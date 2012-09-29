@@ -1,211 +1,215 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.1
+-- http://www.phpmyadmin.net
+--
+-- Client: localhost
+-- Généré le: Sam 29 Septembre 2012 à 22:13
+-- Version du serveur: 5.5.24-log
+-- Version de PHP: 5.4.3
 
-CREATE TABLE ADMINISTRATION (
-                ID VARCHAR NOT NULL,
-                PARAMETRE VARCHAR NOT NULL,
-                VALEUR VARCHAR NOT NULL,
-                PRIMARY KEY (ID)
-);
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
+--
+-- Base de données: `admissible_dsi`
+--
 
-CREATE TABLE ANNONCES (
-                ID INT AUTO_INCREMENT NOT NULL,
-                NOM VARCHAR NOT NULL,
-                RANG INT NOT NULL,
-                TELEPHONE INT NOT NULL,
-                DESCRIPTION VARCHAR NOT NULL,
-                VALIDATION BOOLEAN NOT NULL,
-                ADRESSE_MAIL VARCHAR NOT NULL,
-                ADRESSE VARCHAR NOT NULL,
-                PRIMARY KEY (ID)
-);
+-- --------------------------------------------------------
 
-ALTER TABLE ANNONCES MODIFY COLUMN RANG INTEGER COMMENT 'Rang d''affichage sur la page';
+--
+-- Structure de la table `administration`
+--
 
+CREATE TABLE IF NOT EXISTS `administration` (
+  `ID` varchar(250) NOT NULL,
+  `PARAMETRE` varchar(250) NOT NULL,
+  `VALEUR` varchar(250) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE REF_SECTIONS (
-                ID INT AUTO_INCREMENT NOT NULL,
-                LIBELLE VARCHAR NOT NULL,
-                PRIMARY KEY (ID)
-);
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `admissibles`
+--
 
-CREATE TABLE REF_PROMOTIONS (
-                ID INT NOT NULL,
-                ANNEE INT NOT NULL,
-                PRIMARY KEY (ID)
-);
+CREATE TABLE IF NOT EXISTS `admissibles` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOM` varchar(50) NOT NULL,
+  `PRENOM` varchar(50) NOT NULL,
+  `SEXE` varchar(1) NOT NULL,
+  `ADRESSE_MAIL` varchar(250) NOT NULL,
+  `SERIE` int(1) NOT NULL,
+  `ID_FILIAIRE` int(11) NOT NULL,
+  `ID_ETABLISSEMENT` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `ref_sexes_admissibles_fk` (`SEXE`),
+  KEY `ref_etablissements_admissibles_fk` (`ID_ETABLISSEMENT`),
+  KEY `ref_filiaires_admissibles_fk` (`ID_FILIAIRE`),
+  KEY `series_admissibles_fk` (`SERIE`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tables contenant les admissibles ˆ l''Žcole polytechnique' AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE REF_SEXES (
-                ID INT NOT NULL,
-                LIBELLE VARCHAR NOT NULL,
-                PRIMARY KEY (ID)
-);
+--
+-- Structure de la table `annonces`
+--
 
+CREATE TABLE IF NOT EXISTS `annonces` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOM` varchar(250) NOT NULL,
+  `RANG` int(11) DEFAULT NULL COMMENT 'Rang d''affichage sur la page',
+  `TELEPHONE` int(11) NOT NULL,
+  `DESCRIPTION` varchar(250) NOT NULL,
+  `VALIDATION` tinyint(1) NOT NULL,
+  `ADRESSE_MAIL` varchar(250) NOT NULL,
+  `ADRESSE` varchar(250) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-CREATE TABLE STATUTS (
-                ID INT NOT NULL,
-                LIBELLE VARCHAR NOT NULL,
-                PRIMARY KEY (ID)
-);
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `demandes`
+--
 
-CREATE TABLE REF_ETABLISSEMENTS (
-                ID INT AUTO_INCREMENT NOT NULL,
-                NOM VARCHAR NOT NULL,
-                COMMUNE VARCHAR NOT NULL,
-                PRIMARY KEY (ID)
-);
+CREATE TABLE IF NOT EXISTS `demandes` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ID_ADMISSIBLE` int(11) NOT NULL,
+  `USER_X` varchar(150) NOT NULL,
+  `LIEN` varchar(250) DEFAULT NULL COMMENT 'Lien en get (code unique)\r\n',
+  `ID_STATUS` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `statuts_demandes_fk` (`ID_STATUS`),
+  KEY `x_demandes_fk` (`USER_X`),
+  KEY `admissibles_demandes_fk` (`ID_ADMISSIBLE`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
-CREATE TABLE REF_FILIAIRES (
-                ID INT AUTO_INCREMENT NOT NULL,
-                NOM VARCHAR NOT NULL,
-                PRIMARY KEY (ID)
-);
+--
+-- Structure de la table `ref_etablissements`
+--
 
+CREATE TABLE IF NOT EXISTS `ref_etablissements` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOM` varchar(250) NOT NULL,
+  `COMMUNE` varchar(250) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-CREATE TABLE X (
-                ID INT NOT NULL,
-                ID_SEXE INT NOT NULL,
-                ID_SECTION INT NOT NULL,
-                ADRESSE_MAIL VARCHAR NOT NULL,
-                ID_FILIERE INT NOT NULL,
-                ID_PROMOTION INT NOT NULL,
-                ID_ETABLISSEMENT INT NOT NULL,
-                PRIMARY KEY (ID)
-);
+-- --------------------------------------------------------
 
-ALTER TABLE X MODIFY COLUMN ID INTEGER COMMENT 'Issue du ldap';
+--
+-- Structure de la table `ref_filiaires`
+--
 
+CREATE TABLE IF NOT EXISTS `ref_filiaires` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOM` varchar(250) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-CREATE TABLE SERIES (
-                ID INT AUTO_INCREMENT NOT NULL,
-                NUMERO INT NOT NULL,
-                DATE_DEBUT DATETIME NOT NULL,
-                DATE_FIN DATETIME NOT NULL,
-                PRIMARY KEY (ID)
-);
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `ref_promotions`
+--
 
-CREATE TABLE L_X_SERIES (
-                ID INT NOT NULL,
-                ID_X INT NOT NULL,
-                ID_SERIE INT NOT NULL,
-                PRIMARY KEY (ID)
-);
+CREATE TABLE IF NOT EXISTS `ref_promotions` (
+  `ID` int(11) NOT NULL,
+  `ANNEE` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE L_X_SERIES COMMENT 'DisponiblitŽs de l''X quant aux diffŽrentes sŽries';
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `ref_sections`
+--
 
-CREATE TABLE ADMISSIBLES (
-                ID INT NOT NULL,
-                NOM VARCHAR(50) NOT NULL,
-                PRENOM VARCHAR(50) NOT NULL,
-                ID_SEXE INT NOT NULL,
-                ADRESSE_MAIL VARCHAR NOT NULL,
-                ID_SERIE INT NOT NULL,
-                ID_FILIAIRE INT NOT NULL,
-                ID_ETABLISSEMENT INT NOT NULL,
-                PRIMARY KEY (ID)
-);
+CREATE TABLE IF NOT EXISTS `ref_sections` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `LIBELLE` varchar(250) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-ALTER TABLE ADMISSIBLES COMMENT 'Tables contenant les admissibles ˆ l''Žcole polytechnique';
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `series`
+--
 
-CREATE TABLE DEMANDES (
-                ID INT NOT NULL,
-                ID_ADMISSIBLE INT NOT NULL,
-                ID_X INT NOT NULL,
-                LIEN VARCHAR NOT NULL,
-                ID_STATUS INT NOT NULL,
-                PRIMARY KEY (ID)
-);
+CREATE TABLE IF NOT EXISTS `series` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NUMERO` int(11) NOT NULL,
+  `DATE_DEBUT` datetime NOT NULL,
+  `DATE_FIN` datetime NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
-ALTER TABLE DEMANDES MODIFY COLUMN LIEN VARCHAR COMMENT 'Lien en get (code unique)
-';
+-- --------------------------------------------------------
 
+--
+-- Structure de la table `statuts`
+--
 
-ALTER TABLE X ADD CONSTRAINT ref_sections_x_fk
-FOREIGN KEY (ID_SECTION)
-REFERENCES REF_SECTIONS (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+CREATE TABLE IF NOT EXISTS `statuts` (
+  `ID` int(11) NOT NULL,
+  `LIBELLE` varchar(250) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE X ADD CONSTRAINT ref_promotions_x_fk
-FOREIGN KEY (ID_PROMOTION)
-REFERENCES REF_PROMOTIONS (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+-- --------------------------------------------------------
 
-ALTER TABLE ADMISSIBLES ADD CONSTRAINT ref_sexes_admissibles_fk
-FOREIGN KEY (ID_SEXE)
-REFERENCES REF_SEXES (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+--
+-- Structure de la table `x`
+--
 
-ALTER TABLE X ADD CONSTRAINT ref_sexes_x_fk
-FOREIGN KEY (ID_SEXE)
-REFERENCES REF_SEXES (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+CREATE TABLE IF NOT EXISTS `x` (
+  `USER` varchar(150) NOT NULL COMMENT 'Issue du ldap',
+  `SEXE` varchar(1) NOT NULL,
+  `ID_SECTION` int(11) NOT NULL,
+  `ADRESSE_MAIL` varchar(250) NOT NULL,
+  `ID_FILIERE` int(11) NOT NULL,
+  `ID_PROMOTION` int(11) NOT NULL,
+  `ID_ETABLISSEMENT` int(11) NOT NULL,
+  `DISPO_S1` int(1) NOT NULL,
+  `DISPO_S2` int(1) NOT NULL,
+  `DISPO_S3` int(1) NOT NULL,
+  `DISPO_S4` int(1) NOT NULL,
+  PRIMARY KEY (`USER`),
+  KEY `ref_sections_x_fk` (`ID_SECTION`),
+  KEY `ref_promotions_x_fk` (`ID_PROMOTION`),
+  KEY `ref_sexes_x_fk` (`SEXE`),
+  KEY `ref_etablissements_x_fk` (`ID_ETABLISSEMENT`),
+  KEY `ref_filiaires_x_fk` (`ID_FILIERE`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE DEMANDES ADD CONSTRAINT statuts_demandes_fk
-FOREIGN KEY (ID_STATUS)
-REFERENCES STATUTS (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+--
+-- Contraintes pour les tables exportées
+--
 
-ALTER TABLE ADMISSIBLES ADD CONSTRAINT ref_etablissements_admissibles_fk
-FOREIGN KEY (ID_ETABLISSEMENT)
-REFERENCES REF_ETABLISSEMENTS (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+--
+-- Contraintes pour la table `admissibles`
+--
+ALTER TABLE `admissibles`
+  ADD CONSTRAINT `ref_etablissements_admissibles_fk` FOREIGN KEY (`ID_ETABLISSEMENT`) REFERENCES `ref_etablissements` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ref_filiaires_admissibles_fk` FOREIGN KEY (`ID_FILIAIRE`) REFERENCES `ref_filiaires` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE X ADD CONSTRAINT ref_etablissements_x_fk
-FOREIGN KEY (ID_ETABLISSEMENT)
-REFERENCES REF_ETABLISSEMENTS (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+--
+-- Contraintes pour la table `demandes`
+--
+ALTER TABLE `demandes`
+  ADD CONSTRAINT `admissibles_demandes_fk` FOREIGN KEY (`ID_ADMISSIBLE`) REFERENCES `admissibles` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `statuts_demandes_fk` FOREIGN KEY (`ID_STATUS`) REFERENCES `statuts` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `x_demandes_fk` FOREIGN KEY (`USER_X`) REFERENCES `x` (`USER`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE ADMISSIBLES ADD CONSTRAINT ref_filiaires_admissibles_fk
-FOREIGN KEY (ID_FILIAIRE)
-REFERENCES REF_FILIAIRES (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE X ADD CONSTRAINT ref_filiaires_x_fk
-FOREIGN KEY (ID_FILIERE)
-REFERENCES REF_FILIAIRES (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE L_X_SERIES ADD CONSTRAINT x_l_x_series_fk
-FOREIGN KEY (ID_X)
-REFERENCES X (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE DEMANDES ADD CONSTRAINT x_demandes_fk
-FOREIGN KEY (ID_X)
-REFERENCES X (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE ADMISSIBLES ADD CONSTRAINT series_admissibles_fk
-FOREIGN KEY (ID_SERIE)
-REFERENCES SERIES (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE L_X_SERIES ADD CONSTRAINT series_l_x_series_fk
-FOREIGN KEY (ID_SERIE)
-REFERENCES SERIES (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE DEMANDES ADD CONSTRAINT admissibles_demandes_fk
-FOREIGN KEY (ID_ADMISSIBLE)
-REFERENCES ADMISSIBLES (ID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
+--
+-- Contraintes pour la table `x`
+--
+ALTER TABLE `x`
+  ADD CONSTRAINT `ref_etablissements_x_fk` FOREIGN KEY (`ID_ETABLISSEMENT`) REFERENCES `ref_etablissements` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ref_filiaires_x_fk` FOREIGN KEY (`ID_FILIERE`) REFERENCES `ref_filiaires` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ref_promotions_x_fk` FOREIGN KEY (`ID_PROMOTION`) REFERENCES `ref_promotions` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ref_sections_x_fk` FOREIGN KEY (`ID_SECTION`) REFERENCES `ref_sections` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;

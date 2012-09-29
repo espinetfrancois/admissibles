@@ -66,9 +66,9 @@ class DemandeManager {
                                                ID_FILIERE = :filiere,
                                                ID_ETABLISSEMENT = :prepa;
                                            SELECT LAST_INSERT_ID()
-                                           AS ID;
+                                           AS id;
                                            INSERT INTO demandes 
-                                           SET ID_ADMISSIBLE = ID,
+                                           SET ID_ADMISSIBLE = id,
                                                USER_X = :user,
                                                LIEN = :code,
                                                ID_STATUS = :status');
