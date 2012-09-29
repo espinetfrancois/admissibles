@@ -122,7 +122,17 @@ class EleveManager {
         if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$user)) { // de la forme prenom.nom
             throw new RuntimeException('Utilisateur invalide'); // Ne se produit jamais en exécution courante
         }
-        $requete = $this->db->prepare('SELECT *
+        $requete = $this->db->prepare('SELECT USER AS user,
+                                              SEXE AS sexe,
+                                              ID_SECTION AS section,
+                                              ADRESSE_MAIL AS email,
+                                              ID_FILIERE AS filiere,
+                                              ID_PROMOTION AS promo,
+                                              ID_ETABLISSEMENT AS prepa,
+                                              DISPO_S1 AS serie1,
+                                              DISPO_S2 AS serie2,
+                                              DISPO_S3 AS serie3,
+                                              DISPO_S4 AS serie4
                                        FROM x
                                        WHERE USER = :user');
         $requete->bindValue(':user', $user);
@@ -144,13 +154,25 @@ class EleveManager {
      */
 
     public  function getList() {
-        $requete = $this->db->prepare('SELECT *
+        $requete = $this->db->prepare('SELECT USER AS user,
+                                              SEXE AS sexe,
+                                              ID_SECTION AS section,
+                                              ADRESSE_MAIL AS email,
+                                              ID_FILIERE AS filiere,
+                                              ID_PROMOTION AS promo,
+                                              ID_ETABLISSEMENT AS prepa,
+                                              DISPO_S1 AS serie1,
+                                              DISPO_S2 AS serie2,
+                                              DISPO_S3 AS serie3,
+                                              DISPO_S4 AS serie4
                                        FROM x');
         $requete->execute();
         
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
             
-        return $requete->fetch();
+        $listeX = $requete->fetchAll();
+        $requete->closeCursor();
+        return $listeX;
     }
 
 
@@ -166,18 +188,17 @@ class EleveManager {
         if (!$demande->isValid() || !is_numeric($limit) || !in_array($demande->serie(), array(1, 2, 3, 4))) {
             throw new RuntimeException('getFavorite : mauvais paramétrage'); // Ne se produit jamais en exécution courante
         }
-        $requete = $this->db->prepare('SELECT USER,
-                                              SEXE,
-                                              ID_SECTION,
-                                              ADRESSE_MAIL,
-                                              ID_FILIERE,
-                                              ID_PROMOTION,
-                                              ID_ETABLISSEMENT,
-                                              (3*(SEXE=:sexe)+(ID_SECTION=:section)+6*(ID_ETABLISSEMENT=:prepa)+2*(ID_FILIERE=:filiere)) 
-                                              AS MATCH
+        $requete = $this->db->prepare('SELECT USER AS user,
+                                              SEXE AS sexe,
+                                              ID_SECTION AS section,
+                                              ADRESSE_MAIL AS email,
+                                              ID_FILIERE AS filiere,
+                                              ID_PROMOTION AS promo,
+                                              ID_ETABLISSEMENT AS prepa,
+                                              (3*(SEXE=:sexe)+(ID_SECTION=:section)+6*(ID_ETABLISSEMENT=:prepa)+2*(ID_FILIERE=:filiere)) AS match
                                        FROM x
                                        WHERE `DISPO_S'.$demande->serie().'`=1
-                                       ORDER BY MATCH DESC
+                                       ORDER BY match DESC
                                        LIMIT :limit');
         $requete->bindValue(':sexe', $demande->sexe());
         $requete->bindValue(':section',  $demande->sport());
@@ -186,7 +207,7 @@ class EleveManager {
         $requete->bindValue(':limit',  $limit);
         $requete->execute();
         
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve', array('user','sexe','section','email','filiere','promo','prepa'));
             
         return $requete->fetch();
     }

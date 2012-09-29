@@ -1,19 +1,39 @@
 <?php
 /**
- * Classe représentant l'élève X proposant un logement
+ * Classe représentant un admissible et sa demande de logement
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
- *
  */
 
-class Eleve {
+class Demande {
 
     /**
-     * nom d'utilisateur unique : prenom.nom
+     * Identifiant unique
+     * @var int
+     * @access protected
+     */
+    protected  $id;
+
+    /**
+     * 
      * @var string
      * @access protected
      */
-    protected  $user;
+    protected  $nom;
+
+    /**
+     * 
+     * @var string
+     * @access protected
+     */
+    protected  $prenom;
+
+    /**
+     * Adresse email de contact de l'admissible
+     * @var string
+     * @access protected
+     */
+    protected  $email;
 
     /**
      * M || F
@@ -21,27 +41,6 @@ class Eleve {
      * @access protected
      */
     protected  $sexe;
-
-    /**
-     * Adresse email
-     * @var string
-     * @access protected
-     */
-    protected  $email;
-
-    /**
-     * Promotion de la forme 20XX
-     * @var int
-     * @access protected
-     */
-    protected  $promo;
-
-    /**
-     * Section sportive
-     * @var string
-     * @access protected
-     */
-    protected  $section;
 
     /**
      * Etablissement scolaire d'origine
@@ -58,32 +57,39 @@ class Eleve {
     protected  $filiere;
 
     /**
-     * Disponibilité en série 1
+     * Série d'admissibilité
      * @var int
      * @access protected
      */
-    protected  $serie1;
+    protected  $serie;
+    
+    /**
+     * Sport préféré
+     * @var int
+     * @access protected
+     */
+    protected  $sport;
 
     /**
-     * Disponibilité en série 2
-     * @var int
+     * Nom d'utilisateur de l'élève polytechnicien accueillant l'admissible
+     * @var string
      * @access protected
      */
-    protected  $serie2;
+    protected  $userEleve;
 
     /**
-     * Disponibilité en série 3
+     * Statut de la demande de logement
      * @var int
      * @access protected
      */
-    protected  $serie3;
+    protected  $status;
 
     /**
-     * Disponibilité en série 4
-     * @var int
+     * Identifiant unique transmis lors des requêtes GET
+     * @var string
      * @access protected
      */
-    protected  $serie4;
+    protected  $code;
 
     /**
      * Erreurs de remplissage des attributs
@@ -95,14 +101,18 @@ class Eleve {
     /**
      * Constantes relatives aux erreurs possibles rencontrées lors de l'exécution de la méthode
      */
-    const USER_INVALIDE = 1;
-    const SEXE_INVALIDE = 2;
-    const EMAIL_INVALIDE = 3;
-    const PROMO_INVALIDE = 4;
-    const SECTION_INVALIDE = 5;
+    const ID_INVALIDE = 1;
+    const NOM_INVALIDE = 2;
+    const PRENOM_INVALIDE = 3;
+    const EMAIL_INVALIDE = 4;
+    const SEXE_INVALIDE = 5;
     const PREPA_INVALIDE = 6;
     const FILIERE_INVALIDE = 7;
     const SERIE_INVALIDE = 8;
+    const SPORT_INVALIDE = 9;
+    const USER_INVALIDE = 10;
+    const STATUS_INVALIDE = 11;
+    const CODE_INVALIDE = 12;
 
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
@@ -136,53 +146,42 @@ class Eleve {
 
 
     /**
-     * Méthode permettant de savoir si l'éleve est nouveau
-     * @access public
-     * @return bool
-     */
-
-    public  function isNew() {
-        return empty($this->user);
-    }
-
-
-    /**
      * Méthode permettant de savoir si les attributs sont valides
      * @access public
      * @return bool
      */
 
     public final  function isValid() {
-        return !(empty($this->user) || empty($this->sexe) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
+        return !(empty($this->id) || empty($this->nom) || empty($this->prenom) || empty($this->email) || empty($this->sexe) || empty($this->prepa) || empty($this->filiere) || empty($this->sport));
     }
 
 
     /**
      * @access public
-     * @param string $user 
+     * @param string $nom 
      * @return void
      */
 
-    public  function setUser($user) {
-        if (!preg_match('#[a-z_-]+\.[a-z_-]+#',$user)) { // de la forme prenom.nom
-            $this->erreurs[] = self::USER_INVALIDE;
+    public  function setNom($nom) {
+        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#',$nom)) { // lettres seulement
+            $this->erreurs[] = self::NOM_INVALIDE;
         } else {
-            $this->user = $user;
+            $this->nom = $nom;
         }
     }
 
 
     /**
      * @access public
-     * @param string $sexe 
+     * @param string $prenom 
      * @return void
      */
 
-    public  function setSexe($sexe) {
-        if ($sexe != "M" && $sexe != "F") { // de la forme M ou F
-            $this->erreurs[] = self::SEXE_INVALIDE;
+    public  function setPrenom($prenom) {
+        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#',$prenom)) { // lettres seulement
+            $this->erreurs[] = self::PRENOM_INVALIDE;
         } else {
-            $this->sexe = $sexe;
+            $this->prenom = $prenom;
         }
     }
 
@@ -204,30 +203,15 @@ class Eleve {
 
     /**
      * @access public
-     * @param int $promo 
+     * @param string $sexe 
      * @return void
      */
 
-    public  function setPromo($promo) {
-        if (!is_integer($promo)) { // id numérique
-            $this->erreurs[] = self::PROMO_INVALIDE;
+    public  function setSexe($sexe) {
+        if ($sexe != "M" && $sexe != "F") { // de la forme M ou F
+            $this->erreurs[] = self::SEXE_INVALIDE;
         } else {
-            $this->promo = $promo;
-        }
-    }
-
-
-    /**
-     * @access public
-     * @param string $section 
-     * @return void
-     */
-
-    public  function setSection($section) {
-        if (!is_integer($section)) { // id numérique
-            $this->erreurs[] = self::SECTION_INVALIDE;
-        } else {
-            $this->section = $section;
+            $this->sexe = $sexe;
         }
     }
 
@@ -264,60 +248,59 @@ class Eleve {
 
     /**
      * @access public
-     * @param int $serie1 
+     * @param int $serie 
      * @return void
      */
 
-    public  function setSerie1($serie1) {
-        if ($serie1 != 0 && $serie1 != 1) { // 0 ou 1
+    public  function setSerie($serie) {
+        if ($serie != 1 && $serie != 2 && $serie != 3 && $serie != 4) { // 1, 2, 3 ou 4
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
-            $this->serie1 = $serie1;
+            $this->serie = $serie;
         }
     }
 
 
     /**
      * @access public
-     * @param int $serie2 
+     * @param int $sport 
      * @return void
      */
 
-    public  function setSerie2($serie2) {
-        if ($serie2 != 0 && $serie2 != 1) { // 0 ou 1
-            $this->erreurs[] = self::SERIE_INVALIDE;
+    public  function setSport($sport) {
+        if (!is_integer($sport)) { // id numérique
+            $this->erreurs[] = self::SPORT_INVALIDE;
         } else {
-            $this->serie2 = $serie2;
+            $this->sport = $sport;
+        }
+    }
+
+    /**
+     * @access public
+     * @param string $user 
+     * @return void
+     */
+
+    public  function setUserEleve($user) {
+        if (!preg_match('#[a-z_-]+\.[a-z_-]+#',$user)) { // de la forme prenom.nom
+            $this->erreurs[] = self::USER_INVALIDE;
+        } else {
+            $this->user = $user;
         }
     }
 
 
     /**
      * @access public
-     * @param int $serie3 
+     * @param int $status 
      * @return void
      */
 
-    public  function setSerie3($serie3) {
-        if ($serie3 != 0 && $serie3 != 1) { // 0 ou 1
-            $this->erreurs[] = self::SERIE_INVALIDE;
+    public  function setStatus($status) {
+        if (!is_integer($status)) { // id numérique
+            $this->erreurs[] = self::STATUS_INVALIDE;
         } else {
-            $this->serie3 = $serie3;
-        }
-    }
-
-
-    /**
-     * @access public
-     * @param int $serie4 
-     * @return void
-     */
-
-    public  function setSerie4($serie4) {
-        if ($serie4 != 0 && $serie4 != 1) { // 0 ou 1
-            $this->erreurs[] = self::SERIE_INVALIDE;
-        } else {
-            $this->serie4 = $serie4;
+            $this->status = $status;
         }
     }
 
@@ -327,8 +310,8 @@ class Eleve {
      * @return string
      */
 
-    public  function user() {
-        return $this->user;
+    public  function nom() {
+        return $this->nom;
     }
 
 
@@ -337,8 +320,8 @@ class Eleve {
      * @return string
      */
 
-    public  function sexe() {
-        return $this->sexe;
+    public  function prenom() {
+        return $this->prenom;
     }
 
 
@@ -354,21 +337,11 @@ class Eleve {
 
     /**
      * @access public
-     * @return int
-     */
-
-    public  function promo() {
-        return $this->promo;
-    }
-
-
-    /**
-     * @access public
      * @return string
      */
 
-    public  function section() {
-        return $this->section;
+    public  function sexe() {
+        return $this->sexe;
     }
 
 
@@ -397,8 +370,27 @@ class Eleve {
      * @return int
      */
 
-    public  function serie1() {
-        return $this->serie1;
+    public  function serie() {
+        return $this->serie;
+    }
+    
+    /**
+     * @access public
+     * @return int
+     */
+
+    public  function sport() {
+        return $this->sport;
+    }
+
+
+    /**
+     * @access public
+     * @return string
+     */
+
+    public  function userEleve() {
+        return $this->userEleve;
     }
 
 
@@ -407,28 +399,18 @@ class Eleve {
      * @return int
      */
 
-    public  function serie2() {
-        return $this->serie2;
+    public  function status() {
+        return $this->status;
     }
 
 
     /**
      * @access public
-     * @return int
+     * @return string
      */
 
-    public  function serie3() {
-        return $this->serie3;
-    }
-
-
-    /**
-     * @access public
-     * @return int
-     */
-
-    public  function serie4() {
-        return $this->serie4;
+    public  function code() {
+        return $this->code;
     }
 
 
@@ -440,7 +422,6 @@ class Eleve {
     public  function erreurs() {
         return $this->erreurs;
     }
-
 
 }
 ?>
