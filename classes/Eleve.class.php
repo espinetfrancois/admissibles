@@ -3,6 +3,7 @@
  * Classe représentant l'élève X proposant un logement
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
+ *
  */
 
 class Eleve {
@@ -20,6 +21,13 @@ class Eleve {
      * @access protected
      */
     protected  $sexe;
+
+    /**
+     * Adresse email
+     * @var string
+     * @access protected
+     */
+    protected  $email;
 
     /**
      * Promotion de la forme 20XX
@@ -89,11 +97,12 @@ class Eleve {
      */
     const USER_INVALIDE = 1;
 	const SEXE_INVALIDE = 2;
-	const PROMO_INVALIDE = 3;
-	const SECTION_INVALIDE = 4;
-	const PREPA_INVALIDE = 5;
-	const FILIERE_INVALIDE = 6;
-	const SERIE_INVALIDE = 7;
+	const EMAIL_INVALIDE = 3;
+	const PROMO_INVALIDE = 4;
+	const SECTION_INVALIDE = 5;
+	const PREPA_INVALIDE = 6;
+	const FILIERE_INVALIDE = 7;
+	const SERIE_INVALIDE = 8;
 
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
@@ -144,7 +153,7 @@ class Eleve {
      */
 
     public final  function isValid() {
-        return !(empty($this->user) || empty($this->sexe) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere));
+        return !(empty($this->user) || empty($this->sexe) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
     }
 
 
@@ -174,6 +183,21 @@ class Eleve {
             $this->erreurs[] = self::SEXE_INVALIDE;
         } else {
             $this->sexe = $sexe;
+		}
+    }
+
+
+    /**
+     * @access public
+     * @param string $mail 
+     * @return void
+     */
+
+    public  function setEmail($email) {
+        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email)) { // de la forme prenom.nom
+            $this->erreurs[] = self::EMAIL_INVALIDE;
+        } else {
+            $this->email = $email;
 		}
     }
 
@@ -315,6 +339,16 @@ class Eleve {
 
     public  function sexe() {
         return $this->sexe;
+    }
+
+
+    /**
+     * @access public
+     * @return string
+     */
+
+    public  function email() {
+        return $this->email;
     }
 
 
