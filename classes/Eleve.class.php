@@ -96,13 +96,13 @@ class Eleve {
      * Constantes relatives aux erreurs possibles rencontrées lors de l'exécution de la méthode
      */
     const USER_INVALIDE = 1;
-	const SEXE_INVALIDE = 2;
-	const EMAIL_INVALIDE = 3;
-	const PROMO_INVALIDE = 4;
-	const SECTION_INVALIDE = 5;
-	const PREPA_INVALIDE = 6;
-	const FILIERE_INVALIDE = 7;
-	const SERIE_INVALIDE = 8;
+    const SEXE_INVALIDE = 2;
+    const EMAIL_INVALIDE = 3;
+    const PROMO_INVALIDE = 4;
+    const SECTION_INVALIDE = 5;
+    const PREPA_INVALIDE = 6;
+    const FILIERE_INVALIDE = 7;
+    const SERIE_INVALIDE = 8;
 
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
@@ -168,7 +168,7 @@ class Eleve {
             $this->erreurs[] = self::USER_INVALIDE;
         } else {
             $this->user = $user;
-		}
+        }
     }
 
 
@@ -183,13 +183,13 @@ class Eleve {
             $this->erreurs[] = self::SEXE_INVALIDE;
         } else {
             $this->sexe = $sexe;
-		}
+        }
     }
 
 
     /**
      * @access public
-     * @param string $mail 
+     * @param string $email 
      * @return void
      */
 
@@ -198,7 +198,7 @@ class Eleve {
             $this->erreurs[] = self::EMAIL_INVALIDE;
         } else {
             $this->email = $email;
-		}
+        }
     }
 
 
@@ -213,7 +213,7 @@ class Eleve {
             $this->erreurs[] = self::PROMO_INVALIDE;
         } else {
             $this->promo = $promo;
-		}
+        }
     }
 
 
@@ -228,7 +228,7 @@ class Eleve {
             $this->erreurs[] = self::SECTION_INVALIDE;
         } else {
             $this->section = $section;
-		}
+        }
     }
 
 
@@ -243,7 +243,7 @@ class Eleve {
             $this->erreurs[] = self::PREPA_INVALIDE;
         } else {
             $this->prepa = $prepa;
-		}
+        }
     }
 
 
@@ -258,7 +258,7 @@ class Eleve {
             $this->erreurs[] = self::FILIERE_INVALIDE;
         } else {
             $this->filiere = $filiere;
-		}
+        }
     }
 
 
@@ -273,7 +273,7 @@ class Eleve {
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
             $this->serie1 = $serie1;
-		}
+        }
     }
 
 
@@ -288,7 +288,7 @@ class Eleve {
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
             $this->serie2 = $serie2;
-		}
+        }
     }
 
 
@@ -303,7 +303,7 @@ class Eleve {
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
             $this->serie3 = $serie3;
-		}
+        }
     }
 
 
@@ -318,7 +318,7 @@ class Eleve {
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
             $this->serie4 = $serie4;
-		}
+        }
     }
 
 
