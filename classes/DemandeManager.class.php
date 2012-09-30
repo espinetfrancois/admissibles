@@ -118,7 +118,7 @@ class DemandeManager {
         if (!is_integer($status) || !preg_match('#^[a-z0-9A-Z](32)#',$code)) {
             throw new RuntimeException('updateStatus : mauvais paramétrage'); // Ne se produit jamais en exécution courante
         }
-        $newCode = md5(sha1(time().$code);
+        $newCode = md5(sha1(time().$code));
         $requete = $this->db->prepare('UPDATE demandes 
                                        SET ID_STATUS = :status,
                                            LIEN = :newCode,
