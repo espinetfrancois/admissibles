@@ -1,14 +1,14 @@
 <?php
 /**
  * Fichier inclut dans chaque page : fonction de chargement automatique des classes
- * @author François Espinet
+ * @author FranÃ§ois Espinet
  * @version 1.0
  *
  */
 
 /**
  * Fonction de chargement automatique des classes
- * @param string $class Nom de la classe à insérer
+ * @param string $class Nom de la classe Ã  insÃ©rer
  * @return void
  */
 function autoloader($class) {
@@ -22,4 +22,3 @@ function autoloader($class) {
 
 spl_autoload_register('autoloader');
 
-?>

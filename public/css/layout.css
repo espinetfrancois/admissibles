@@ -1,0 +1,296 @@
+/*
+	****************************************************************************************************************
+	****************************************************************************************************************
+	**************************************************** GENERAL ***************************************************
+	****************************************************************************************************************
+	****************************************************************************************************************
+*/
+body {
+	line-height: 1.2;
+	background-color: rgb(200, 200, 200);
+	margin: 0;
+	padding: 0;
+	font-family: arial, "Bitstream Vera Sans", sans-serif;
+	font-size: 8pt;
+	color: #31313b;
+	margin: 0 5em 2em 5em;
+	
+}
+
+/*****************************************************************************************************************
+  ****************************************************************************************************************
+  *************************************************** TITRES *****************************************************
+  ****************************************************************************************************************
+  *****************************************************************************************************************/
+h1 {
+	font-family: tahoma, arial, helvetica, sans-serif;
+	font-size: 1.8em;
+	font-weight: 500;
+	text-transform: uppercase;
+	position: absolute;
+	top: 20px;
+	left: 100px;
+	color: white;
+}
+
+h2 {
+	font-family: "Lucida Sans Unicode", "Lucida Sans", "Lucida Grande",
+		Arial, sans-serif;
+	font-size: 1.65em;
+	font-weight: 500;
+	margin: 0 0 0.4em;
+}
+
+h3 {
+	font-size: 1.4em;
+	margin: 1em 0;
+}
+
+h4 {
+	font-size: 1.2em;
+	margin: 1em 0;
+}
+
+div#bandeau {
+	background: #002334;
+	height: 150px;
+	width: 100%;
+	font-size: 1.1em;
+}
+
+div#logo_polytechnique {
+	position: absolute;
+	top: 2em;
+	right: 8em;
+	height: 60px;
+	width: 240px;
+	background-color: rgba(256, 256, 256, 0.8);
+	border-radius: 1px;
+}
+
+div#logo_polytechnique>a {
+	height: 50px;
+	width: 210px;
+	margin-left: 10px;
+	background-image:
+		url(http://www.polytechnique.edu/images/logo/logoecoleclair.png);
+	background-repeat: no-repeat;
+	display: block;
+}
+
+div#logo_polytechnique a:focus {
+	background-color: transparent !important;
+}
+
+div#accroche {
+	color: #ffffff;
+	font-size: 1.3em;
+	position: absolute;
+	top: 100px;
+	left: 150px;
+}
+
+/*
+	****************************************************************************************************************
+	****************************************************************************************************************
+	**************************************************** MENU ******************************************************
+	****************************************************************************************************************
+	****************************************************************************************************************
+*/
+div#navigation {
+	background: #002334;
+	float: left;
+	font-size: 1.35em;
+	padding: 0 0 3px 0;
+	width: 16em;
+	min-height: 300px;
+	z-index: 20;
+}
+
+div#navigation ul {
+	background: #164d6d;
+	font-weight: 700;
+	padding-top: 10px;
+}
+
+div#navigation a {
+	text-decoration: none;
+}
+
+/* div#page {
+	font-size: 1.1em;
+	margin: 0 5em;
+} */
+
+ol,ul {
+	list-style: none;
+}
+
+ul,ol,li {
+	margin: 0;
+	padding: 0;
+}
+
+ol li {
+	list-style-type: decimal;
+	background: none;
+	padding-left: 0;
+}
+
+ol {
+	margin-left: 1.5em;
+}
+
+a {
+	color: #2896d5;
+	text-decoration: underline;
+}
+
+a:focus {
+	background-color: #666;
+	background-image: none;
+	color: #fff !important;
+	text-decoration: none;
+}
+
+div#menu {
+	background-color: red;
+	float: left;
+	padding-bottom: 1px;
+	width: 100%;
+}
+
+ul#menu_principal ul {
+	list-style: none;
+	background: #ffba00;
+	border-left: 6px solid #c2960c;
+	font-size: 0.8em;
+	font-size: 11px;
+}
+
+ul#menu_principal a {
+	border-bottom: 1px dashed #17758a;
+	color: #fff;
+	display: block;
+	padding: 0.4em 20px 0.4em 15px;
+}
+
+ul#menu_principal a:hover,ul#menu_principal em a {
+	color: #002334;
+	background-color: #ffba00;
+}
+
+/* gestion des liens actif */
+/* niveau 1 et 2*/
+ul#menu_principal li.active, ul#menu_principal li.active li.active {
+	background-color : white;
+}
+
+ul#menu_principal li.active>a, ul#menu_principal li.active ul li.active>a {
+	color : #002334;
+}
+
+/*niveau 2*/
+
+ul#menu_principal li.active ul {
+	display : block;
+}
+
+/* gestion des sous-menus */
+div#navigation ul li ul {
+	display	: none;
+}
+
+div#navigation ul li:hover ul {
+	display : block;
+}
+
+
+
+
+/*
+	****************************************************************************************************************
+	****************************************************************************************************************
+	************************************************* MISE EN PAGE *************************************************
+	****************************************************************************************************************
+	****************************************************************************************************************
+*/
+
+div#page_deco {
+	background-color: #fff;
+	min-height: 290px;
+	padding: 10px 1em 3px 3em;
+	line-height: 1.7em;
+	text-align: justify;
+	margin: 0 0 0 21.6em;
+	left: 0;
+	right: 0;
+	border-right : 1px solid;
+	/*border-left  : 1px solid; */
+}
+
+div.content {
+	margin : 1em;
+}
+
+/*
+	****************************************************************************************************************
+	****************************************************************************************************************
+	************************************************* PIED DE PAGE *************************************************
+	****************************************************************************************************************
+	****************************************************************************************************************
+*/
+div#pied_page {
+	border-top: 1px solid;
+	width: 100%;
+}
+
+ul#actions,ul#liens {
+	color: #31313b;
+	background: #ffba00;
+	margin: 10px 0 6px;
+	padding: 0.1em;
+	float: left;
+}
+
+ul#actions {
+	padding: 0.1em 20px;
+	width: 216px;
+}
+
+ul#actions li,ul#liens li {
+	display: inline;
+}
+
+ul#actions a,ul#liens a {
+	color: #31313b;
+	text-decoration: none;
+}
+
+ul#actions a:hover,ul#liens a:hover {
+	text-decoration: underline;
+}
+
+ul#liens {
+	margin: 10px 0 6px 8px;
+	padding: 0.1em 6px;
+}
+
+ul#ours {
+	padding: 0.1em 7px;
+	clear: both;
+}
+
+ul#ours li {
+	display: inline;
+}
+
+ul#ours a:hover {
+	text-decoration: underline;
+}
+
+ul#ours,ul#ours a {
+	background: #164d6d;
+	color: #fff;
+	text-decoration: none;
+}
