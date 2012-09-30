@@ -3,6 +3,8 @@
  * Classe représentant un admissible et sa demande de logement
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
+ *
+ * @todo : gestion logs / vérification de l'existence des références
  */
 
 class Demande {
@@ -154,7 +156,18 @@ class Demande {
     public final  function isValid() {
         return !(empty($this->id) || empty($this->nom) || empty($this->prenom) || empty($this->email) || empty($this->sexe) || empty($this->prepa) || empty($this->filiere) || empty($this->sport));
     }
+    
+    
+    /**
+     * @access public
+     * @param string $id 
+     * @return void
+     */
 
+    public  function setId($id) {
+        $this->id = (int) $id;
+    }
+    
 
     /**
      * @access public
