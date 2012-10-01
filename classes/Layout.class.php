@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Classes de gestion du Layout
  * @author François Espinet
  * @version 1.0
  *
  */
-
 class Layout {
 
     /**
@@ -166,6 +166,12 @@ class Layout {
             return '<link type="text/css" href="'.'/public/css/'.$sUrl.'" rel="stylesheet" media="all" />';
         }
     }
+    
+    /**
+     * Méthodes de rendu des différents éléments de la page.
+     * 
+     * @return string
+     */
 
     public function renderHead() {
         $sHead = '<head>';
@@ -236,7 +242,5 @@ class Layout {
     public function __toString() {
         return $this->render();
     }
-
-
 }
 
