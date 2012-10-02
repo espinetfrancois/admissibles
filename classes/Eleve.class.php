@@ -59,34 +59,6 @@ class Eleve {
     protected  $filiere;
 
     /**
-     * Disponibilité en série 1
-     * @var int
-     * @access protected
-     */
-    protected  $serie1;
-
-    /**
-     * Disponibilité en série 2
-     * @var int
-     * @access protected
-     */
-    protected  $serie2;
-
-    /**
-     * Disponibilité en série 3
-     * @var int
-     * @access protected
-     */
-    protected  $serie3;
-
-    /**
-     * Disponibilité en série 4
-     * @var int
-     * @access protected
-     */
-    protected  $serie4;
-
-    /**
      * Erreurs de remplissage des attributs
      * @var array
      * @access protected
@@ -103,7 +75,6 @@ class Eleve {
     const SECTION_INVALIDE = 5;
     const PREPA_INVALIDE = 6;
     const FILIERE_INVALIDE = 7;
-    const SERIE_INVALIDE = 8;
 
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
@@ -265,66 +236,6 @@ class Eleve {
 
     /**
      * @access public
-     * @param int $serie1 
-     * @return void
-     */
-
-    public  function setSerie1($serie1) {
-        if ($serie1 != 0 && $serie1 != 1) { // 0 ou 1
-            $this->erreurs[] = self::SERIE_INVALIDE;
-        } else {
-            $this->serie1 = $serie1;
-        }
-    }
-
-
-    /**
-     * @access public
-     * @param int $serie2 
-     * @return void
-     */
-
-    public  function setSerie2($serie2) {
-        if ($serie2 != 0 && $serie2 != 1) { // 0 ou 1
-            $this->erreurs[] = self::SERIE_INVALIDE;
-        } else {
-            $this->serie2 = $serie2;
-        }
-    }
-
-
-    /**
-     * @access public
-     * @param int $serie3 
-     * @return void
-     */
-
-    public  function setSerie3($serie3) {
-        if ($serie3 != 0 && $serie3 != 1) { // 0 ou 1
-            $this->erreurs[] = self::SERIE_INVALIDE;
-        } else {
-            $this->serie3 = $serie3;
-        }
-    }
-
-
-    /**
-     * @access public
-     * @param int $serie4 
-     * @return void
-     */
-
-    public  function setSerie4($serie4) {
-        if ($serie4 != 0 && $serie4 != 1) { // 0 ou 1
-            $this->erreurs[] = self::SERIE_INVALIDE;
-        } else {
-            $this->serie4 = $serie4;
-        }
-    }
-
-
-    /**
-     * @access public
      * @return string
      */
 
@@ -390,46 +301,6 @@ class Eleve {
 
     public  function filiere() {
         return $this->filiere;
-    }
-
-
-    /**
-     * @access public
-     * @return int
-     */
-
-    public  function serie1() {
-        return $this->serie1;
-    }
-
-
-    /**
-     * @access public
-     * @return int
-     */
-
-    public  function serie2() {
-        return $this->serie2;
-    }
-
-
-    /**
-     * @access public
-     * @return int
-     */
-
-    public  function serie3() {
-        return $this->serie3;
-    }
-
-
-    /**
-     * @access public
-     * @return int
-     */
-
-    public  function serie4() {
-        return $this->serie4;
     }
 
 

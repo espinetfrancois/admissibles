@@ -266,7 +266,7 @@ class Demande {
      */
 
     public  function setSerie($serie) {
-        if ($serie != 1 && $serie != 2 && $serie != 3 && $serie != 4) { // 1, 2, 3 ou 4
+        if (is_numeric($serie)) {
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
             $this->serie = $serie;

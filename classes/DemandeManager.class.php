@@ -2,9 +2,10 @@
 /**
  * Classe de gestion BDD de la classe Demande
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
- * @version 0.5
+ * @version 1.0
  *
- *@todo : gestion des erreurs
+ * @todo : gestion de la liste des admissibles (recherche)
+ * @todo : gestion des erreurs
  */
 
 class DemandeManager {
@@ -39,24 +40,7 @@ class DemandeManager {
     public  function add(Demande $demande) {
         if (!$demande->isValid()) {
             throw new RuntimeException('Les champs doivent être valides pour être enregistrés'); // Ne se produit jamais en exécution courante
-        } else {
-            $requete = $this->db->prepare('INSERT INTO admissibles 
-                                           SET NOM = :nom,
-                                               PRENOM = :prenom,
-                                               SEXE = :sexe,
-                                               ADRESSE_MAIL = :email,
-                                               SERIE = :serie,
-                                               ID_FILIERE = :filiere,
-                                               ID_ETABLISSEMENT = :prepa');
-            $requete->bindValue(':nom', $eleve->user());
-            $requete->bindValue(':prenom', $eleve->section());
-            $requete->bindValue(':sexe', $eleve->sexe());
-            $requete->bindValue(':email', $eleve->email());
-            $requete->bindValue(':serie', $eleve->promo());
-            $requete->bindValue(':filiere', $eleve->filiere());
-            $requete->bindValue(':prepa', $eleve->prepa());
-            $requete->execute();
-            
+        } else {            
             $requete = $this->db->prepare('INSERT INTO admissibles 
                                            SET NOM = :nom,
                                                PRENOM = :prenom,
@@ -150,7 +134,7 @@ class DemandeManager {
                                               admissibles.ADRESSE_MAIL AS email
                                               admissibles.SEXE AS sexe
                                               admissibles.ID_ETABLISSEMENT AS prepa
-                                              admissibles.ID_FILIAIRE AS filiere
+                                              admissibles.ID_FILIERE AS filiere
                                               admissibles.SERIE AS serie
                                               demandes.USER_X AS userEleve
                                               demandes.ID_STATUS AS status
@@ -184,7 +168,7 @@ class DemandeManager {
                                               admissibles.ADRESSE_MAIL AS email
                                               admissibles.SEXE AS sexe
                                               admissibles.ID_ETABLISSEMENT AS prepa
-                                              admissibles.ID_FILIAIRE AS filiere
+                                              admissibles.ID_FILIERE AS filiere
                                               admissibles.SERIE AS serie
                                               demandes.USER_X AS userEleve
                                               demandes.ID_STATUS AS status
