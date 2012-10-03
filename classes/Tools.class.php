@@ -2,11 +2,17 @@
 /**
  * Librairie de fonctions statiques
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
- * @version 0
+ * @version 0.5
  *
  */
 
 class Tools {
+
+    /**
+     * Chemin d'accès au fichier log
+     */
+    const LOG_PATH = "../log.txt";
+
 
     /**
      * Méthode d'envoi de mails formattés
@@ -38,9 +44,9 @@ class Tools {
      */
 
     public static  function log($level, $erreur) {
-
+        $message = "[".date('Y-m-d H:i:s', time())."] ".$_SERVER['REMOTE_ADDR']." - ".$erreur."\n";
+        error_log($message, 3, self::LOG_PATH);
     }
-
 
 }
 ?>

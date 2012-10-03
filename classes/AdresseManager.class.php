@@ -4,7 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 0.5
  *
- *@todo : gestion des erreurs
+ * @todo : gestion des erreurs
  */
 
 class AdresseManager {

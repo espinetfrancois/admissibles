@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo : gestion de la liste des admissibles (recherche)
  * @todo : gestion des erreurs
  */
 
@@ -40,24 +39,20 @@ class DemandeManager {
     public  function add(Demande $demande) {
         if (!$demande->isValid()) {
             throw new RuntimeException('Les champs doivent être valides pour être enregistrés'); // Ne se produit jamais en exécution courante
-        } else {            
-            $requete = $this->db->prepare('INSERT INTO admissibles 
-                                           SET NOM = :nom,
-                                               PRENOM = :prenom,
-                                               SEXE = :sexe,
+        } else {
+            $requete = $this->db->prepare('UPDATE admissibles 
+                                           SET SEXE = :sexe,
                                                ADRESSE_MAIL = :email,
                                                SERIE = :serie,
                                                ID_FILIERE = :filiere,
-                                               ID_ETABLISSEMENT = :prepa;
-                                           SELECT LAST_INSERT_ID()
-                                           AS id;
+                                               ID_ETABLISSEMENT = :prepa
+                                           WHERE ID = :id;
                                            INSERT INTO demandes 
-                                           SET ID_ADMISSIBLE = id,
+                                           SET ID_ADMISSIBLE = :id,
                                                USER_X = :user,
                                                LIEN = :code,
                                                ID_STATUS = :status');
-            $requete->bindValue(':nom', $demande->nom());
-            $requete->bindValue(':prenom', $demande->prenom());
+            $requete->bindValue(':id', $demande->id());
             $requete->bindValue(':sexe', $demande->sexe());
             $requete->bindValue(':email', $demande->email());
             $requete->bindValue(':serie', $demande->serie());
@@ -67,6 +62,41 @@ class DemandeManager {
             $requete->bindValue(':code', $demande->code());
             $requete->bindValue(':status', $demande->status());
             $requete->execute();
+        }
+    }
+
+
+    /**
+     * Méthode retournant l'id de l'admissible si présent dans les listes d'admissibilités et -1 sinon
+     * @access public
+     * @param string $nom
+     * @param string $prenom
+     * @param int $serie
+     * @return int
+     */
+
+    public  function isAdmissible($nom, $prenom, $serie) {
+        $nom = strtolower(strtr($nom,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
+                                     'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
+        $prenom = strtolower(strtr($prenom,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
+                                     'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
+        $requete = $this->db->prepare('SELECT ID
+                                       FROM admissibles
+                                       WHERE NOM = :nom
+                                       AND PRENOM = :prenom
+                                       AND SERIE = :serie');
+        $requete->bindValue(':nom', $nom);
+        $requete->bindValue(':prenom', $prenom);
+        $requete->bindValue(':serie', $serie);
+        $requete->execute();
+        if ($requete->rowCount() == 0) {
+            return -1;
+        } elseif ($requete->rowCount() == 1) {
+            $result = $requete->fetch(PDO::FETCH_ASSOC);
+            $requete->closeCursor();
+            return $result['ID'];
+        } else {
+            throw new RuntimeException('Plusieurs admissibles ont le meme nom'); // Ne se produit jamais en exécution courante
         }
     }
 
