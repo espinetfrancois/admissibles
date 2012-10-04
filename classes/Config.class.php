@@ -20,7 +20,7 @@ class Config {
 		define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 		define('PUBLIC_PATH', ROOT_PATH."/public");
 		define('CSS_PATH', PUBLIC_PATH."/css");
-		define('JS_PATH', PUBLIC_PAHT."/js");
+		define('JS_PATH', PUBLIC_PATH."/js");
 		define('LIBRARY_PATH', PUBLIC_PATH."/library");
 		define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
 	}
