@@ -293,3 +293,10 @@ ul#ours,ul#ours a {
 	color: #fff;
 	text-decoration: none;
 }
+/**
+id de la page
+*/
+
+span#page_id {
+	visibility : hidden;
+}
