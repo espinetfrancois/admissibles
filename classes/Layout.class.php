@@ -1,11 +1,12 @@
 <?php
+
+
 /**
  * Classes de gestion du Layout
  * @author François Espinet
  * @version 1.0
  *
  */
-
 class Layout {
 
     /**
@@ -40,6 +41,14 @@ class Layout {
      * Contenu de la page
      * @var string
      */
+    
+    /**
+     * L'id de la page à envoyer
+     * @remark l'id 0 est reservé pour pas d'id (id par défaut) pas de coloration dans le menu
+     * @var int
+     */
+    protected $_id = 0;
+    
     protected $_content = null;
 
     /**
@@ -53,10 +62,17 @@ class Layout {
     const JS        = '1';
     const CSS        = '2';
 
+    protected $_libraries = array("jquery/jquery-1.8.2.min.js", "jquery/jquery-ui-1.8.24.custom.min.js");
+    protected $_templates = array("jquery/jquery-ui-1.8.24.custom.css");
+    
     public function __construct() {
-        $this->_meta[] = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+        $this->_meta[] = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'."\n".
+        '<link href="/public/images/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
+        '<link href="/public/images/favicon.png" type="image/png" rel="icon">'."\n";
         $this->appendCss('layout.css');
+        $this->appendCss('forms.css');
         $this->addMenu("menu.html");
+        $this->appendJs('menu.js');
     }
 
     public function setTitle($sTitre) {
@@ -166,6 +182,20 @@ class Layout {
             return '<link type="text/css" href="'.'/public/css/'.$sUrl.'" rel="stylesheet" media="all" />';
         }
     }
+    
+    /**
+     * Fonction qui met un id sur la page pour utilisation en javascript pour le menu
+     * @param int $nId l'id de la page envoyée
+     */
+    public function setId($nId) {
+    	$this->_id = $nId;
+    }
+    
+    /**
+     * Méthodes de rendu des différents éléments de la page.
+     * 
+     * @return string
+     */
 
     public function renderHead() {
         $sHead = '<head>';
@@ -195,7 +225,7 @@ class Layout {
     }
 
     public function renderJs() {
-        $sJs = "";
+        $sJs = $this->renderLibraries();
         if (count($this->_js)) {
             foreach ($this->_js as $saJs) {
                 $sJs .= $saJs."\n";
@@ -204,8 +234,31 @@ class Layout {
         return $sJs;
     }
 
+    /**
+     * Ajout des bibliothèques définies dans la constant libraries
+     */
+    protected function renderLibraries() {
+    	$libraries = "";
+    	if (count($this->_libraries)) {
+    		foreach ($this->_libraries as $library) {
+    			$libraries .= '<script type="text/javascript" src="'.'/public/library/'.$library.'"></script>'."\n";
+    		}
+    	}
+    	return $libraries;
+    }
+    
+    protected function renderCssTemplates() {
+    	$templates = "";
+    	if (count($this->_templates)) {
+    		foreach ($this->_templates as $template) {
+    			$templates .= '<script type="text/javascript" src="'.'/public/library/'.$template.'"></script>'."\n";
+    		}
+    	}
+    	return $templates;
+    }
+    
     public function renderCss() {
-        $sCss = "";
+        $sCss = $this->renderCssTemplates();
         if (count($this->_css)) {
             foreach ($this->_css as $saCss) {
                 $sCss .= $saCss."\n";
@@ -216,27 +269,28 @@ class Layout {
 
     public function renderMenu() {
         if ($this->_menu != null) {
-            return '<div class= menu>'.file_get_contents($_SERVER['DOCUMENT_ROOT'].$this->_menu).'</div>';
+            return '<div class= menu>'.file_get_contents(ROOT_PATH.$this->_menu).'</div>';
         }
     }
     
     public function renderBandeau() {
-        return file_get_contents($_SERVER['DOCUMENT_ROOT'].'/public/template/haut.html');
+        return file_get_contents(ROOT_PATH.'/public/template/haut.html');
     }
     
     public function renderPiedPage() {
-        return file_get_contents($_SERVER['DOCUMENT_ROOT'].'/public/template/pied_page.html');
+        return file_get_contents(ROOT_PATH.'/public/template/pied_page.html');
     }
 
+    public function renderId() {
+    	return "<span id=page_id>".$this->_id."</span>";
+    }
 
     public function render() {
-        return self::doctype."\n".'<html>'."\n".$this->renderHead()."\n".$this->renderBandeau().$this->renderMenu()."\n"."<body>\n".$this->renderContent().$this->renderPiedPage()."\n</body>\n"."\n"."</html>";
+        return self::doctype."\n".'<html>'."\n".$this->renderHead()."\n".$this->renderBandeau().$this->renderMenu()."\n"."<body>\n".$this->renderContent().$this->renderPiedPage()."\n</body>\n"."\n".$this->renderId()."</html>";
     }
 
     public function __toString() {
         return $this->render();
     }
-
-
 }
 ?>

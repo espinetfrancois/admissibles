@@ -72,8 +72,7 @@ div#logo_polytechnique>a {
 	height: 50px;
 	width: 210px;
 	margin-left: 10px;
-	background-image:
-		url(http://www.polytechnique.edu/images/logo/logoecoleclair.png);
+	background-image:url("../images/logoecoleclair.png");
 	background-repeat: no-repeat;
 	display: block;
 }
@@ -293,4 +292,11 @@ ul#ours,ul#ours a {
 	background: #164d6d;
 	color: #fff;
 	text-decoration: none;
+}
+/**
+id de la page
+*/
+
+span#page_id {
+	visibility : hidden;
 }
