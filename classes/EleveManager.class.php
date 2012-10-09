@@ -19,12 +19,12 @@ class EleveManager {
 
     /**
      * Méthode permettant d'ajouter un élève
-     * @access protected
+     * @access public
      * @param Eleve $eleve 
      * @return void
      */
 
-    protected  function add(Eleve $eleve) {
+    public  function add(Eleve $eleve) {
         $requete = $this->db->prepare('INSERT INTO x 
                                        SET USER = :user,
                                            SEXE = :sexe,
@@ -46,28 +46,32 @@ class EleveManager {
 
     /**
      * Méthode permettant de modifier un élève
-     * @access protected
+     * @access public
      * @param Eleve $eleve 
      * @return void
      */
 
-    protected  function update(Eleve $eleve) {
-        $requete = $this->db->prepare('UPDATE x 
-                                       SET SEXE = :sexe,
-                                           ID_SECTION = :section,
-                                           ADRESSE_MAIL = :email,
-                                           ID_FILIERE = :filiere,
-                                           ID_PROMOTION = :promo,
-                                           ID_ETABLISSEMENT = :prepa,s
-                                       WHERE USER = :user'); 
-        $requete->bindValue(':user', $eleve->user());
-        $requete->bindValue(':sexe', $eleve->sexe());
-        $requete->bindValue(':section', $eleve->section());
-        $requete->bindValue(':email', $eleve->email());
-        $requete->bindValue(':filiere', $eleve->filiere());
-        $requete->bindValue(':promo', $eleve->promo());
-        $requete->bindValue(':prepa', $eleve->prepa());
-        $requete->execute();
+    public  function update(Eleve $eleve) {
+        if ($eleve->isValid()) {
+            $requete = $this->db->prepare('UPDATE x 
+                                           SET SEXE = :sexe,
+                                               ID_SECTION = :section,
+                                               ADRESSE_MAIL = :email,
+                                               ID_FILIERE = :filiere,
+                                               ID_PROMOTION = :promo,
+                                               ID_ETABLISSEMENT = :prepa
+                                           WHERE USER = :user'); 
+            $requete->bindValue(':user', $eleve->user());
+            $requete->bindValue(':sexe', $eleve->sexe());
+            $requete->bindValue(':section', $eleve->section());
+            $requete->bindValue(':email', $eleve->email());
+            $requete->bindValue(':filiere', $eleve->filiere());
+            $requete->bindValue(':promo', $eleve->promo());
+            $requete->bindValue(':prepa', $eleve->prepa());
+            $requete->execute();
+        } else {
+            throw new RuntimeException('Les champs doivent être valides pour être enregistrés'); // Ne se produit jamais en exécution courante
+        }
     }
 
 
@@ -84,22 +88,6 @@ class EleveManager {
 
 
     /**
-     * Méthode permettant d'enregistrer l'élève s'il est valide
-     * @access public
-     * @param Eleve $eleve 
-     * @return void
-     */
-
-    public  function save(Eleve $eleve) {
-        if ($eleve->isValid()) {
-            $eleve->isNew() ? $this->add($eleve) : $this->update($eleve);
-        } else {
-            throw new RuntimeException('Les champs doivent être valides pour être enregistrés'); // Ne se produit jamais en exécution courante
-        }
-    }
-    
-
-    /**
      * Méthode permettant de mettre à jour les disponibilités d'un élève
      * @access public
      * @param int $id
@@ -107,8 +95,8 @@ class EleveManager {
      * @return void
      */
 
-    public  function updateDispo($id, $dispo) {
-        if (!is_numeric($id) || !is_array($dispo)) {
+    public  function updateDispo($user, $dispo) {
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_array($dispo)) {
             throw new RuntimeException('update Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
         }
         foreach ($dispo as $serie) {
@@ -118,8 +106,8 @@ class EleveManager {
         }
         $requete = $this->db->prepare('SELECT ID
                                        FROM x
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $id);
+                                       WHERE USER = :user');
+        $requete->bindValue(':user', $user);
         $requete->execute();
         $requete->closeCursor();
         if ($requete->rowCount() != 1) {
@@ -127,13 +115,13 @@ class EleveManager {
         }
         $requete = $this->db->prepare('DELETE
                                        FROM disponibilites
-                                       WHERE ID_X = :id');
-        $requete->bindValue(':id', $id);
+                                       WHERE ID_X = :user');
+        $requete->bindValue(':user', $user);
         $requete->execute();
         foreach ($dispo as $serie) {
             $requete = $this->db->prepare('INSERT INTO disponibilites
-                                           SET ID_X = :id, ID_SERIE = :serie');
-            $requete->bindValue(':id', $id);
+                                           SET ID_X = :user, ID_SERIE = :serie');
+            $requete->bindValue(':user', $user);
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         }
@@ -148,22 +136,21 @@ class EleveManager {
      */
 
     public  function getUnique($user) {
-        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$user)) { // de la forme prenom.nom
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
             throw new RuntimeException('Utilisateur invalide'); // Ne se produit jamais en exécution courante
         }
-        $requete = $this->db->prepare('SELECT ID AS id,
-                                              USER AS user,
+        $requete = $this->db->prepare("SELECT USER AS user,
                                               SEXE AS sexe,
                                               ID_SECTION AS section,
                                               ADRESSE_MAIL AS email,
                                               ID_FILIERE AS filiere,
                                               ID_PROMOTION AS promo,
-                                              ID_ETABLISSEMENT AS prepa,
+                                              ID_ETABLISSEMENT AS prepa
                                        FROM x
-                                       WHERE USER = :user');
+                                       WHERE USER = :user");
         $requete->bindValue(':user', $user);
         $requete->execute();
-        if ($requete->rowCount() != 1) {
+        if ($requete->rowCount() > 1) {
             throw new RuntimeException('Plusieurs utilisateurs possèdent le même nom'); // Ne se produit jamais en exécution courante
         }
             
@@ -175,24 +162,26 @@ class EleveManager {
     /**
      * Méthode retournant les disponibilités d'un élève en particulier
      * @access public
-     * @param int $id 
+     * @param string $user 
      * @return array
      */
 
-    public  function getDispo($id) {
-        if (!is_numeric($id)) { // id numérique
-            throw new RuntimeException('Identifiant invalide'); // Ne se produit jamais en exécution courante
+    public  function getDispo($user) {
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
+            throw new RuntimeException('Utilisateur invalide'); // Ne se produit jamais en exécution courante
         }
-        $requete = $this->db->prepare('SELECT serie.INTITULE AS intitule
-                                              disponibilites.ID_SEIE AS serie
+        $requete = $this->db->prepare('SELECT disponibilites.ID_SERIE AS serie
                                        FROM disponibilites
                                        INNER JOIN series
                                        ON series.ID = disponibilites.ID_SERIE
-                                       WHERE ID_X = :id');
-        $requete->bindValue(':id', $id);
+                                       WHERE ID_X = :user');
+        $requete->bindValue(':user', $user);
         $requete->execute();
         
-        $listeDispo = $requete->fetchAll();
+        $listeDispo = array();
+        while ($res = $requete->fetch()) {
+            $listeDispo[] = $res['serie'];
+        }
         $requete->closeCursor();
         return $listeDispo;
     }

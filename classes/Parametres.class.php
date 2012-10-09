@@ -96,6 +96,12 @@ class Parametres {
             $table = "ref_sections";
             $order = "NOM";
             break;
+            
+        case  self::SERIE:
+            $champs = "ID AS id, INTITULE AS intitule, DATE_DEBUT AS date_debut, DATE_FIN AS date_fin, OUVERTURE AS ouverture, FERMETURE AS fermeture";
+            $table = "series";
+            $order = "DATE_DEBUT";
+            break;
         
         default:
             throw new RuntimeException('Mauvais type de liste'); // Ne se produit jamais en exécution courante

@@ -136,7 +136,7 @@ class Eleve {
      */
 
     public  function setUser($user) {
-        if (!preg_match('#[a-z_-]+\.[a-z_-]+#',$user)) { // de la forme prenom.nom
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom
             $this->erreurs[] = self::USER_INVALIDE;
         } else {
             $this->user = $user;
@@ -166,7 +166,7 @@ class Eleve {
      */
 
     public  function setEmail($email) {
-        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email)) { // adresse email
+        if (!preg_match('#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\.[a-z]{2,4}$#',$email)) { // adresse email
             $this->erreurs[] = self::EMAIL_INVALIDE;
         } else {
             $this->email = $email;
@@ -181,7 +181,7 @@ class Eleve {
      */
 
     public  function setPromo($promo) {
-        if (!is_integer($promo)) { // id numérique
+        if (!is_numeric($promo)) { // id numérique
             $this->erreurs[] = self::PROMO_INVALIDE;
         } else {
             $this->promo = $promo;
@@ -196,7 +196,7 @@ class Eleve {
      */
 
     public  function setSection($section) {
-        if (!is_integer($section)) { // id numérique
+        if (!is_numeric($section)) { // id numérique
             $this->erreurs[] = self::SECTION_INVALIDE;
         } else {
             $this->section = $section;
@@ -211,7 +211,7 @@ class Eleve {
      */
 
     public  function setPrepa($prepa) {
-        if (!is_integer($prepa)) { // id numérique
+        if (!is_numeric($prepa)) { // id numérique
             $this->erreurs[] = self::PREPA_INVALIDE;
         } else {
             $this->prepa = $prepa;
@@ -226,11 +226,21 @@ class Eleve {
      */
 
     public  function setFiliere($filiere) {
-        if (!is_integer($filiere)) { // id numérique
+        if (!is_numeric($filiere)) { // id numérique
             $this->erreurs[] = self::FILIERE_INVALIDE;
         } else {
             $this->filiere = $filiere;
         }
+    }
+    
+    
+    /**
+     * @access public
+     * @return void
+     */
+
+    public  function setErreurs() {
+        $this->erreurs = array();
     }
 
 

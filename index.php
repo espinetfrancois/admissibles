@@ -1,6 +1,8 @@
 <?php
+require_once('inc/autoload.php');
+session_start();
+require_once('inc/sql.php');
 
-require_once('classes/autoload.php');
 $layout = new Layout();
 $layout->addContent('coucou');
 $layout->setId(1);

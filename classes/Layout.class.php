@@ -67,8 +67,8 @@ class Layout {
     
     public function __construct() {
         $this->_meta[] = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'."\n".
-        '<link href="/public/images/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
-        '<link href="/public/images/favicon.png" type="image/png" rel="icon">'."\n";
+        '<link href="public/images/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
+        '<link href="public/images/favicon.png" type="image/png" rel="icon">'."\n";
         $this->appendCss('layout.css');
         $this->appendCss('forms.css');
         $this->addMenu("menu.html");
