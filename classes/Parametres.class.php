@@ -6,6 +6,7 @@
  *
  */
 
+
 class Parametres {
 
     /**
@@ -57,15 +58,30 @@ class Parametres {
         }
         return $res['admin'];
     }
+    
+    
+    /**
+     * Méthode de remise à zéro de l'interface
+     * @access public
+     * @return void
+     */
+    
+    public  function remiseAZero() {
+        $requete = $this->db->query('DELETE FROM disponibilites');
+        $requete = $this->db->query('DELETE FROM series');
+        $requete = $this->db->query('DELETE FROM demandes');
+        $requete = $this->db->query('DELETE FROM x');
+        $requete = $this->db->query('DELETE FROM admissibles');
+    }
 
 
     /**
-     * Méthode retournant la serie pour laquelle l'interface est actuellement en ligne
+     * Méthode retournant les series pour lesquelles l'interface est actuellement en ligne
      * @access public
      * @return int
      */
 
-    public  function getSerie() {
+    public  function getCurrentSeries() {
         $requete = $this->db->prepare('SELECT ID AS id,
                                               INTITULE AS intitule,
                                               DATE_DEBUT AS debut,
@@ -78,10 +94,8 @@ class Parametres {
         $n = $requete->rowCount();
         if ($n == 0) {
             return (array("id" => -1));
-        } elseif ($n == 1) {
-            return $requete->fetch();
         } else {
-            throw new RuntimeException('Chevauchement de séries'); // Ne se produit jamais en exécution courante
+            return $requete->fetchAll();
         }
     }
 
@@ -322,13 +336,17 @@ class Parametres {
             
         case self::SERIE:
             $requete = $this->db->prepare('SELECT *
-                                           FROM admissible, disponibilites
-                                           WHERE admissible.SERIE = :id
-                                           OR disponibilites.ID_SERIE = :id');
+                                           FROM admissibles
+                                           WHERE admissibles.SERIE = :id');
             $requete->bindValue(':id', $id);
             $requete->execute();
+            $requete2 = $this->db->prepare('SELECT *
+                                           FROM disponibilites
+                                           WHERE disponibilites.ID_SERIE = :id');
+            $requete2->bindValue(':id', $id);
+            $requete2->execute();
             
-            if ($requete->rowCount() > 0) {
+            if ($requete->rowCount() + $requete2->rowCount() > 0) {
                 return true;
             } else {
                 return false;
@@ -346,15 +364,17 @@ class Parametres {
      * Méthode insérant les listes d'admissibilité en BDD
      * @access public
      * @param int $serie 
+     * @param int $filiere 
      * @param string $donnees 
      * @return void
      */
 
-    public  function parseADM($serie, $donnees) {
+    public  function parseADM($serie, $filiere, $donnees) {
         // vérification du paramètre $serie
         $requete = $this->db->prepare('SELECT ID
                                        FROM series
-                                       WHERE ID = :id');
+                                       WHERE ID = :id
+                                       AND FERMETURE > '.time());
         $requete->bindValue(':id', $serie);
         $requete->execute();
         
@@ -363,10 +383,24 @@ class Parametres {
         }
         $requete->closeCursor();
         
+        // vérification du paramètre $filiere
+        $requete = $this->db->prepare('SELECT ID
+                                       FROM ref_filieres
+                                       WHERE ID = :id');
+        $requete->bindValue(':id', $filiere);
+        $requete->execute();
+        
+        if ($requete->rowCount() != 1) {
+            throw new RuntimeException("Filière inconnue"); // Ne se produit jamais en exécution courante
+        }
+        $requete->closeCursor();
+        
         // parsage du paramètre $donnees
-        $ligne = explode(";;", $donnees);
+        $ligne = explode(PHP_EOL, $donnees);
         foreach ($ligne as $value) {
-            $col = explode(";", $value);
+            // Séparation des noms de la forme : 'Nom (Prénom)'
+            $value = preg_replace("#(.+)\s\((.+)\)$#","$1///$2",$value); 
+            $col = explode("///", $value);
             // traitement des donnees : minuscules et sans accents
             $nom = strtolower(strtr($col[0],'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
                                           'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
@@ -374,13 +408,22 @@ class Parametres {
                                              'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
             $requete = $this->db->prepare('INSERT INTO admissibles
                                            SET NOM = :nom,
-                                                  PRENOM = :prenom
+                                               PRENOM = :prenom,
+                                               ID_FILIERE = :filiere,
                                                SERIE = :serie');
             $requete->bindValue(':nom', $nom);
             $requete->bindValue(':prenom', $prenom);
             $requete->bindValue(':serie', $serie);
+            $requete->bindValue(':filiere', $filiere);
             $requete->execute();
         }
+        
+        // Ouverture des demandes d'hébergement pour la série considérée
+        $requete = $this->db->prepare('UPDATE series
+                                       SET OUVERTURE = '.time().'
+                                       WHERE ID = :id');
+        $requete->bindValue(':id', $serie);
+        $requete->execute();
     }
 
 }

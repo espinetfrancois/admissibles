@@ -168,6 +168,9 @@ Filière : <select name="filiere">
 <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
 <a href="./index_dev.php?action=deconnect">Se déconnecter</a> -- <a href="./index_dev.php?action=modify">Modifier mes informations personnelles</a>
 <hr/>
+        <?php 
+        if (!empty($series)) {
+        ?>
 <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible :</p>
 <form action="./index_dev.php" method="post">
 <input type="hidden" name="serie" value="1"/>
@@ -191,6 +194,11 @@ Filière : <select name="filiere">
 <br/>
 <input type="submit" value="Modifier mes disponibilités d'accueil"/>
 </form>
+        <?php
+        } else {
+            echo "<p>Il n'est pas encore possible de mettre à jour vos disponibilités d'hébergement. Merci de repasser plus tard...</p>";
+        }
+        ?>
 <hr/>
 <p>Récapitulatif de vos demandes :</p>
         <?php
