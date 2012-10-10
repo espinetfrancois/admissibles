@@ -66,13 +66,6 @@ class Adresse {
     protected  $valide;
 
     /**
-     * Ordre d'affichage
-     * @var int
-     * @access protected
-     */
-    protected  $ordre;
-
-    /**
      * Erreurs de remplissage des attributs
      * @var array
      * @access protected
@@ -90,7 +83,6 @@ class Adresse {
     const DESCRIPTION_INVALIDE = 6;
     const CATEGORIE_INVALIDE = 7;
     const VALIDE_INVALIDE = 8;
-    const ORDRE_INVALIDE = 9;
 
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
@@ -238,7 +230,7 @@ class Adresse {
      */
 
     public  function setCategorie($categorie) {
-        if (!is_integer($categorie)) { // id numérique
+        if (!is_numeric($categorie)) { // id numérique
             $this->erreurs[] = self::CATEGORIE_INVALIDE;
         } else {
             $this->categorie = $categorie;
@@ -263,18 +255,12 @@ class Adresse {
 
     /**
      * @access public
-     * @param int $ordre 
      * @return void
      */
 
-    public  function setOrdre($ordre) {
-        if (!is_integer($ordre)) { // id numérique
-            $this->erreurs[] = self::ORDRE_INVALIDE;
-        } else {
-            $this->ordre = $ordre;
-        }
+    public  function setErreurs() {
+        $this->erreurs = array();
     }
-
 
     /**
      * @access public
@@ -353,16 +339,6 @@ class Adresse {
 
     public  function categorie() {
         return $this->categorie;
-    }
-
-
-    /**
-     * @access public
-     * @return int
-     */
-
-    public  function ordre() {
-        return $this->ordre;
     }
 
 

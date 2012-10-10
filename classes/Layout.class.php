@@ -67,8 +67,8 @@ class Layout {
     
     public function __construct() {
         $this->_meta[] = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'."\n".
-        '<link href="public/images/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
-        '<link href="public/images/favicon.png" type="image/png" rel="icon">'."\n";
+        '<link href="./public/images/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
+        '<link href="./public/images/favicon.png" type="image/png" rel="icon">'."\n";
         $this->appendCss('layout.css');
         $this->appendCss('forms.css');
         $this->addMenu("menu.html");
@@ -105,7 +105,7 @@ class Layout {
      * @param String $sUrl l'url depuis 'template'
      */
     public function addMenu($sUrl) {
-        $this->_menu = '/public/template/'.$sUrl;
+        $this->_menu = './public/template/'.$sUrl;
     }
 
     public function addHead($sHead) {
@@ -177,9 +177,9 @@ class Layout {
 
     protected function ___generateUrl($sUrl, $nType) {
         if ($nType == self::JS) {
-            return '<script type="text/javascript" src="'.'/public/js/'.$sUrl.'"></script>';
+            return '<script type="text/javascript" src="./public/js/'.$sUrl.'"></script>';
         } else {
-            return '<link type="text/css" href="'.'/public/css/'.$sUrl.'" rel="stylesheet" media="all" />';
+            return '<link type="text/css" href="./public/css/'.$sUrl.'" rel="stylesheet" media="all" />';
         }
     }
     
@@ -241,7 +241,7 @@ class Layout {
         $libraries = "";
         if (count($this->_libraries)) {
             foreach ($this->_libraries as $library) {
-                $libraries .= '<script type="text/javascript" src="'.'/public/library/'.$library.'"></script>'."\n";
+                $libraries .= '<script type="text/javascript" src="./public/library/'.$library.'"></script>'."\n";
             }
         }
         return $libraries;
@@ -251,7 +251,7 @@ class Layout {
         $templates = "";
         if (count($this->_templates)) {
             foreach ($this->_templates as $template) {
-                $templates .= '<script type="text/javascript" src="'.'/public/library/'.$template.'"></script>'."\n";
+                $templates .= '<script type="text/javascript" src="./public/library/'.$template.'"></script>'."\n";
             }
         }
         return $templates;
@@ -274,15 +274,15 @@ class Layout {
     }
     
     public function renderBandeau() {
-        return file_get_contents(ROOT_PATH.'/public/template/haut.html');
+        return file_get_contents(ROOT_PATH.'./public/template/haut.html');
     }
     
     public function renderPiedPage() {
-        return file_get_contents(ROOT_PATH.'/public/template/pied_page.html');
+        return file_get_contents(ROOT_PATH.'./public/template/pied_page.html');
     }
 
     public function renderId() {
-        return "<span id=page_id>".$this->_id."</span>";
+        return "<span id='page_id'>".$this->_id."</span>";
     }
 
     public function render() {
