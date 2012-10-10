@@ -1,2 +1,39 @@
 @CHARSET "UTF-8";
 
+/* Décoration des formulaires*/
+form {
+	border-radius : 1em;
+	background-color : rgba(22, 77, 109, 0.5);
+	padding : 2em;
+	/* width : 35em; */
+	overflow : auto;
+	width : auto;
+	display : inline-block;
+}
+
+form p.champ {
+	float : left;
+	width : 30em;
+	clear : both;
+	padding-top : 10px;
+	padding-bottom : 1em;
+	margin : 0;
+}
+
+p.champ input {
+	float : right;
+	clear : right;
+}
+
+p.champ label {
+	float : left;
+}
+
+form input[type=text], form input[type=password] {
+	border-radius : 4px;
+}
+
+form > input[type=submit] {
+	float : right;
+	margin-top : 5px;
+}

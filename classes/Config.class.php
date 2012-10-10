@@ -49,6 +49,7 @@ class Config {
         define('CSS_PATH', PUBLIC_PATH."/css");
         define('JS_PATH', PUBLIC_PATH."/js");
         define('LIBRARY_PATH', PUBLIC_PATH."/library");
+        define('PAGES_PATH', PUBLIC_PATH.'/pages');
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
     }
 

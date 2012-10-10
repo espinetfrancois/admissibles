@@ -88,10 +88,17 @@ class Layout {
      * ajoute du contenu à la page
      * @param string $sContent
      */
-    public function addContent($sContent) {
-        $this->_content[] = $sContent;
+    public function addContent($page) {
+    	ob_start(array($this, "_addContent"));
+    	include($page);
+    	ob_end_clean();
+        	/* $this->_content[] = $sContent; */
     }
 
+    protected function _addContent($sContent) {
+    	$this->_content[] = $sContent;
+    	return $sContent; 
+    }
     /**
      * Ajout du contenu à la page en le positionnant avant le contenu courant
      * @param String $sContent

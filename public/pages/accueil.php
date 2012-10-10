@@ -1,0 +1,3 @@
+<?php
+?>
+Ici l'accueil

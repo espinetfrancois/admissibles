@@ -9,7 +9,7 @@
  * @todo : affichage et gestion des demandes
  */
 
-$eleveManager = new EleveManager($db);
+$eleveManager = new EleveManager($GLOBALS['db']);
 
 // Identification
 if (isset($_POST['user']) && isset($_POST['pass']) && !empty($_POST['user']) && !empty($_POST['pass']))
@@ -44,7 +44,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['promo'])
         $erreurs = $_SESSION['eleve']->erreurs();
     }
 }
-// Modification des disponibilités d'acceuil
+// Modification des disponibilitÃ©t d'acceuil
 if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1") {
     $series = $parametres->getList(Parametres::SERIE);
     $dispo = array();
@@ -53,39 +53,43 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
             if ($value['ouverture'] > time()) {
                 $dispo[] = $value['id'];
             } else {
-                throw new RuntimeException('Série invalide'); // Ne se produit jamais en exécution courante
+                throw new RuntimeException('SÃ©rie invalide'); // Ne se produit jamais en exÃ©xution courante
             }
         }
     }
     $eleveManager->updateDispo($_SESSION['eleve']->user(), $dispo);
 }
 // Interface de connexion
-if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { // Eleve non identifié
+if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { // Eleve non identifiÃ 
     session_destroy();
 ?>
-<h1>Connexion</h1>
-<p>Connectez-vous à l'aide de vos identifiants LDAP (DSI) :</p>
+<!-- <div class="form"> -->
+<h2>Connexion</h2>
+<p>Connectez-vous Ã  l'aide de vos identifiants LDAP (DSI) :</p>
 <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
 <form action="./index_dev.php" method="post">
-Utilisateur : <input type="text" name="user"/><br/>
-Mot de passe : <input type="password" name="pass"/><br/>
+<p id="champ-user" class="champ" class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p>
+<p id="champ-pass" class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p>
+<br/>
 <input type="submit" value="Se connecter"/>
+<span class="clearfloat"></span>
 </form>
 
+<!-- </div> -->
 
 <?php
-} else { // Eleve identifié
-    if ((isset($_GET['action']) && $_GET['action'] == "modify") || !$_SESSION['eleve']->isValid()) { // on teste si l'élève a déjà entré ses infos personnelles
+} else { // Eleve identifiÃ©
+    if ((isset($_GET['action']) && $_GET['action'] == "modify") || !$_SESSION['eleve']->isValid()) { // on teste si l'Ã lÃ©le a dÃ©dÃ  entrÃ  ses infos personnelles
         $promos = $parametres->getList(Parametres::PROMO);
         $sections = $parametres->getList(Parametres::SECTION);
         $prepas = $parametres->getList(Parametres::ETABLISSEMENT);
         $filieres = $parametres->getList(Parametres::FILIERE);
         ?>
 
-<h1>Modifier mes informations personnelles</h1>
+<h2>Modifier mes informations personnelles</h2>
 <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
 <form action="./index_dev.php" method="post">
-Sexe : M <input type="radio" name="sexe" value="M"
+<p id="champ-sexe" class="champ"><label for="sexe">Sexe</label> : M <input type="radio" name="sexe" value="M"
     <?php 
         if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "") { 
             echo 'checked="checked"'; 
@@ -95,8 +99,8 @@ Sexe : M <input type="radio" name="sexe" value="M"
             echo 'checked="checked"'; 
         }?>/>
 <?php if (isset($erreurs) && in_array(Eleve::SEXE_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-<br/>
-Promotion : <select name="promo">
+</p>
+<p id="champ-promo" class="champ"> <label for="promo">Promotion : </label><select name="promo">
             <option value=""></option>
         <?php
         foreach ($promos as $value) {
@@ -110,8 +114,9 @@ Promotion : <select name="promo">
         ?>
         </select>
 <?php if (isset($erreurs) && in_array(Eleve::PROMO_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-<br/>
-Section : <select name="section">
+</p>
+<p id="champ-section" class="champ">
+<label for="section">Section : </label><select name="section">
             <option value=""></option>
         <?php
         foreach ($sections as $value) {
@@ -125,8 +130,9 @@ Section : <select name="section">
         ?>
         </select>
 <?php if (isset($erreurs) && in_array(Eleve::SECTION_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-<br/>
-Etablissement d'origine : <select name="prepa">
+</p>
+<p id="champ-prepa" class="champ">
+<label for="prepa">Etablissement d'origine : </label><select name="prepa">
             <option value=""></option>
         <?php
         foreach ($prepas as $value) {
@@ -140,8 +146,8 @@ Etablissement d'origine : <select name="prepa">
         ?>
         </select>
 <?php if (isset($erreurs) && in_array(Eleve::PREPA_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-<br/>
-Filière : <select name="filiere">
+</p>
+<p id="champ-filiere" class="champ"> <label for="filiere">FiliÃ©re : </label><select name="filiere">
             <option value=""></option>
         <?php
         foreach ($filieres as $value) {
@@ -155,7 +161,8 @@ Filière : <select name="filiere">
         ?>
         </select>
 <?php if (isset($erreurs) && in_array(Eleve::FILIERE_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-<br/><br/>
+</p>
+<br/>
 <input type="submit" value="Modifier mes informations personnelles"/>
 </form>
 
@@ -164,14 +171,14 @@ Filière : <select name="filiere">
         $series = $parametres->getList(Parametres::SERIE);
         $dispos = $eleveManager->getDispo($_SESSION['eleve']->user());
         ?>
-<h1>Disponibilités d'accueil</h1>
+<h2>DisponibilitÃ©t d'accueil</h2>
 <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
-<a href="./index_dev.php?action=deconnect">Se déconnecter</a> -- <a href="./index_dev.php?action=modify">Modifier mes informations personnelles</a>
+<a href="./index_dev.php?action=deconnect">Se dÃ©donnecter</a> -- <a href="./index_dev.php?action=modify">Modifier mes informations personnelles</a>
 <hr/>
         <?php 
         if (!empty($series)) {
         ?>
-<p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible :</p>
+<p>Cochez ci-dessous les semaines pour lesquelles vous Ãªtes disposÃ©s Ã  accueillir un admissible :</p>
 <form action="./index_dev.php" method="post">
 <input type="hidden" name="serie" value="1"/>
         <?php
@@ -192,27 +199,27 @@ Filière : <select name="filiere">
         }
         ?>
 <br/>
-<input type="submit" value="Modifier mes disponibilités d'accueil"/>
+<input type="submit" value="Modifier mes disponibilitÃ©t d'accueil"/>
 </form>
         <?php
         } else {
-            echo "<p>Il n'est pas encore possible de mettre à jour vos disponibilités d'hébergement. Merci de repasser plus tard...</p>";
+            echo "<p>Il n'est pas encore possible de mettre Ã  jour vos disponibilitÃ©es d'hÃ©bergement. Merci de repasser plus tard...</p>";
         }
         ?>
 <hr/>
-<p>Récapitulatif de vos demandes :</p>
+<p>RÃ©capitulatif de vos demandes :</p>
         <?php
         $demandeManager = new DemandeManager($db);
         $demandes = $demandeManager->getDemandes($_SESSION['eleve']->user());
         echo '<table border=1 cellspacing=0>';
         echo '<tr>
                   <td>Nom</td>
-                  <td>Prénom</td>
+                  <td>PrÃ©rom</td>
                   <td>Sexe</td>
                   <td>Adresse email</td>
                   <td>Etablissement</td>
-                  <td>Filière</td>
-                  <td>Série</td>
+                  <td>FiliÃ©ie</td>
+                  <td>SÃ©rie</td>
                   <td>Statut</td>
                   <td>Action possible</td>
               </tr>';

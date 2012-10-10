@@ -300,3 +300,8 @@ id de la page
 span#page_id {
 	visibility : hidden;
 }
+
+.clearfloat {
+	clear : both;
+	padding-bottom : 5px;
+}
