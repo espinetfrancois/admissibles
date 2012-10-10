@@ -158,16 +158,16 @@ class DemandeManager {
         if (!preg_match('#^[a-z0-9A-Z](32)#',$code)) {
             throw new RuntimeException('Code invalide'); // Ne se produit jamais en exécution courante
         }
-        $requete = $this->db->prepare('SELECT admissibles.ID AS id
-                                              admissibles.NOM AS nom
-                                              admissibles.PRENOM AS prenom
-                                              admissibles.ADRESSE_MAIL AS email
-                                              admissibles.SEXE AS sexe
-                                              admissibles.ID_ETABLISSEMENT AS prepa
-                                              admissibles.ID_FILIERE AS filiere
-                                              admissibles.SERIE AS serie
-                                              demandes.USER_X AS userEleve
-                                              demandes.ID_STATUS AS status
+        $requete = $this->db->prepare('SELECT admissibles.ID AS id,
+                                              admissibles.NOM AS nom,
+                                              admissibles.PRENOM AS prenom,
+                                              admissibles.ADRESSE_MAIL AS email,
+                                              admissibles.SEXE AS sexe,
+                                              admissibles.ID_ETABLISSEMENT AS prepa,
+                                              admissibles.ID_FILIERE AS filiere,
+                                              admissibles.SERIE AS serie,
+                                              demandes.USER_X AS userEleve,
+                                              demandes.ID_STATUS AS status,
                                               demandes.LIEN code
                                        FROM demandes
                                        INNER JOIN admissibles
@@ -192,16 +192,16 @@ class DemandeManager {
      */
 
     public  function getList() {
-        $requete = $this->db->prepare('SELECT admissibles.ID AS id
-                                              admissibles.NOM AS nom
-                                              admissibles.PRENOM AS prenom
-                                              admissibles.ADRESSE_MAIL AS email
-                                              admissibles.SEXE AS sexe
-                                              admissibles.ID_ETABLISSEMENT AS prepa
-                                              admissibles.ID_FILIERE AS filiere
-                                              admissibles.SERIE AS serie
-                                              demandes.USER_X AS userEleve
-                                              demandes.ID_STATUS AS status
+        $requete = $this->db->prepare('SELECT admissibles.ID AS id,
+                                              admissibles.NOM AS nom,
+                                              admissibles.PRENOM AS prenom,
+                                              admissibles.ADRESSE_MAIL AS email,
+                                              admissibles.SEXE AS sexe,
+                                              admissibles.ID_ETABLISSEMENT AS prepa,
+                                              admissibles.ID_FILIERE AS filiere,
+                                              admissibles.SERIE AS serie,
+                                              demandes.USER_X AS userEleve,
+                                              demandes.ID_STATUS AS status,
                                               demandes.LIEN code
                                        FROM demandes
                                        INNER JOIN admissibles
@@ -209,6 +209,48 @@ class DemandeManager {
         $requete->execute();
 
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
+            
+        $listeDemandes = $requete->fetchAll();
+        $requete->closeCursor();
+        return $listeDemandes;
+    }
+    
+
+    /**
+     * Méthode retournant la liste des demandes d'un X en particulier
+     * @access public
+     * @param string $user
+     * @return array
+     */
+
+    public  function getDemandes($user) {
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
+            throw new RuntimeException('Utilisateur invalide'); // Ne se produit jamais en exécution courante
+        }
+        $requete = $this->db->prepare('SELECT admissibles.ID AS id,
+                                              admissibles.NOM AS nom,
+                                              admissibles.PRENOM AS prenom,
+                                              admissibles.ADRESSE_MAIL AS email,
+                                              admissibles.SEXE AS sexe,
+                                              CONCAT(ref_etablissements.COMMUNE," - ",ref_etablissements.NOM) AS prepa,
+                                              ref_filieres.NOM AS filiere,
+                                              series.INTITULE AS serie,
+                                              demandes.ID_STATUS AS status,
+                                              demandes.LIEN code
+                                       FROM demandes
+                                       INNER JOIN admissibles
+                                       ON demandes.ID_ADMISSIBLE = admissibles.ID
+                                       INNER JOIN ref_etablissements
+                                       ON admissibles.ID_ETABLISSEMENT = ref_etablissements.ID
+                                       INNER JOIN ref_filieres
+                                       ON admissibles.ID_FILIERE = ref_filieres.ID
+                                       INNER JOIN series
+                                       ON admissibles.SERIE = series.ID
+                                       WHERE demandes.USER_X = :user');
+        $requete->bindValue(':user', $user);
+        $requete->execute();
+
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
             
         $listeDemandes = $requete->fetchAll();
         $requete->closeCursor();

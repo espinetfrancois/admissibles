@@ -4,6 +4,9 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 0
  *
+ * @todo : identification LDAP
+ * @todo : action des formulaires (prod)
+ * @todo : affichage et gestion des demandes
  */
 
 $eleveManager = new EleveManager($db);
@@ -40,6 +43,21 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['promo'])
     } else {
         $erreurs = $_SESSION['eleve']->erreurs();
     }
+}
+// Modification des disponibilités d'acceuil
+if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1") {
+    $series = $parametres->getList(Parametres::SERIE);
+    $dispo = array();
+    foreach ($series as $value) {
+        if (isset($_POST["serie".$value['id']])) {
+            if ($value['ouverture'] > time()) {
+                $dispo[] = $value['id'];
+            } else {
+                throw new RuntimeException('Série invalide'); // Ne se produit jamais en exécution courante
+            }
+        }
+    }
+    $eleveManager->updateDispo($_SESSION['eleve']->user(), $dispo);
 }
 // Interface de connexion
 if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { // Eleve non identifié
@@ -152,19 +170,22 @@ Filière : <select name="filiere">
 <hr/>
 <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible :</p>
 <form action="./index_dev.php" method="post">
+<input type="hidden" name="serie" value="1"/>
         <?php
         foreach ($series as $value) {
             if ($value['ouverture'] < time()) {
                 $disabled = "disabled";
+                $name = "";
             } else {
                 $disabled = "";
+                $name = "name='serie".$value['id']."'";
             }
             if (in_array($value['id'], $dispos)) {
                 $checked = "checked";
             } else {
                 $checked = "";
             }
-            echo $value['intitule'].' (du '.date("d.m.Y", $value['date_debut']).' au '.date("d.m.Y", $value['date_fin']).') : <input type="checkbox" name="'.$value['id'].'" '.$checked.' '.$disabled.'/><br/>';
+            echo $value['intitule'].' (du '.date("d.m.Y", $value['date_debut']).' au '.date("d.m.Y", $value['date_fin']).') : <input type="checkbox" '.$name.' '.$checked.' '.$disabled.'/><br/>';
         }
         ?>
 <br/>
@@ -173,6 +194,36 @@ Filière : <select name="filiere">
 <hr/>
 <p>Récapitulatif de vos demandes :</p>
         <?php
+        $demandeManager = new DemandeManager($db);
+        $demandes = $demandeManager->getDemandes($_SESSION['eleve']->user());
+        echo '<table border=1 cellspacing=0>';
+        echo '<tr>
+                  <td>Nom</td>
+                  <td>Prénom</td>
+                  <td>Sexe</td>
+                  <td>Adresse email</td>
+                  <td>Etablissement</td>
+                  <td>Filière</td>
+                  <td>Série</td>
+                  <td>Statut</td>
+                  <td>Action possible</td>
+              </tr>';
+        foreach ($demandes as $demande) {
+            //switch ($demande->status())
+            
+            echo '<tr>
+                    <td>'.$demande->nom().'</td>
+                    <td>'.$demande->prenom().'</td>
+                    <td>'.$demande->sexe().'</td>
+                    <td>'.$demande->email().'</td>
+                    <td>'.$demande->prepa().'</td>
+                    <td>'.$demande->filiere().'</td>
+                    <td>'.$demande->serie().'</td>
+                    <td>'.$status.'</td>
+                    <td>'.$action.'</td>
+                  </tr>';
+        }
+        echo '</table>';
     }
 }
 

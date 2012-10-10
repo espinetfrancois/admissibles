@@ -188,7 +188,7 @@ class Layout {
      * @param int $nId l'id de la page envoyée
      */
     public function setId($nId) {
-    	$this->_id = $nId;
+        $this->_id = $nId;
     }
     
     /**
@@ -238,23 +238,23 @@ class Layout {
      * Ajout des bibliothèques définies dans la constant libraries
      */
     protected function renderLibraries() {
-    	$libraries = "";
-    	if (count($this->_libraries)) {
-    		foreach ($this->_libraries as $library) {
-    			$libraries .= '<script type="text/javascript" src="'.'/public/library/'.$library.'"></script>'."\n";
-    		}
-    	}
-    	return $libraries;
+        $libraries = "";
+        if (count($this->_libraries)) {
+            foreach ($this->_libraries as $library) {
+                $libraries .= '<script type="text/javascript" src="'.'/public/library/'.$library.'"></script>'."\n";
+            }
+        }
+        return $libraries;
     }
     
     protected function renderCssTemplates() {
-    	$templates = "";
-    	if (count($this->_templates)) {
-    		foreach ($this->_templates as $template) {
-    			$templates .= '<script type="text/javascript" src="'.'/public/library/'.$template.'"></script>'."\n";
-    		}
-    	}
-    	return $templates;
+        $templates = "";
+        if (count($this->_templates)) {
+            foreach ($this->_templates as $template) {
+                $templates .= '<script type="text/javascript" src="'.'/public/library/'.$template.'"></script>'."\n";
+            }
+        }
+        return $templates;
     }
     
     public function renderCss() {
@@ -282,7 +282,7 @@ class Layout {
     }
 
     public function renderId() {
-    	return "<span id=page_id>".$this->_id."</span>";
+        return "<span id=page_id>".$this->_id."</span>";
     }
 
     public function render() {

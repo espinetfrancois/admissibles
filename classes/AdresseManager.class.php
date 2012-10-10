@@ -5,6 +5,7 @@
  * @version 0.5
  *
  * @todo : gestion des erreurs
+ * @todo : gestion des catégories
  */
 
 class AdresseManager {

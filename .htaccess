@@ -1,1 +1,2 @@
 Options +MultiViews
+SetEnv APP_ENV dev

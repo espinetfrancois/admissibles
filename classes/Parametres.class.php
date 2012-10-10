@@ -38,6 +38,28 @@ class Parametres {
 
 
     /**
+     * Méthode retournant le nom d'utilisateur de l'administrateur
+     * @access public
+     * @return string
+     */
+    
+    public  function getAdmin() {
+        $requete = $this->db->prepare('SELECT VALEUR AS admin
+                                       FROM administration
+                                       WHERE PARAMETRE = "administrateur"');
+        $requete->execute();
+        if ($requete->rowCount() != 1) {
+            throw new RuntimeException('Corruption de la table des paramètres'); // Ne se produit jamais en exécution courante
+        }
+        $res = $requete->fetch();
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$res['admin'])) {
+            throw new RuntimeException('Corruption de la table des paramètres'); // Ne se produit jamais en exécution courante
+        }
+        return $res['admin'];
+    }
+
+
+    /**
      * Méthode retournant la serie pour laquelle l'interface est actuellement en ligne
      * @access public
      * @return int
@@ -78,26 +100,26 @@ class Parametres {
             $table = "ref_etablissements";
             $order = "COMMUNE, NOM";
             break;
-        
-        case  self::FILIERE:
+
+        case self::FILIERE:
             $champs = "ID AS id, NOM AS nom";
             $table = "ref_filieres";
             $order = "NOM";
             break;
-            
-        case  self::PROMO:
+
+        case self::PROMO:
             $champs = "ID AS id, NOM AS nom";
             $table = "ref_promotions";
             $order = "NOM";
             break;
-            
-        case  self::SECTION:
+
+        case self::SECTION:
             $champs = "ID AS id, NOM AS nom";
             $table = "ref_sections";
             $order = "NOM";
             break;
-            
-        case  self::SERIE:
+
+        case self::SERIE:
             $champs = "ID AS id, INTITULE AS intitule, DATE_DEBUT AS date_debut, DATE_FIN AS date_fin, OUVERTURE AS ouverture, FERMETURE AS fermeture";
             $table = "series";
             $order = "DATE_DEBUT";
@@ -125,31 +147,36 @@ class Parametres {
      * @return void
      */
 
-    public  function addToList($type, $donnees) { // $donnees a controler à la validation du formulaire
+    public  function addToList($type, $donnees) {
         switch ($type) {
         case self::ETABLISSEMENT:
-            $valeurs = "NOM =".$donnees['nom'].", COMMUNE =".$donnees['commune'];
+            $valeurs = "NOM = :nom, COMMUNE = :commune";
             $table = "ref_etablissements";
+            $array = array("nom" => $donnees['nom'], "commune" => $donnees['commune']);
             break;
         
         case  self::FILIERE:
-            $valeurs = "NOM =".$donnees['nom'];
+            $valeurs = "NOM = :nom";
             $table = "ref_filieres";
+            $array = array("nom" => $donnees['nom']);
             break;
             
         case  self::PROMO:
-            $valeurs = "NOM =".$donnees['nom'];
+            $valeurs = "NOM = :nom";
             $table = "ref_promotions";
+            $array = array("nom" => $donnees['nom']);
             break;
             
         case  self::SECTION:
-            $valeurs = "NOM =".$donnees['nom'];
+            $valeurs = "NOM = :nom";
             $table = "ref_sections";
+            $array = array("nom" => $donnees['nom']);
             break;
             
         case  self::SERIE:
-            $valeurs = "INTITULE =".$donnees['intitule'].", DATE_DEBUT =".$donnees['date_debut'].", DATE_FIN =".$donnees['date_fin'].", OUVERTURE =".$donnees['ouverture'].", FERMETURE =".$donnees['fermeture'];
+            $valeurs = "INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture";
             $table = "series";
+            $array = array("intitule" => $donnees['intitule'], "date_debut" => $donnees['date_debut'], "date_fin" => $donnees['date_fin'], "ouverture" => $donnees['ouverture'], "fermeture" => $donnees['fermeture']);
             break;
         
         default:
@@ -158,6 +185,9 @@ class Parametres {
         }
         $requete = $this->db->prepare('INSERT INTO '.$table.'
                                        SET '.$valeurs);
+        foreach($array as $key => $value) {
+            $requete->bindValue(':'.$key, $value);
+        }
         $requete->execute();
     }
     
@@ -211,6 +241,104 @@ class Parametres {
                                        WHERE ID = :id');
         $requete->bindValue(':id', $id);
         $requete->execute();
+    }
+    
+    
+    /**
+     * Méthode vérifiant l'utilisation d'un paramètre
+     * @access public
+     * @param int $type 
+     * @param array $id 
+     * @return bool
+     */
+
+    public  function isUsedList($type, $id) {
+        switch ($type) {
+        case self::ETABLISSEMENT:
+            $requete = $this->db->prepare('SELECT *
+                                           FROM x
+                                           WHERE x.ID_ETABLISSEMENT = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+            $requete2 = $this->db->prepare('SELECT *
+                                           FROM admissibles
+                                           WHERE admissibles.ID_ETABLISSEMENT = :id');
+            $requete2->bindValue(':id', $id);
+            $requete2->execute();
+            
+            if ($requete->rowCount() + $requete2->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+        
+        case self::FILIERE:
+            $requete = $this->db->prepare('SELECT *
+                                           FROM x
+                                           WHERE x.ID_FILIERE = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+            $requete2 = $this->db->prepare('SELECT *
+                                           FROM admissibles
+                                           WHERE admissibles.ID_FILIERE = :id');
+            $requete2->bindValue(':id', $id);
+            $requete2->execute();
+            
+            if ($requete->rowCount() + $requete2->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+            
+        case self::PROMO:
+            $requete = $this->db->prepare('SELECT *
+                                           FROM x
+                                           WHERE ID_PROMOTION = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+            
+            if ($requete->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+            
+        case self::SECTION:
+            $requete = $this->db->prepare('SELECT *
+                                           FROM x
+                                           WHERE ID_SECTION = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+            
+            if ($requete->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+            
+        case self::SERIE:
+            $requete = $this->db->prepare('SELECT *
+                                           FROM admissible, disponibilites
+                                           WHERE admissible.SERIE = :id
+                                           OR disponibilites.ID_SERIE = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+            
+            if ($requete->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+        
+        default:
+            throw new RuntimeException('Mauvais type de liste'); // Ne se produit jamais en exécution courante
+            break;
+        }
     }
     
     

@@ -4,7 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo : gestion logs / vérification de l'existence des références
+ * @todo : gestion logs
  */
 
 class Demande {
@@ -115,6 +115,7 @@ class Demande {
     const USER_INVALIDE = 10;
     const STATUS_INVALIDE = 11;
     const CODE_INVALIDE = 12;
+
 
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
@@ -236,7 +237,7 @@ class Demande {
      */
 
     public  function setPrepa($prepa) {
-        if (!is_integer($prepa)) { // id numérique
+        if (!is_numeric($prepa)) { // id numérique
             $this->erreurs[] = self::PREPA_INVALIDE;
         } else {
             $this->prepa = $prepa;
@@ -251,7 +252,7 @@ class Demande {
      */
 
     public  function setFiliere($filiere) {
-        if (!is_integer($filiere)) { // id numérique
+        if (!is_numeric($filiere)) { // id numérique
             $this->erreurs[] = self::FILIERE_INVALIDE;
         } else {
             $this->filiere = $filiere;
@@ -281,7 +282,7 @@ class Demande {
      */
 
     public  function setSport($sport) {
-        if (!is_integer($sport)) { // id numérique
+        if (!is_numeric($sport)) { // id numérique
             $this->erreurs[] = self::SPORT_INVALIDE;
         } else {
             $this->sport = $sport;
@@ -310,7 +311,7 @@ class Demande {
      */
 
     public  function setStatus($status) {
-        if (!is_integer($status)) { // id numérique
+        if (!is_numeric($status)) { // id numérique
             $this->erreurs[] = self::STATUS_INVALIDE;
         } else {
             $this->status = $status;

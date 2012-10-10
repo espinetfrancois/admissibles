@@ -104,23 +104,16 @@ class EleveManager {
                 throw new RuntimeException('update Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
             }
         }
-        $requete = $this->db->prepare('SELECT ID
-                                       FROM x
-                                       WHERE USER = :user');
-        $requete->bindValue(':user', $user);
-        $requete->execute();
-        $requete->closeCursor();
-        if ($requete->rowCount() != 1) {
-            throw new RuntimeException('Utilisateur invalide'); // Ne se produit jamais en exécution courante
-        }
-        $requete = $this->db->prepare('DELETE
+        $requete = $this->db->prepare('DELETE disponibilites
                                        FROM disponibilites
-                                       WHERE ID_X = :user');
+                                       INNER JOIN series
+                                       WHERE series.OUVERTURE > '.time().'
+                                       AND disponibilites.ID_X = :user'); // Suppression des disponibilités encore modifiables
         $requete->bindValue(':user', $user);
         $requete->execute();
         foreach ($dispo as $serie) {
             $requete = $this->db->prepare('INSERT INTO disponibilites
-                                           SET ID_X = :user, ID_SERIE = :serie');
+                                           SET ID_X = :user, ID_SERIE = :serie'); // Ajout des nouvelles valeurs
             $requete->bindValue(':user', $user);
             $requete->bindValue(':serie', $serie);
             $requete->execute();
