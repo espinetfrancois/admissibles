@@ -198,8 +198,8 @@ class Layout {
      */
 
     public function renderHead() {
-        $sHead = '<head>';
-        $sHead=$this->renderMeta().$this->renderCss().$this->renderJs();
+        $sHead = '<head>'."\n";
+        $sHead.=$this->renderMeta().$this->renderCss().$this->renderJs();
         return $sHead."<title>".$this->_title."</title>"."\n".'</head>';
     }
 
@@ -269,7 +269,7 @@ class Layout {
 
     public function renderMenu() {
         if ($this->_menu != null) {
-            return '<div class= menu>'.file_get_contents(ROOT_PATH.$this->_menu).'</div>';
+            return "\n".'<div class= menu>'.file_get_contents(ROOT_PATH.$this->_menu).'</div>';
         }
     }
     
@@ -286,11 +286,10 @@ class Layout {
     }
 
     public function render() {
-        return self::doctype."\n".'<html>'."\n".$this->renderHead()."\n".$this->renderBandeau().$this->renderMenu()."\n"."<body>\n".$this->renderContent().$this->renderPiedPage()."\n</body>\n"."\n".$this->renderId()."</html>";
+        return self::doctype."\n".'<html>'."\n".$this->renderHead()."\n<body>".$this->renderBandeau().$this->renderMenu()."\n".$this->renderContent().$this->renderPiedPage()."\n".$this->renderId()."\n</body>\n</html>\n";
     }
 
     public function __toString() {
         return $this->render();
     }
 }
-?>

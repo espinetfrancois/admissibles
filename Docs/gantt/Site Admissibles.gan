@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Site des admissibles de l'école polytechnique" company="" webLink="http://" view-date="2012-09-10" view-index="0" gantt-divider-location="526" resource-divider-location="355" version="2.0">
     <description/>
-    <view zooming-state="default:5" id="gantt-chart"/>
+    <view zooming-state="default:6" id="gantt-chart"/>
     <view id="resource-table">
         <field id="0" name="Nom" width="50" order="0"/>
         <field id="1" name="Rôle par défaut" width="49" order="1"/>
@@ -32,7 +32,7 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="0" name="Réalisation de la maquette" color="#8cb6ce" meeting="false" start="2012-09-17" duration="7" complete="0" expand="true">
+        <task id="0" name="Réalisation de la maquette" color="#8cb6ce" meeting="false" start="2012-09-17" duration="7" complete="100" expand="true">
             <depend id="57" type="2" difference="0" hardness="Strong"/>
         </task>
         <task id="57" name="Validation de la maquette" color="#8cb6ce" meeting="false" start="2012-09-26" duration="4" complete="0" expand="true">
@@ -43,19 +43,19 @@
             <depend id="118" type="2" difference="1" hardness="Strong"/>
         </task>
         <task id="118" name="2ième validation de la maquette" color="#8cb6ce" meeting="false" start="2012-10-09" duration="2" complete="0" expand="true"/>
-        <task id="123" name="Réunion avec l'administrateur de l'application" color="#8cb6ce" meeting="false" start="2012-09-24" duration="5" complete="0" expand="true">
+        <task id="123" name="Réunion avec l'administrateur de l'application" color="#8cb6ce" meeting="false" start="2012-09-24" duration="5" complete="90" expand="true">
             <notes><![CDATA[Personne à définir]]></notes>
         </task>
-        <task id="1" name="Rédaction du cahier des charges" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="0" expand="true">
+        <task id="1" name="Rédaction du cahier des charges" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="100" expand="true">
             <depend id="2" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="2" name="Conception du modèle de donnée (MPD - MCD)" color="#8cb6ce" meeting="false" start="2012-10-01" duration="3" complete="0" expand="true">
+        <task id="2" name="Conception du modèle de donnée (MPD - MCD)" color="#8cb6ce" meeting="false" start="2012-10-01" duration="3" complete="90" expand="true">
             <depend id="54" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="7" name="Mise en place du serveur de developpement" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="0" expand="true">
+        <task id="7" name="Mise en place du serveur de developpement" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="50" expand="true">
             <depend id="54" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="4" name="Création du dépot svn" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="0" expand="true">
+        <task id="4" name="Création du dépot svn" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="50" expand="true">
             <depend id="12" type="2" difference="0" hardness="Strong"/>
             <depend id="54" type="2" difference="0" hardness="Strong"/>
         </task>
@@ -64,7 +64,7 @@
             <depend id="9" type="2" difference="3" hardness="Strong"/>
             <depend id="12" type="2" difference="1" hardness="Strong"/>
         </task>
-        <task id="6" name="Création de l'architechture" color="#8cb6ce" meeting="false" start="2012-09-26" duration="4" complete="0" expand="true">
+        <task id="6" name="Création de l'architechture" color="#8cb6ce" meeting="false" start="2012-09-26" duration="4" complete="50" expand="true">
             <depend id="8" type="2" difference="2" hardness="Strong"/>
             <depend id="9" type="2" difference="3" hardness="Strong"/>
             <depend id="12" type="2" difference="1" hardness="Strong"/>
@@ -95,7 +95,7 @@
         <task id="16" name="Validation fonctionnelle" color="#8cb6ce" meeting="false" start="2012-10-24" duration="10" complete="0" expand="true">
             <depend id="116" type="2" difference="3" hardness="Strong"/>
         </task>
-        <task id="5" name="Formation en POO" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="0" expand="true"/>
+        <task id="5" name="Formation en POO" color="#8cb6ce" meeting="false" start="2012-09-17" duration="10" complete="90" expand="true"/>
         <task id="116" name="Validation Finale" color="#8cb6ce" meeting="true" start="2012-11-12" duration="1" complete="0" expand="true"/>
     </tasks>
     <resources>
