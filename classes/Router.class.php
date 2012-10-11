@@ -5,6 +5,8 @@
  * @author francois.espinet
  *
  */
+
+
 class Router {
 
 	/**
@@ -124,6 +126,7 @@ class Router {
 		$aUrlParts = explode('/', $request);
 		//set du prefix du filename du fichier
 		$this->file = PAGES_PATH.'/';
+
 		//si l'url est en /qqchose
 		//die(var_export($aUrlParts));
 		if ($aUrlParts[1] == '') {
@@ -136,6 +139,7 @@ class Router {
 			$aPrefUrl = $this->__traitementPrefixe($aUrlParts[1]);
 			if (! $this->not_found) {
 				$this->__traitementSuffixe($aPrefUrl, $aUrlParts[2]);
+
 			}
 		} else {
 			
