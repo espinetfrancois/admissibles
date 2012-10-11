@@ -241,5 +241,5 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         echo '</table>';
     }
 }
-
 ?>
+<span id="page_id">3</span>

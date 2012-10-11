@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Classes de gestion du Layout
  * @author François Espinet
@@ -42,15 +41,10 @@ class Layout {
      * @var string
      */
     
-    /**
-     * L'id de la page à envoyer
-     * @remark l'id 0 est reservé pour pas d'id (id par défaut) pas de coloration dans le menu
-     * @var int
-     */
-    protected $_id = 0;
-    
     protected $_content = null;
 
+    public $not_found = false;
+    
     /**
      * balise doctype
      * @var string
@@ -112,7 +106,7 @@ class Layout {
      * @param String $sUrl l'url depuis 'template'
      */
     public function addMenu($sUrl) {
-        $this->_menu = './public/template/'.$sUrl;
+        $this->_menu = $sUrl;
     }
 
     public function addHead($sHead) {
@@ -184,18 +178,10 @@ class Layout {
 
     protected function ___generateUrl($sUrl, $nType) {
         if ($nType == self::JS) {
-            return '<script type="text/javascript" src="./public/js/'.$sUrl.'"></script>';
+            return '<script type="text/javascript" src="'.JS_PATH.'/'.$sUrl.'"></script>';
         } else {
-            return '<link type="text/css" href="./public/css/'.$sUrl.'" rel="stylesheet" media="all" />';
+            return '<link type="text/css" href="'.CSS_PATH.'/'.$sUrl.'" rel="stylesheet" media="all" />';
         }
-    }
-    
-    /**
-     * Fonction qui met un id sur la page pour utilisation en javascript pour le menu
-     * @param int $nId l'id de la page envoyée
-     */
-    public function setId($nId) {
-        $this->_id = $nId;
     }
     
     /**
@@ -248,7 +234,7 @@ class Layout {
         $libraries = "";
         if (count($this->_libraries)) {
             foreach ($this->_libraries as $library) {
-                $libraries .= '<script type="text/javascript" src="./public/library/'.$library.'"></script>'."\n";
+                $libraries .= '<script type="text/javascript" src="'.LIBRARY_PATH.'/'.$library.'"></script>'."\n";
             }
         }
         return $libraries;
@@ -258,7 +244,7 @@ class Layout {
         $templates = "";
         if (count($this->_templates)) {
             foreach ($this->_templates as $template) {
-                $templates .= '<script type="text/javascript" src="./public/library/'.$template.'"></script>'."\n";
+                $templates .= '<script type="text/javascript" src="'.LIBRARY_PATH.'/'.$template.'"></script>'."\n";
             }
         }
         return $templates;
@@ -276,24 +262,31 @@ class Layout {
 
     public function renderMenu() {
         if ($this->_menu != null) {
-            return "\n".'<div class= menu>'.file_get_contents(ROOT_PATH.$this->_menu).'</div>';
+            return "\n".'<div class= menu>'.file_get_contents(TEMPLATE_PATH.'/'.$this->_menu).'</div>';
         }
     }
     
+    public function renderNotFound() {
+    	$sNotFound ="";
+    	if ($this->not_found) {
+    		$sNotFound = '<div class="not_found">La page que vous avez demandée n\'a pas été trouvée</div>';
+    	}
+    	return $sNotFound;
+    }
+    
     public function renderBandeau() {
-        return file_get_contents(ROOT_PATH.'./public/template/haut.html');
+        return file_get_contents(TEMPLATE_PATH.'/haut.html');
     }
     
     public function renderPiedPage() {
-        return file_get_contents(ROOT_PATH.'./public/template/pied_page.html');
-    }
-
-    public function renderId() {
-        return "<span id='page_id'>".$this->_id."</span>";
+        return file_get_contents(TEMPLATE_PATH.'/pied_page.html');
     }
 
     public function render() {
-        return self::doctype."\n".'<html>'."\n".$this->renderHead()."\n<body>".$this->renderBandeau().$this->renderMenu()."\n".$this->renderContent().$this->renderPiedPage()."\n".$this->renderId()."\n</body>\n</html>\n";
+        return self::doctype."\n".'<html>'."\n".$this->renderHead().
+        "\n<body>".$this->renderBandeau().$this->renderNotFound().$this->renderMenu().
+        "\n".$this->renderContent().$this->renderPiedPage().
+        "\n</body>\n</html>\n";
     }
 
     public function __toString() {

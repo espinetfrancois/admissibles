@@ -305,3 +305,12 @@ span#page_id {
 	clear : both;
 	padding-bottom : 5px;
 }
+
+
+.not_found {
+	background-color : red;
+	font-size : 1.4em;
+	text-align : center;
+	
+}
+}
