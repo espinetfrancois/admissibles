@@ -24,11 +24,7 @@ class Router {
 	 */
 	protected $urlX = array();
 	
-	/**
-	 * url de l'accueil
-	 * @var string
-	 */
-	protected $accueil = null;
+	protected $urlRoot = array();
 
 	/**
 	 * Le filename du fichier à charger
@@ -43,20 +39,26 @@ class Router {
 	public $not_found = false;
 
 	/**
-	 * Constantes pour les section dans le fichier ini
+	 * Constantes pour les sections dans le fichier ini
 	 * @var string
 	 */
 	const SECTION_X = 'x';
 	/**
-	 * Constantes pour les section dans le fichier ini
+	 * Constantes pour les sections dans le fichier ini
 	 * @var string
 	 */
 	const SECTION_ADMISSIBLE = "admissible";
 	/**
-	 * Constantes pour les section dans le fichier ini
+	 * Constantes pour les sections dans le fichier ini
 	 * @var string
 	 */
 	const SECTION_ADMIN = "admin";
+	
+	/**
+	 * Constantes pour les sections dans le fichier ini
+	 * @var string
+	 */
+	const SECTION_ROOT = 'root';
 
 	/**
 	 * Préfixe pour les url
@@ -104,7 +106,7 @@ class Router {
 			$this->urlAdmin = $urls[self::SECTION_ADMIN];
 			$this->urlAdmissible = $urls[self::SECTION_ADMISSIBLE];
 			$this->urlX = $urls[self::SECTION_X];
-			$this->accueil = $urls['accueil'];
+			$this->urlRoot = $urls[self::SECTION_ROOT];
 		} else {
 			throw new Exception("Impossible de charger le fichier de configuration du routeur");
 		}
@@ -122,23 +124,33 @@ class Router {
 		$aUrlParts = explode('/', $request);
 		//set du prefix du filename du fichier
 		$this->file = PAGES_PATH.'/';
-		//si l'url n'est pas "/"
-		if (count($aUrlParts) > 2) {
+		//si l'url est en /qqchose
+		//die(var_export($aUrlParts));
+		if ($aUrlParts[1] == '') {
+			$this->file = PAGES_PATH.'/'.$this->urlRoot['accueil'];
+		}elseif (count($aUrlParts) == 2) {
+			$this->__traitementSuffixe($this->urlRoot, $aUrlParts[1]);
+		}
+		//si l'url est en /qqchose/qqchosed'autre
+		elseif (count($aUrlParts) > 2) {
 			$aPrefUrl = $this->__traitementPrefixe($aUrlParts[1]);
 			if (! $this->not_found) {
 				$this->__traitementSuffixe($aPrefUrl, $aUrlParts[2]);
 			}
 		} else {
+			
 			//sinon on renvoie l'accueil
-			$this->file .= $this->accueil;
+			$this->file .= $this->urlRoot['accueil'];
 		}
 		
+		//si l'url est en /qqch/qqch/qqch...
 		if (count($aUrlParts) > 3) {
 			$this->not_found = true;
 		} 
 		
+		// si l'url n'existe pas, on met l'accueil
 		if ($this->not_found) {
-			$this->file = PAGES_PATH.'/'.$this->accueil;
+			$this->file = PAGES_PATH.'/'.$this->urlRoot['accueil'];
 		}
 	}
 	
@@ -154,6 +166,8 @@ class Router {
 			case self::ADMISSIBLES_PREFIX:
 				return $this->urlAdmissible;
 				break;
+			case null:
+				return $this->urlRoot;
 			default:
 				$this->not_found = true;
 				return null;
