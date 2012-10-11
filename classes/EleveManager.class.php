@@ -4,7 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo : gestion des erreurs
+ * @todo logs
  */
 
 class EleveManager {
@@ -88,36 +88,45 @@ class EleveManager {
 
 
     /**
-     * Méthode permettant de mettre à jour les disponibilités d'un élève
+     * Méthode permettant d'ajouter une disponibilité d'un élève pour une série
      * @access public
-     * @param int $id
-     * @param array $dispo
+     * @param string $user
+     * @param int $serie
      * @return void
      */
 
-    public  function updateDispo($user, $dispo) {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_array($dispo)) {
-            throw new RuntimeException('update Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
+    public  function addDispo($user, $serie) {
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
+            throw new RuntimeException('add Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
         }
-        foreach ($dispo as $serie) {
-            if (!is_numeric($serie)) {
-                throw new RuntimeException('update Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
-            }
-        }
-        $requete = $this->db->prepare('DELETE disponibilites
-                                       FROM disponibilites
-                                       INNER JOIN series
-                                       WHERE series.OUVERTURE > '.time().'
-                                       AND disponibilites.ID_X = :user'); // Suppression des disponibilités encore modifiables
+        $requete = $this->db->prepare('INSERT INTO disponibilites
+                                       SET ID_X = :user,
+									   ID_SERIE = :serie');
         $requete->bindValue(':user', $user);
+		$requete->bindValue(':serie', $serie);
         $requete->execute();
-        foreach ($dispo as $serie) {
-            $requete = $this->db->prepare('INSERT INTO disponibilites
-                                           SET ID_X = :user, ID_SERIE = :serie'); // Ajout des nouvelles valeurs
-            $requete->bindValue(':user', $user);
-            $requete->bindValue(':serie', $serie);
-            $requete->execute();
+    }
+	
+	
+	/**
+     * Méthode supprimant la disponibilité d'un élève pour une série
+     * @access public
+     * @param string $user
+     * @param int $serie
+     * @return void
+     */
+
+    public  function deleteDispo($user, $serie) {
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
+            throw new RuntimeException('delete Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
         }
+        $requete = $this->db->prepare('DELETE 
+                                       FROM disponibilites
+                                       WHERE ID_X = :user
+									   AND ID_SERIE = :serie');
+        $requete->bindValue(':user', $user);
+		$requete->bindValue(':serie', $serie);
+        $requete->execute();
     }
 
 
@@ -214,36 +223,39 @@ class EleveManager {
      */
 
     public  function getFavorite(Demande $demande, $limit) {
-        if (!$demande->isValid() || !is_numeric($limit) || !in_array($demande->serie(), array(1, 2, 3, 4))) {
+        if (!$demande->isValid() || !is_numeric($limit)) {
             throw new RuntimeException('getFavorite : mauvais paramétrage'); // Ne se produit jamais en exécution courante
         }
         $requete = $this->db->prepare('SELECT x.USER AS user,
                                               x.SEXE AS sexe,
-                                              x.ID_SECTION AS section,
+                                              ref_sections.NOM AS section,
                                               x.ADRESSE_MAIL AS email,
-                                              x.ID_FILIERE AS filiere,
+                                              ref_filieres.NOM AS filiere,
                                               x.ID_PROMOTION AS promo,
-                                              x.ID_ETABLISSEMENT AS prepa,
-                                              (3*(x.SEXE=:sexe)+(x.ID_SECTION=:section)+6*(x.ID_ETABLISSEMENT=:prepa)+2*(x.ID_FILIERE=:filiere)) AS match
+                                              CONCAT(ref_etablissements.COMMUNE," - ",ref_etablissements.NOM) AS prepa,
+                                              (3*(x.SEXE=:sexe)+(x.ID_SECTION=:section)+6*(x.ID_ETABLISSEMENT=:prepa)+2*(x.ID_FILIERE=:filiere)) AS pertinent
                                        FROM x
                                        INNER JOIN disponibilites
-                                       ON disponibilites.ID_X = x.ID
+                                       ON disponibilites.ID_X = x.USER
+									   INNER JOIN ref_sections
+                                       ON ref_sections.ID = x.ID_SECTION
+									   INNER JOIN ref_etablissements
+                                       ON ref_etablissements.ID = x.ID_ETABLISSEMENT
+									   INNER JOIN ref_filieres
+                                       ON ref_filieres.ID = x.ID_FILIERE
                                        WHERE disponibilites.ID_SERIE = :serie
-                                       ORDER BY match DESC
-                                       LIMIT :limit');
+                                       ORDER BY pertinent DESC
+                                       LIMIT '.$limit);
         $requete->bindValue(':sexe', $demande->sexe());
         $requete->bindValue(':section',  $demande->sport());
         $requete->bindValue(':prepa',  $demande->prepa());
         $requete->bindValue(':filiere',  $demande->filiere());
         $requete->bindValue(':serie',  $demande->serie());
-        $requete->bindValue(':limit',  $limit);
         $requete->execute();
         
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve', array('user','sexe','section','email','filiere','promo','prepa'));
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Eleve'); // Attention : les champs référencées contiennent les valeurs affichables
         
-        $listeEleves = $requete->fetchAll();
-        $requete->closeCursor();
-        return $listeEleves;
+        return $requete->fetchAll();
     }
 
 }

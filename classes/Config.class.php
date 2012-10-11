@@ -2,7 +2,7 @@
 
 /**
  * Classe de configuration du projet
- *     Définit les constantes de l'application
+ * Définit les constantes de l'application
  * @author francois
  *
  */

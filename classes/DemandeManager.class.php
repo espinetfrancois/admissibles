@@ -4,7 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo : gestion des erreurs
+ * @todo logs
  */
 
 class DemandeManager {
@@ -43,7 +43,6 @@ class DemandeManager {
             $requete = $this->db->prepare('UPDATE admissibles 
                                            SET SEXE = :sexe,
                                                ADRESSE_MAIL = :email,
-                                               SERIE = :serie,
                                                ID_FILIERE = :filiere,
                                                ID_ETABLISSEMENT = :prepa
                                            WHERE ID = :id;
@@ -55,7 +54,6 @@ class DemandeManager {
             $requete->bindValue(':id', $demande->id());
             $requete->bindValue(':sexe', $demande->sexe());
             $requete->bindValue(':email', $demande->email());
-            $requete->bindValue(':serie', $demande->serie());
             $requete->bindValue(':filiere', $demande->filiere());
             $requete->bindValue(':prepa', $demande->prepa());
             $requete->bindValue(':user', $demande->userEleve());
@@ -104,18 +102,26 @@ class DemandeManager {
     /**
      * Méthode renvoyant false si l'admissible a déjà une demande en cours
      * @access public
-     * @param string $email 
+     * @param Demande $demande 
      * @return bool
      */
 
-    public  function autorisation($email) {
+    public  function autorisation($demande) {
         $requete = $this->db->prepare('SELECT demandes.ID
                                        FROM demandes
                                        INNER JOIN admissibles
                                        ON demandes.ID_ADMISSIBLE = admissibles.ID
-                                       WHERE admissibles.ADRESSE_MAIL = :email
+                                       WHERE admissibles.NOM = :nom
+									   AND admissibles.PRENOM = :prenom
+									   AND admissibles.ADRESSE_MAIL = :email
+									   AND admissibles.SERIE = :serie
+									   AND admissibles.FILIERE = :filiere
                                        AND demandes.ID_STATUS <= 2');
-        $requete->bindValue(':email', $email);
+        $requete->bindValue(':nom', $demande->nom());
+		$requete->bindValue(':prenom', $demande->prenom());
+		$requete->bindValue(':email', $demande->email());
+		$requete->bindValue(':serie', $demande->serie());
+		$requete->bindValue(':filiere', $demande->filiere());
         $requete->execute();
         return ($requete->rowCount() == 0);
     }
@@ -224,7 +230,7 @@ class DemandeManager {
      */
 
     public  function getDemandes($user) {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
             throw new RuntimeException('Utilisateur invalide'); // Ne se produit jamais en exécution courante
         }
         $requete = $this->db->prepare('SELECT admissibles.ID AS id,
@@ -250,11 +256,9 @@ class DemandeManager {
         $requete->bindValue(':user', $user);
         $requete->execute();
 
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
             
-        $listeDemandes = $requete->fetchAll();
-        $requete->closeCursor();
-        return $listeDemandes;
+        return $requete->fetchAll();
     }
 
 }

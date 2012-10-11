@@ -4,7 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo : gestion logs
+ * @todo logs
  */
 
 class Demande {
@@ -115,6 +115,7 @@ class Demande {
     const USER_INVALIDE = 10;
     const STATUS_INVALIDE = 11;
     const CODE_INVALIDE = 12;
+	const NON_ADMISSIBLE = 13;
 
 
     /**
@@ -155,7 +156,7 @@ class Demande {
      */
 
     public final  function isValid() {
-        return !(empty($this->id) || empty($this->nom) || empty($this->prenom) || empty($this->email) || empty($this->sexe) || empty($this->prepa) || empty($this->filiere) || empty($this->sport));
+        return !(empty($this->nom) || empty($this->prenom) || empty($this->email) || empty($this->sexe) || empty($this->prepa) || empty($this->filiere) || empty($this->sport));
     }
     
     
@@ -267,7 +268,7 @@ class Demande {
      */
 
     public  function setSerie($serie) {
-        if (is_numeric($serie)) {
+        if (!is_numeric($serie)) {
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
             $this->serie = $serie;
