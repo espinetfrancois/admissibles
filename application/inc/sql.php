@@ -4,3 +4,4 @@ $db     = new PDO('mysql:host='.$config->get_dbhost().';dbname='.$config->get_db
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $parametres = new Parametres($db);
+$_SESSION['db'] = $db;

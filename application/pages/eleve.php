@@ -9,6 +9,7 @@
  * @todo gestion du mail d'acceptation
  * @todo logs
  */
+$db = $_SESSION['db'];
 
 $eleveManager = new EleveManager($db);
 $demandeManager = new DemandeManager($db);
