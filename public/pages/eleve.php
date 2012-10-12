@@ -51,20 +51,20 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
     $series = $parametres->getList(Parametres::SERIE);
     $dispo = array();
     foreach ($series as $value) {
-		if ($value['ouverture'] > time()) {
-        	if (isset($_POST["serie".$value['id']])) {
+        if ($value['ouverture'] > time()) {
+            if (isset($_POST["serie".$value['id']])) {
                 $eleveManager->addDispo($_SESSION['eleve']->user(), $value['id']);
             } else {
-				$eleveManager->deleteDispo($_SESSION['eleve']->user(), $value['id']);
-			}
+                $eleveManager->deleteDispo($_SESSION['eleve']->user(), $value['id']);
+            }
         }
     }
 }
 // Acceptation d'une demande de logement
-if (isset($_POST['code']) && !empty($_POST['code'])) {
-	$demande = $demandeManager->getUnique($_POST['code']);
-	$demande->setCode($demandeManager->updateStatus($_POST['code'], "2"));
-	// envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
+if (isset($_SESSION['eleve']) && isset($_POST['code']) && !empty($_POST['code'])) {
+    $demande = $demandeManager->getUnique($_POST['code']);
+    $demande->setCode($demandeManager->updateStatus($_POST['code'], "2"));
+    // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
 }
 
 // Interface de connexion
@@ -231,26 +231,26 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
               </tr>';
         foreach ($demandes as $demande) {
             switch ($demande->status()) {
-			case 0:
-				$status_libele = "En cours de validation par l'admissible";
-				$action = "Merci d'attendre que l'admissible ait vérifié son adresse email. Vous ne recevrez pas d'autre demande que celle-ci pour cette série.";
-				break;
-			case 1:
-				$status_libele = "En attente d'acceptation";
-				$action = "<form action='index.php?page=eleve' method='post'><input type='hidden' name='accept' value='".$demande->code()."'><input type='submit' value='Accepter la demande'/></form>";
-				break;
-			case 2:
-				$status_libele = "Validée";
-				$action = "Prendre contact avec l'admissible pour définir les modalités de son arrivée : ".$demande->email();
-				break;
-			case 3:
-				$status_libele = "Annulée";
-				$action = "";
-				break;
-			default:
-            	throw new RuntimeException('Statut erroné'); // Ne se produit jamais en exécution courante
-           		break;
-			}
+            case 0:
+                $status_libele = "En cours de validation par l'admissible";
+                $action = "Merci d'attendre que l'admissible ait vérifié son adresse email. Vous ne recevrez pas d'autre demande que celle-ci pour cette série.";
+                break;
+            case 1:
+                $status_libele = "En attente d'acceptation";
+                $action = "<form action='index.php?page=eleve' method='post'><input type='hidden' name='accept' value='".$demande->code()."'><input type='submit' value='Accepter la demande'/></form>";
+                break;
+            case 2:
+                $status_libele = "Validée";
+                $action = "Prendre contact avec l'admissible pour définir les modalités de son arrivée : ".$demande->email();
+                break;
+            case 3:
+                $status_libele = "Annulée";
+                $action = "";
+                break;
+            default:
+                throw new RuntimeException('Statut erroné'); // Ne se produit jamais en exécution courante
+                   break;
+            }
             
             echo '<tr>
                     <td>'.$demande->nom().'</td>
