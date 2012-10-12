@@ -4,6 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 0.5
  *
+ * @todo fonctions d'envoi des mails validation/accepptation/annulation/confirmation
  */
 
 class Tools {

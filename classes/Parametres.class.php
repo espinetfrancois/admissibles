@@ -4,6 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
+ * @todo logs
  */
 
 
@@ -78,14 +79,14 @@ class Parametres {
     /**
      * Méthode retournant les series pour lesquelles l'interface est actuellement en ligne
      * @access public
-     * @return int
+     * @return array
      */
 
     public  function getCurrentSeries() {
         $requete = $this->db->prepare('SELECT ID AS id,
                                               INTITULE AS intitule,
-                                              DATE_DEBUT AS debut,
-                                              DATE_FIN AS fin
+                                              DATE_DEBUT AS date_debut,
+                                              DATE_FIN AS date_fin
                                        FROM series
                                        WHERE OUVERTURE <= :time
                                        AND FERMETURE >= :time');
@@ -93,7 +94,7 @@ class Parametres {
         $requete->execute();
         $n = $requete->rowCount();
         if ($n == 0) {
-            return (array("id" => -1));
+            return (array());
         } else {
             return $requete->fetchAll();
         }

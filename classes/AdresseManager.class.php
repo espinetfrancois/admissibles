@@ -2,10 +2,9 @@
 /**
  * Gestionnaire BDD de la classe Adresse
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
- * @version 0.5
+ * @version 1.0
  *
- * @todo : gestion des erreurs
- * @todo : gestion des catégories
+ * @todo logs
  */
 
 class AdresseManager {

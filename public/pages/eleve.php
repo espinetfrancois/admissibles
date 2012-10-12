@@ -2,14 +2,16 @@
 /**
  * Page de gestion des Eleves X
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
- * @version 0
+ * @version 1.0
  *
- * @todo : identification LDAP
- * @todo : action des formulaires (prod)
- * @todo : affichage et gestion des demandes
+ * @todo identification LDAP
+ * @todo proposition d'une bonne adresse
+ * @todo gestion du mail d'acceptation
+ * @todo logs
  */
 
-$eleveManager = new EleveManager($GLOBALS['db']);
+$eleveManager = new EleveManager($db);
+$demandeManager = new DemandeManager($db);
 
 // Identification
 if (isset($_POST['user']) && isset($_POST['pass']) && !empty($_POST['user']) && !empty($_POST['pass']))
@@ -17,7 +19,7 @@ if (isset($_POST['user']) && isset($_POST['pass']) && !empty($_POST['user']) && 
     if (true) { // identification LDAP ***
         $_SESSION['eleve'] = $eleveManager->getUnique($_POST['user']);
         if ($_SESSION['eleve'] == NULL) {
-            $_SESSION['new'] = 1;
+            $_SESSION['new'] = 1; // Première connexion de l'élève
             $_SESSION['eleve'] = new Eleve(array("user" => $_POST['user'], "email" => "LDAP@poly.edu")); //***
         }
     }
@@ -49,16 +51,22 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
     $series = $parametres->getList(Parametres::SERIE);
     $dispo = array();
     foreach ($series as $value) {
-        if (isset($_POST["serie".$value['id']])) {
-            if ($value['ouverture'] > time()) {
-                $dispo[] = $value['id'];
+		if ($value['ouverture'] > time()) {
+        	if (isset($_POST["serie".$value['id']])) {
+                $eleveManager->addDispo($_SESSION['eleve']->user(), $value['id']);
             } else {
-                throw new RuntimeException('Série invalide'); // Ne se produit jamais en exéxution courante
-            }
+				$eleveManager->deleteDispo($_SESSION['eleve']->user(), $value['id']);
+			}
         }
     }
-    $eleveManager->updateDispo($_SESSION['eleve']->user(), $dispo);
 }
+// Acceptation d'une demande de logement
+if (isset($_POST['code']) && !empty($_POST['code'])) {
+	$demande = $demandeManager->getUnique($_POST['code']);
+	$demande->setCode($demandeManager->updateStatus($_POST['code'], "2"));
+	// envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
+}
+
 // Interface de connexion
 if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { // Eleve non identifià
     session_destroy();
@@ -67,7 +75,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
 <h2>Connexion</h2>
 <p>Connectez-vous à l'aide de vos identifiants LDAP (DSI) :</p>
 <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
-<form action="./index_dev.php" method="post">
+<form action="index.php?page=eleve" method="post">
 <p id="champ-user" class="champ" class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p>
 <p id="champ-pass" class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p>
 <br/>
@@ -88,7 +96,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
 
 <h2>Modifier mes informations personnelles</h2>
 <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
-<form action="./index_dev.php" method="post">
+<form action="index.php?page=eleve" method="post">
 <p id="champ-sexe" class="champ"><label for="sexe">Sexe</label> : M <input type="radio" name="sexe" value="M"
     <?php 
         if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "") { 
@@ -147,7 +155,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         </select>
 <?php if (isset($erreurs) && in_array(Eleve::PREPA_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
 </p>
-<p id="champ-filiere" class="champ"> <label for="filiere">Filiére : </label><select name="filiere">
+<p id="champ-filiere" class="champ"> <label for="filiere">Filière : </label><select name="filiere">
             <option value=""></option>
         <?php
         foreach ($filieres as $value) {
@@ -173,13 +181,13 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         ?>
 <h2>Disponibilitét d'accueil</h2>
 <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
-<a href="./index_dev.php?action=deconnect">Se dédonnecter</a> -- <a href="./index_dev.php?action=modify">Modifier mes informations personnelles</a>
+<a href="index.php?page=eleve&action=deconnect">Se déconnecter</a> -- <a href="index.php?page=eleve&action=modify">Modifier mes informations personnelles</a>
 <hr/>
         <?php 
         if (!empty($series)) {
         ?>
 <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible :</p>
-<form action="./index_dev.php" method="post">
+<form action="index.php?page=eleve" method="post">
 <input type="hidden" name="serie" value="1"/>
         <?php
         foreach ($series as $value) {
@@ -209,14 +217,12 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
 <hr/>
 <p>Récapitulatif de vos demandes :</p>
         <?php
-        $demandeManager = new DemandeManager($db);
         $demandes = $demandeManager->getDemandes($_SESSION['eleve']->user());
         echo '<table border=1 cellspacing=0>';
         echo '<tr>
                   <td>Nom</td>
                   <td>Prérom</td>
                   <td>Sexe</td>
-                  <td>Adresse email</td>
                   <td>Etablissement</td>
                   <td>Filiéie</td>
                   <td>Série</td>
@@ -224,17 +230,36 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
                   <td>Action possible</td>
               </tr>';
         foreach ($demandes as $demande) {
-            //switch ($demande->status())
+            switch ($demande->status()) {
+			case 0:
+				$status_libele = "En cours de validation par l'admissible";
+				$action = "Merci d'attendre que l'admissible ait vérifié son adresse email. Vous ne recevrez pas d'autre demande que celle-ci pour cette série.";
+				break;
+			case 1:
+				$status_libele = "En attente d'acceptation";
+				$action = "<form action='index.php?page=eleve' method='post'><input type='hidden' name='accept' value='".$demande->code()."'><input type='submit' value='Accepter la demande'/></form>";
+				break;
+			case 2:
+				$status_libele = "Validée";
+				$action = "Prendre contact avec l'admissible pour définir les modalités de son arrivée : ".$demande->email();
+				break;
+			case 3:
+				$status_libele = "Annulée";
+				$action = "";
+				break;
+			default:
+            	throw new RuntimeException('Statut erroné'); // Ne se produit jamais en exécution courante
+           		break;
+			}
             
             echo '<tr>
                     <td>'.$demande->nom().'</td>
                     <td>'.$demande->prenom().'</td>
                     <td>'.$demande->sexe().'</td>
-                    <td>'.$demande->email().'</td>
                     <td>'.$demande->prepa().'</td>
                     <td>'.$demande->filiere().'</td>
                     <td>'.$demande->serie().'</td>
-                    <td>'.$status.'</td>
+                    <td>'.$status_libele.'</td>
                     <td>'.$action.'</td>
                   </tr>';
         }

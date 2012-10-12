@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Mar 02 Octobre 2012 à 20:32
+-- Généré le: Jeu 11 Octobre 2012 à 11:03
 -- Version du serveur: 5.5.24-log
 -- Version de PHP: 5.4.3
 
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `administration` (
-  `ID` varchar(250) NOT NULL,
+  `ID` int(11) NOT NULL,
   `PARAMETRE` varchar(250) NOT NULL,
   `VALEUR` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `admissibles` (
   `ADRESSE_MAIL` varchar(250) NOT NULL,
   `SERIE` int(1) NOT NULL,
   `ID_FILIERE` int(11) NOT NULL,
-  `ID_ETABLISSEMENT` int(11) NOT NULL,
+  `ID_ETABLISSEMENT` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `ref_sexes_admissibles_fk` (`SEXE`),
   KEY `ref_etablissements_admissibles_fk` (`ID_ETABLISSEMENT`),
@@ -64,15 +64,14 @@ CREATE TABLE IF NOT EXISTS `admissibles` (
 CREATE TABLE IF NOT EXISTS `annonces` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `NOM` varchar(250) NOT NULL,
-  `RANG` int(11) DEFAULT NULL COMMENT 'Rang d''affichage sur la page',
-  `TELEPHONE` int(11) NOT NULL,
-  `DESCRIPTION` varchar(250) NOT NULL,
+  `TELEPHONE` varchar(50) NOT NULL,
+  `DESCRIPTION` text NOT NULL,
   `VALIDATION` tinyint(1) NOT NULL,
   `ADRESSE_MAIL` varchar(250) NOT NULL,
   `ADRESSE` varchar(250) NOT NULL,
   `ID_CATEGORIE` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -99,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `demandes` (
 --
 
 CREATE TABLE IF NOT EXISTS `disponibilites` (
-  `ID_X` int(11) NOT NULL,
+  `ID_X` varchar(250) NOT NULL,
   `ID_SERIE` int(11) NOT NULL,
   KEY `ref_series_disponibilites_fk` (`ID_SERIE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -113,9 +112,8 @@ CREATE TABLE IF NOT EXISTS `disponibilites` (
 CREATE TABLE IF NOT EXISTS `ref_categories` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `NOM` varchar(200) NOT NULL,
-  `ORDRE` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Référence pour les catégories d''annonces proposées' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Référence pour les catégories d''annonces proposées' AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -128,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `ref_etablissements` (
   `NOM` varchar(250) NOT NULL,
   `COMMUNE` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -140,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `ref_filieres` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `NOM` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -149,10 +147,10 @@ CREATE TABLE IF NOT EXISTS `ref_filieres` (
 --
 
 CREATE TABLE IF NOT EXISTS `ref_promotions` (
-  `ID` int(11) NOT NULL,
-  `NOM` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOM` varchar(10) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -164,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `ref_sections` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `NOM` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -190,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `series` (
 
 CREATE TABLE IF NOT EXISTS `statuts` (
   `ID` int(11) NOT NULL,
-  `LIBELLE` varchar(250) NOT NULL,
+  `NOM` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -224,8 +222,8 @@ CREATE TABLE IF NOT EXISTS `x` (
 -- Contraintes pour la table `admissibles`
 --
 ALTER TABLE `admissibles`
-  ADD CONSTRAINT `ref_filieres_admissibles_fk` FOREIGN KEY (`ID_FILIERE`) REFERENCES `ref_filieres` (`ID`),
-  ADD CONSTRAINT `ref_etablissements_admissibles_fk` FOREIGN KEY (`ID_ETABLISSEMENT`) REFERENCES `ref_etablissements` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `ref_etablissements_admissibles_fk` FOREIGN KEY (`ID_ETABLISSEMENT`) REFERENCES `ref_etablissements` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ref_filieres_admissibles_fk` FOREIGN KEY (`ID_FILIERE`) REFERENCES `ref_filieres` (`ID`);
 
 --
 -- Contraintes pour la table `demandes`
@@ -245,8 +243,8 @@ ALTER TABLE `disponibilites`
 -- Contraintes pour la table `x`
 --
 ALTER TABLE `x`
-  ADD CONSTRAINT `ref_filieres_x_fk` FOREIGN KEY (`ID_FILIERE`) REFERENCES `ref_filieres` (`ID`),
   ADD CONSTRAINT `ref_etablissements_x_fk` FOREIGN KEY (`ID_ETABLISSEMENT`) REFERENCES `ref_etablissements` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `ref_filieres_x_fk` FOREIGN KEY (`ID_FILIERE`) REFERENCES `ref_filieres` (`ID`),
   ADD CONSTRAINT `ref_promotions_x_fk` FOREIGN KEY (`ID_PROMOTION`) REFERENCES `ref_promotions` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `ref_sections_x_fk` FOREIGN KEY (`ID_SECTION`) REFERENCES `ref_sections` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
