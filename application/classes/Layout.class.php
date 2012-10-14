@@ -83,16 +83,16 @@ class Layout {
      * @param string $sContent
      */
     public function addContent($page) {
-    	ob_start(array($this, "_addContent"));
-    	include($page);
-    	ob_end_clean();
-        	/* $this->_content[] = $sContent; */
+        ob_start(array($this, "_addContent"));
+        include($page);
+        ob_end_clean();
+            /* $this->_content[] = $sContent; */
     }
 
-    protected function _addContent($sContent) {
+    public function _addContent($sContent) {
     	$this->_content[] = $sContent;
     	return $sContent; 
-    }
+	}
     /**
      * Ajout du contenu à la page en le positionnant avant le contenu courant
      * @param String $sContent
@@ -267,11 +267,11 @@ class Layout {
     }
     
     public function renderNotFound() {
-    	$sNotFound ="";
-    	if ($this->not_found) {
-    		$sNotFound = '<div class="not_found">La page que vous avez demandée n\'a pas été trouvée</div>';
-    	}
-    	return $sNotFound;
+        $sNotFound ="";
+        if ($this->not_found) {
+            $sNotFound = '<div class="not_found">La page que vous avez demandée n\'a pas été trouvée</div>';
+        }
+        return $sNotFound;
     }
     
     public function renderBandeau() {

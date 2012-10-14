@@ -101,14 +101,14 @@ class EleveManager {
         }
         $requete = $this->db->prepare('INSERT INTO disponibilites
                                        SET ID_X = :user,
-									   ID_SERIE = :serie');
+                                       ID_SERIE = :serie');
         $requete->bindValue(':user', $user);
-		$requete->bindValue(':serie', $serie);
+        $requete->bindValue(':serie', $serie);
         $requete->execute();
     }
-	
-	
-	/**
+    
+    
+    /**
      * Méthode supprimant la disponibilité d'un élève pour une série
      * @access public
      * @param string $user
@@ -121,16 +121,14 @@ class EleveManager {
             throw new RuntimeException('delete Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
         }
         $requete = $this->db->prepare('DELETE 
-                                       FROM disponibilites
-                                       WHERE ID_X = :user
-									   AND ID_SERIE = :serie');
+                                       SET ID_X = :user,
+									   ID_SERIE = :serie');
         $requete->bindValue(':user', $user);
 		$requete->bindValue(':serie', $serie);
         $requete->execute();
     }
-
-
-    /**
+	
+	/**	
      * Méthode retournant un élève en particulier
      * @access public
      * @param string $user 
@@ -259,4 +257,3 @@ class EleveManager {
     }
 
 }
-?>

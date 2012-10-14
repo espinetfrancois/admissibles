@@ -13,27 +13,23 @@ class Router {
 	 * Tableau des url d'administration
 	 * @var array d'url
 	 */
-	protected $urlAdmin = array();
-	 
-	/**
-	 * Tableau des url des admissibles
-	 * @var array d'url
-	 */
-	protected $urlAdmissible = array();
-	/**
-	 * Tableau des url pour les x
-	 * @var array d'url
-	 */
-	protected $urlX = array();
-	
-	protected $urlRoot = array();
+	protected $urls = array();
+
+	protected $prefixes = array();
 
 	/**
 	 * Le filename du fichier à charger
 	 * @var string
 	 */
 	public $file = null;
-	
+
+	/**
+	 *
+	 * @var Requete
+	 */
+	protected $requete = null;
+
+
 	/**
 	 * Booléen qui indique si on a un 404
 	 * @var bool page trouvée ou non
@@ -41,42 +37,9 @@ class Router {
 	public $not_found = false;
 
 	/**
-	 * Constantes pour les sections dans le fichier ini
+	 * Section spéciale pour les routes sans préfixes
 	 * @var string
 	 */
-	const SECTION_X = 'x';
-	/**
-	 * Constantes pour les sections dans le fichier ini
-	 * @var string
-	 */
-	const SECTION_ADMISSIBLE = "admissible";
-	/**
-	 * Constantes pour les sections dans le fichier ini
-	 * @var string
-	 */
-	const SECTION_ADMIN = "admin";
-	
-	/**
-	 * Constantes pour les sections dans le fichier ini
-	 * @var string
-	 */
-	const SECTION_ROOT = 'root';
-
-	/**
-	 * Préfixe pour les url
-	 * @var string
-	 */
-	const ADMIN_PREFIX = 'administration';
-	/**
-	 * Préfixe pour les url
-	 * @var string
-	 */
-	const X_PREFIX = 'x';
-	/**
-	 * Préfixe pour les url
-	 * @var string
-	 */
-	const ADMISSIBLES_PREFIX = 'admissibles';
 
 	/**
 	 * Le fichier ini contenant les routes.
@@ -84,7 +47,8 @@ class Router {
 	 */
 	const INI_FILE = "router.ini";
 
-	
+	const SECTION_ROOT = "root";
+
 	/**
 	 * Constructeur, prend en argument l'url demandée ($_SERVER['REQUEST_URI'])
 	 * @author francois.espinet
@@ -93,9 +57,18 @@ class Router {
 	public function __construct($request) {
 		//chargement du fichier ini, initialisation des tableaux
 		$this->_loadIni(CONFIG_PATH.'/'.self::INI_FILE);
-		//recuperation du fichier en fonction de l'url demandée
-		$this->_setFileFromUrl($request);
-		
+		//initialisation de l'objet requete
+		$this->requete = new Requete($request);
+
+		//si la requete est invalide
+		if ($this->requete->is_invalide) {
+			$this->not_found = true;
+			$this->setAccueil();
+		}
+
+		//si la requete est valide, on met en marche le mécanisme de routage.
+		$this->_setFileFromUrl();
+
 		//die($this->file);
 	}
 
@@ -105,83 +78,56 @@ class Router {
 	 */
 	private function _loadIni($IniFile) {
 		if ( ($urls = parse_ini_file($IniFile, true)) ) {
-			$this->urlAdmin = $urls[self::SECTION_ADMIN];
-			$this->urlAdmissible = $urls[self::SECTION_ADMISSIBLE];
-			$this->urlX = $urls[self::SECTION_X];
-			$this->urlRoot = $urls[self::SECTION_ROOT];
+			$this->prefixes = $urls['prefixes'];
+			$this->urls = array(self::SECTION_ROOT => $urls[self::SECTION_ROOT]);
+			foreach ($this->prefixes as $keypref => $prefixe ) {
+				$this->urls[$prefixe] = $urls[$keypref];
+			}
 		} else {
 			throw new Exception("Impossible de charger le fichier de configuration du routeur");
 		}
+	}
+
+	private function setAccueil() {
+		$this->file = PAGES_PATH.'/'.$this->urls[self::SECTION_ROOT]['accueil'];
+		return;
 	}
 
 	/**
 	 * @brief conversion de l'url en fichier à charger
 	 * Découpe l'url et retourne le fichier demandée en fonction des morceaux de l'url
 	 * @author francois.espinet
-	 * @param string $request la requete de l'utilisateur
 	 */
-	private function _setFileFromUrl($request) {
-		/* decomposision de l'url en morceaux selon /
-		 Attention : $aUrlParts[0] contient "" */
-		$aUrlParts = explode('/', $request);
-		//set du prefix du filename du fichier
+	private function _setFileFromUrl() {
 		$this->file = PAGES_PATH.'/';
-
-		//si l'url est en /qqchose
-		//die(var_export($aUrlParts));
-		if ($aUrlParts[1] == '') {
-			$this->file = PAGES_PATH.'/'.$this->urlRoot['accueil'];
-		}elseif (count($aUrlParts) == 2) {
-			$this->__traitementSuffixe($this->urlRoot, $aUrlParts[1]);
-		}
-		//si l'url est en /qqchose/qqchosed'autre
-		elseif (count($aUrlParts) > 2) {
-			$aPrefUrl = $this->__traitementPrefixe($aUrlParts[1]);
+		if ($this->requete->prefixe != null) {
+			$prefix = $this->__traitementPrefixe();
 			if (! $this->not_found) {
-				$this->__traitementSuffixe($aPrefUrl, $aUrlParts[2]);
-
+				$this->__traitementSuffixe($prefix);
 			}
 		} else {
-			
-			//sinon on renvoie l'accueil
-			$this->file .= $this->urlRoot['accueil'];
+			$this->__traitementSuffixe();
 		}
-		
-		//si l'url est en /qqch/qqch/qqch...
-		if (count($aUrlParts) > 3) {
-			$this->not_found = true;
-		} 
-		
-		// si l'url n'existe pas, on met l'accueil
+
 		if ($this->not_found) {
-			$this->file = PAGES_PATH.'/'.$this->urlRoot['accueil'];
+			$this->setAccueil();
+		}
+			
+	}
+
+	private function __traitementPrefixe() {
+		if (array_key_exists($this->requete->prefixe, $this->urls)) {
+			return $this->requete->prefixe;
+		} else {
+			$this->not_found = true;
 		}
 	}
-	
-	private function __traitementPrefixe($prefix) {
-		//en fonction du prefixe
-		switch ($prefix) {
-			case self::ADMIN_PREFIX:
-				return $this->urlAdmin;
-				break;
-			case self::X_PREFIX:
-				return $this->urlX;
-				break;
-			case self::ADMISSIBLES_PREFIX:
-				return $this->urlAdmissible;
-				break;
-			case null:
-				return $this->urlRoot;
-			default:
-				$this->not_found = true;
-				return null;
-				break;
-		}
-	}
-	
-	private function __traitementSuffixe(array $url, $suffixe) {
-		if (array_key_exists($suffixe, $url)) {
-			$this->file .= $url[$suffixe];
+
+	private function __traitementSuffixe($prefix = self::SECTION_ROOT) {
+		if (array_key_exists($this->requete->suffixe, $this->urls[$prefix]) ) {
+			$this->file .= $this->urls[$prefix][$this->requete->suffixe];
+		} elseif ($this->requete->suffixe == null) {
+			$this->setAccueil();
 		} else {
 			$this->not_found = true;
 		}

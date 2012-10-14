@@ -8,6 +8,7 @@
  * @todo proposition d'une bonne adresse
  * @todo gestion du mail d'acceptation
  * @todo logs
+ * @todo gerer le problème de db
  */
 $db = $_SESSION['db'];
 
