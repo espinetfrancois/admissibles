@@ -10,7 +10,7 @@
 function coloreLien(id) {
 	if (id != "0") {
 		//coloration du parent
-		$('li#'+id).parent('a').addClass("active");
+		$('li#'+id).parent('ul').parent('li').addClass("active");
 		//coloration du lien actif
 		$('li#'+id).addClass('active');
 	}
