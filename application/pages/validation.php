@@ -13,12 +13,12 @@ $demandeManager = new DemandeManager($db);
 if (isset($_GET['code']) && preg_match("#^[0-9a-f]{32}$#i",$_GET['code'])) {
     $demande = $demandeManager->getUnique($_GET['code']);
     $demande->$demandeManager->updateStatus($_GET['code'], "1");
-    // Envoi d'un mail à l'X correspondant lui indiquant une demande à accepter sur son espace
-    echo "<h2>Demande d'hébergement chez un élève pendant la période des oraux</h2>";
-    echo "<p>Votre adresse email a bien été <strong>validée</strong>.<br/>";
-    echo "Vous recevrez un email de confirmation lorsque l'élève que vous avez contacté acceptera votre demande.<br/><br/>";
-    echo "Si l'élève semble ne pas répondre dans le temps imparti, merci d'annuler votre demande (voir l'email précedemment reçu) afin d'en faire une nouvelle...</p>";
+    // Envoi d'un mail Ã  l'X correspondant lui indiquant une demande Ã  accepter sur son espace
+    echo "<h2>Demande d'hÃ©bergement chez un Ã©lÃ¨ve pendant la pÃ©riode des oraux</h2>";
+    echo "<p>Votre adresse email a bien Ã©tÃ© <strong>validÃ©e</strong>.<br/>";
+    echo "Vous recevrez un email de confirmation lorsque l'Ã©lÃ¨ve que vous avez contactÃ© acceptera votre demande.<br/><br/>";
+    echo "Si l'Ã©lÃ¨ve semble ne pas rÃ©pondre dans le temps imparti, merci d'annuler votre demande (voir l'email prÃ©cedemment reÃ§u) afin d'en faire une nouvelle...</p>";
 } else {
-    throw new RuntimeException('Erreur dans le processus de demande'); // Ne se produit jamais en exécution courante
+    throw new RuntimeException('Erreur dans le processus de demande'); // Ne se produit jamais en exÃ©cution courante
 }
 ?>

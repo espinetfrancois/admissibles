@@ -1,6 +1,6 @@
 <?php
 /**
- * Page de gestion des demandes d'hébergement des admissibles
+ * Page de gestion des demandes d'hÃ©bergement des admissibles
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
@@ -11,15 +11,15 @@
 $demandeManager = new DemandeManager($db);
 $eleveManager = new EleveManager($db);
 
-echo "<h2>Demande d'hébergement chez un élève pendant la période des oraux</h2>";
+echo "<h2>Demande d'hÃ©bergement chez un Ã©lÃ¨ve pendant la pÃ©riode des oraux</h2>";
 
 if (isset($_SESSION['demande']) && isset($_POST['user'])) {
     $dispos = $eleveManager->getDispos($_POST['user']);
     if (!in_array($_SESSION['demande']->serie(),$dispos)) {
-        echo "<p>Désolé, l'élève que vous avez choisi vient d'être sollicité. Merci de reitérer votre recherche.</p>";
+        echo "<p>DÃ©solÃ©, l'Ã©lÃ¨ve que vous avez choisi vient d'Ãªtre sollicitÃ©. Merci de reitÃ©rer votre recherche.</p>";
     }
     elseif (!$demandeManager->autorisation($_SESSION['demande'])) {
-        echo "<p>Désolé, vous avez déjà effectué une demande d'hébergement. Merci d'attendre la réponse de l'élève ou d'annuler votre demande.</p>";
+        echo "<p>DÃ©solÃ©, vous avez dÃ©jÃ  effectuÃ© une demande d'hÃ©bergement. Merci d'attendre la rÃ©ponse de l'Ã©lÃ¨ve ou d'annuler votre demande.</p>";
     } else {
         $_SESSION['demande']->setUserEleve($_POST['user']);
         $_SESSION['demande']->setStatus("0");
@@ -31,9 +31,9 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
 
 if (isset($_GET['action']) && $_GET['action'] == "demande") {
     $series = $parametres->getCurrentSeries();
-    if (empty($series)) { // Interface fermée aux demandes
+    if (empty($series)) { // Interface fermÃ©e aux demandes
         ?>
-        <p>Les demandes ne sont pas encore ouvertes pour la prochaine série...</p>
+        <p>Les demandes ne sont pas encore ouvertes pour la prochaine sÃ©rie...</p>
         <?php
     } else {
         if (isset($_POST['nom'])) {
@@ -51,15 +51,15 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
                 $erreurD[] = Demande::NON_ADMISSIBLE;
             }
         }
-        if (isset($demande) && empty($erreurD)) { // Demande réussie : affichage de deux X pouvant les héberger
+        if (isset($demande) && empty($erreurD)) { // Demande rÃ©ussie : affichage de deux X pouvant les hÃ©berger
             $_SESSION['demande'] = $demande;
             $eleves = $eleveManager->getFavorite($demande, 2);
             if (empty($eleves)) {
-                echo "<p>Désolé, aucune correspondance n'a été trouvée (tous les élèves ont déjà été sollicités.<br/>Rendez-vous sur la page <a href=''>Bonnes adresses</a> pour trouver un hébergement à proximité de l'école...</p>";
+                echo "<p>DÃ©solÃ©, aucune correspondance n'a Ã©tÃ© trouvÃ©e (tous les Ã©lÃ¨ves ont dÃ©jÃ  Ã©tÃ© sollicitÃ©s.<br/>Rendez-vous sur la page <a href=''>Bonnes adresses</a> pour trouver un hÃ©bergement Ã  proximitÃ© de l'Ã©cole...</p>";
             } else {
-                echo "<p>Voici les élèves qui te correspondent le mieux pour t'héberger :</p>";
+                echo "<p>Voici les Ã©lÃ¨ves qui te correspondent le mieux pour t'hÃ©berger :</p>";
                 echo "<table border=1 cellspacing=0>";
-                echo "<tr><td>Nom d'utilisateur</td><td>Sexe</td><td>Etablissement d'origine</td><td>Filière</td><td>Section sportive</td><td>Contact</td></tr>";
+                echo "<tr><td>Nom d'utilisateur</td><td>Sexe</td><td>Etablissement d'origine</td><td>FiliÃ¨re</td><td>Section sportive</td><td>Contact</td></tr>";
                 foreach ($eleves as $eleve) {
                     echo "<tr><td>".$eleve->user()."</td><td>".$eleve->sexe()."</td><td>".$eleve->prepa()."</td><td>".$eleve->filiere()."</td><td>".$eleve->section()."</td>";
                     echo "<td><form action='index.php?page=admissible' method='post'><input type='hidden' name='user' value='".$eleve->user()."'/><input type='submit' value='Envoyer une demande de logement'/></form></td></tr>";
@@ -71,11 +71,11 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
             $filieres = $parametres->getList(Parametres::FILIERE);
             $sections = $parametres->getList(Parametres::SECTION);
             
-            if (isset($erreurD) && in_array(Demande::NON_ADMISSIBLE, $erreurD)) echo '<span style="color:red;">Merci de vérifier vos informations personnelles : vous ne semblez pas être dans les listes d\'admissibilité !</span>'; ?>
+            if (isset($erreurD) && in_array(Demande::NON_ADMISSIBLE, $erreurD)) echo '<span style="color:red;">Merci de vÃ©rifier vos informations personnelles : vous ne semblez pas Ãªtre dans les listes d\'admissibilitÃ© !</span>'; ?>
             <form action="index.php?page=admissible&action=demande" method="post">
             Nom : <input type="text" name="nom" value="<?php if (isset($demande)) { echo $demande->nom(); } ?>"/>
             <?php if (isset($erreurD) && in_array(Demande::NOM_INVALIDE, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Prénom : <input type="text" name="prenom" value="<?php if (isset($demande)) { echo $demande->prenom(); } ?>"/>
+            PrÃ©nom : <input type="text" name="prenom" value="<?php if (isset($demande)) { echo $demande->prenom(); } ?>"/>
             <?php if (isset($erreurD) && in_array(Demande::PRENOM_INVALIDE, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Adresse e-mail valide : <input type="text" name="email" value="<?php if (isset($demande)) { echo $demande->email(); } ?>"/>
             <?php if (isset($erreurD) && in_array(Demande::EMAIL_INVALIDE, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
@@ -95,7 +95,7 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
                 <option value="-1">Autre</option>
             </select>
             <?php if (isset($erreurD) && in_array(Demande::PREPA_INVALIDE, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Filière : <select name="filiere">
+            FiliÃ¨re : <select name="filiere">
             <?php
             foreach ($filieres as $value) {
                 if (isset($demande) && $demande->filiere() == $value['id']) {
@@ -108,7 +108,7 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
             ?>
             </select>
             <?php if (isset($erreurD) && in_array(Demande::FILIERE_INVALIDE, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Série : <select name="serie">
+            SÃ©rie : <select name="serie">
             <?php
             foreach ($series as $value) {
                 if (isset($demande) && $demande->serie() == $value['id']) {
@@ -121,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
             ?>
             </select>
             <?php if (isset($erreurD) && in_array(Demande::SERIE_INVALIDE, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Sport préféré : <select name="section">
+            Sport prÃ©fÃ©rÃ© : <select name="section">
             <?php
             foreach ($sections as $value) {
                 echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
@@ -134,14 +134,14 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
             <?php
         }
     }
-} else { // Page affichée 
+} else { // Page affichÃ©e 
     ?>
-    <p>Cette interface vous permet de trouver un élève présent sur le campus pour vous héberger pendant la période des oraux.<br/>
-Dès la sortie des listes d'admissibilités pour votre série et jusqu'à la veille du début des épreuves orales minuit, rendez-vous sur la page <a href="index.php?page=admissible&action=demande">Faire une demande de logement</a>, 
-remplissez le formulaire avec vos informations personnelles et envoyer votre demande auprès de l'élève qui vous correspond le mieux (même lycée de provenance, même filière ou autres...).<br/><br/>
-Dès l'aceptation par l'élève concerné, vous recevrez un email de confirmation vous permettant de prendre contact avec lui pour organiser votre arrivée.<br/>
-Si votre demande semble prendre trop de temps pour être acceptée par l'élève que vous avez choisi, annulez votre première demande et remplissez-en une autre...<br/><br/>
-Par ailleurs, n'hésitez pas à consulter la liste des <a href="index.php?page=adresses">bonnes adresses</a> si vous souhaitez vous loger par vos propres moyens à proximité du campus (hôtel, pension...)</p>
+    <p>Cette interface vous permet de trouver un Ã©lÃ¨ve prÃ©sent sur le campus pour vous hÃ©berger pendant la pÃ©riode des oraux.<br/>
+DÃ¨s la sortie des listes d'admissibilitÃ©s pour votre sÃ©rie et jusqu'Ã  la veille du dÃ©but des Ã©preuves orales minuit, rendez-vous sur la page <a href="index.php?page=admissible&action=demande">Faire une demande de logement</a>, 
+remplissez le formulaire avec vos informations personnelles et envoyer votre demande auprÃ¨s de l'Ã©lÃ¨ve qui vous correspond le mieux (mÃªme lycÃ©e de provenance, mÃªme filiÃ¨re ou autres...).<br/><br/>
+DÃ¨s l'aceptation par l'Ã©lÃ¨ve concernÃ©, vous recevrez un email de confirmation vous permettant de prendre contact avec lui pour organiser votre arrivÃ©e.<br/>
+Si votre demande semble prendre trop de temps pour Ãªtre acceptÃ©e par l'Ã©lÃ¨ve que vous avez choisi, annulez votre premiÃ¨re demande et remplissez-en une autre...<br/><br/>
+Par ailleurs, n'hÃ©sitez pas Ã  consulter la liste des <a href="index.php?page=adresses">bonnes adresses</a> si vous souhaitez vous loger par vos propres moyens Ã  proximitÃ© du campus (hÃ´tel, pension...)</p>
     <?php
 }
 
