@@ -13,7 +13,7 @@
  */
 function autoloader($class) {
     try {
-        include("classes/".$class.".class.php");
+        include(APPLICATION_PATH."/classes/".$class.".class.php");
     } catch(Exception $e) {
         throw new Exception("Erreur lors du chargement de la classe : ".$class);
     }

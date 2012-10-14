@@ -7,4 +7,3 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $parametres = new Parametres($db);
 
 $_SESSION['db'] = $db;
-$_SESSION['parametres'] = $parametres;

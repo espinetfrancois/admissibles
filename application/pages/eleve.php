@@ -10,6 +10,7 @@
  * @todo logs
  * @todo gerer le problème de db
  */
+$db = $_SESSION['db'];
 
 $eleveManager = new EleveManager($db);
 $demandeManager = new DemandeManager($db);
