@@ -1,5 +1,5 @@
 Options +MultiViews
 SetEnv APP_ENV dev
 
-RewriteEngine on
-RewriteRule !\.(js|ico|gif|jpg|png|css|swf)$ index.php
+#RewriteEngine on
+#RewriteRule !\.(js|ico|gif|jpg|png|css|swf)$ index.php

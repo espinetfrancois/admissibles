@@ -112,16 +112,16 @@ class DemandeManager {
                                        INNER JOIN admissibles
                                        ON demandes.ID_ADMISSIBLE = admissibles.ID
                                        WHERE admissibles.NOM = :nom
-                                       AND admissibles.PRENOM = :prenom
-                                       AND admissibles.ADRESSE_MAIL = :email
-                                       AND admissibles.SERIE = :serie
-                                       AND admissibles.FILIERE = :filiere
+									   AND admissibles.PRENOM = :prenom
+									   AND admissibles.ADRESSE_MAIL = :email
+									   AND admissibles.SERIE = :serie
+									   AND admissibles.FILIERE = :filiere
                                        AND demandes.ID_STATUS <= 2');
         $requete->bindValue(':nom', $demande->nom());
-        $requete->bindValue(':prenom', $demande->prenom());
-        $requete->bindValue(':email', $demande->email());
-        $requete->bindValue(':serie', $demande->serie());
-        $requete->bindValue(':filiere', $demande->filiere());
+		$requete->bindValue(':prenom', $demande->prenom());
+		$requete->bindValue(':email', $demande->email());
+		$requete->bindValue(':serie', $demande->serie());
+		$requete->bindValue(':filiere', $demande->filiere());
         $requete->execute();
         return ($requete->rowCount() == 0);
     }
@@ -131,7 +131,7 @@ class DemandeManager {
      * Méthode permettant de mettre à jour le status d'une demande
      * @access public
      * @param string $code
-     * @return void
+     * @return string
      */
 
     public  function updateStatus($code, $status) {
@@ -139,14 +139,17 @@ class DemandeManager {
             throw new RuntimeException('updateStatus : mauvais paramétrage'); // Ne se produit jamais en exécution courante
         }
 
+        $newCode = md5(sha1(time().$code));
         $requete = $this->db->prepare('UPDATE demandes
                                        SET ID_STATUS = :status,
                                            LIEN = :newCode,
                                        WHERE LIEN = :code'); 
         $requete->bindValue(':status', $status);
         $requete->bindValue(':newCode', $newCode);
+        $requete->bindValue(':code', $code);
 
         $requete->execute();
+        return $newCode;
     }
 
 

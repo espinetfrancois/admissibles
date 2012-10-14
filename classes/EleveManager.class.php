@@ -121,16 +121,14 @@ class EleveManager {
             throw new RuntimeException('delete Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
         }
         $requete = $this->db->prepare('DELETE 
-                                       FROM disponibilites
-                                       WHERE ID_X = :user
-                                       AND ID_SERIE = :serie');
+                                       SET ID_X = :user,
+									   ID_SERIE = :serie');
         $requete->bindValue(':user', $user);
-        $requete->bindValue(':serie', $serie);
+		$requete->bindValue(':serie', $serie);
         $requete->execute();
     }
-
-
-    /**
+	
+	/**	
      * Méthode retournant un élève en particulier
      * @access public
      * @param string $user 
@@ -237,11 +235,11 @@ class EleveManager {
                                        FROM x
                                        INNER JOIN disponibilites
                                        ON disponibilites.ID_X = x.USER
-                                       INNER JOIN ref_sections
+									   INNER JOIN ref_sections
                                        ON ref_sections.ID = x.ID_SECTION
-                                       INNER JOIN ref_etablissements
+									   INNER JOIN ref_etablissements
                                        ON ref_etablissements.ID = x.ID_ETABLISSEMENT
-                                       INNER JOIN ref_filieres
+									   INNER JOIN ref_filieres
                                        ON ref_filieres.ID = x.ID_FILIERE
                                        WHERE disponibilites.ID_SERIE = :serie
                                        ORDER BY pertinent DESC
@@ -259,4 +257,3 @@ class EleveManager {
     }
 
 }
-?>

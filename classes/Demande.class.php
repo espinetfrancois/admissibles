@@ -117,7 +117,6 @@ class Demande {
     const CODE_INVALIDE = 12;
     const NON_ADMISSIBLE = 13;
 
-
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
      * @access public

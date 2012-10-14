@@ -11,8 +11,6 @@
  * @todo gerer le problème de db
  */
 
-$param = $_SESSION['parametres'];
-$db = $param->
 $eleveManager = new EleveManager($db);
 $demandeManager = new DemandeManager($db);
 
