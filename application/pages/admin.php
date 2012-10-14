@@ -8,6 +8,8 @@
  * @todo log
  */
 
+include_once(APPLICATION_PATH.'/inc/sql.php');
+
 // Identification
 if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
 {
@@ -36,20 +38,20 @@ session_destroy();
 else {
     echo "<h2>Interface d'administration</h2>";
     if (isset($_GET['action']) && $_GET['action'] == "param" && isset($_GET['type'])) { // Gestion des listes de paramÃ©tres
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
+        echo "<a href='index.php?page=admin'>Retour ï¿½ l'accueil</a>";
         switch ($_GET['type']) {
             case Parametres::PROMO: 
-                echo "<h2>Promotions présentes sur le platâl</h2>";
+                echo "<h2>Promotions prï¿½sentes sur le platï¿½l</h2>";
                 $form = "<input type='text' name='nom' maxlength='50'/>";
                 break;
 
             case Parametres::ETABLISSEMENT: 
-                echo "<h2>Etablissements de provenance des élèves</h2><p>Les élèves gardent la possibilité d'entrer une autre valeur que celles proposées ci-dessous.</p>";
-                $form = "<input type='text' name='ville' value='VILLE' size='10' maxlength='50'/> - <input type='text' name='nom' value=\"Nom de l'établissement\" size='30' maxlength='50'/>";
+                echo "<h2>Etablissements de provenance des ï¿½lï¿½ves</h2><p>Les ï¿½lï¿½ves gardent la possibilitï¿½ d'entrer une autre valeur que celles proposï¿½es ci-dessous.</p>";
+                $form = "<input type='text' name='ville' value='VILLE' size='10' maxlength='50'/> - <input type='text' name='nom' value=\"Nom de l'ï¿½tablissement\" size='30' maxlength='50'/>";
                 break;
 
             case Parametres::FILIERE:
-                echo "<h2>Filières d'entrée des élèves</h2>";
+                echo "<h2>Filiï¿½res d'entrï¿½e des ï¿½lï¿½ves</h2>";
                 $form = "<input type='text' name='nom' maxlength='50'/>";
                 break;
 
@@ -59,31 +61,31 @@ else {
                 break;
 
             default: 
-                $erreurP = 1; echo "<h2>Erreur de paramétrage...</h2>";
+                $erreurP = 1; echo "<h2>Erreur de paramï¿½trage...</h2>";
                 break;
         }
         if (!isset($erreurP)) { // Si aucune erreure de paramÃ©trage
             if (isset($_GET['suppr'])) { // Suppression d'un Ã©lÃ©ment de liste
                 if (!is_numeric($_GET['suppr'])) {
-                    throw new RuntimeException('Corruption des paramètres GET'); // Ne se produit jamais en exÃ©cution courante
+                    throw new RuntimeException('Corruption des paramï¿½tres GET'); // Ne se produit jamais en exÃ©cution courante
                 }
                 if (!$parametres->isUsedList($_GET['type'], $_GET['suppr'])) {
                     $parametres->deleteFromList($_GET['type'], $_GET['suppr']);
                 } else {
-                    $erreurA = "Vous ne pouvez supprimer cet élément tant qu'il est utilisé dans le profil d'un élève ou d'un admissible";
+                    $erreurA = "Vous ne pouvez supprimer cet ï¿½lï¿½ment tant qu'il est utilisï¿½ dans le profil d'un ï¿½lï¿½ve ou d'un admissible";
                 }
             }
             if (isset($_POST['nom']) && isset($_POST['ville'])) { // Ajout d'un Ã©lÃ©ment de liste (Etablissement)
                 if (!empty($_POST['nom']) && !empty($_POST['ville']) && strlen($_POST['nom']) <= 50 && strlen($_POST['ville']) <= 50) {
                     $parametres->addToList($_GET['type'], array("nom" => $_POST['nom'], "commune" => $_POST['ville']));
                 } else {
-                    $erreurA = "Erreur lors de l'ajout d'un nouvel élèment";
+                    $erreurA = "Erreur lors de l'ajout d'un nouvel ï¿½lï¿½ment";
                 }
             } elseif (isset($_POST['nom'])) { // Ajout d'un Ã©lÃ©ment de liste (autre)
                 if (!empty($_POST['nom']) && strlen($_POST['nom']) <= 50) {
                     $parametres->addToList($_GET['type'], array("nom" => $_POST['nom']));
                 } else {
-                    $erreurA = "Erreur lors de l'ajout d'un nouvel élément";
+                    $erreurA = "Erreur lors de l'ajout d'un nouvel ï¿½lï¿½ment";
                 }
             }
             $liste = $parametres->getList($_GET['type']);
@@ -106,37 +108,37 @@ else {
             echo "</table>";
             echo "</form>";
         }
-    } elseif (isset($_GET['action']) && $_GET['action'] == "series") { // Modification des séries d'admissibilité
-        if (isset($_GET['suppr'])) { // Suppression d'une série
+    } elseif (isset($_GET['action']) && $_GET['action'] == "series") { // Modification des sï¿½ries d'admissibilitï¿½
+        if (isset($_GET['suppr'])) { // Suppression d'une sï¿½rie
             if (!is_numeric($_GET['suppr'])) {
-                throw new RuntimeException('Corruption des paramÃ©tres GET'); // Ne se produit jamais en exécution courante
+                throw new RuntimeException('Corruption des paramÃ©tres GET'); // Ne se produit jamais en exï¿½cution courante
             }
             if (!$parametres->isUsedList(Parametres::SERIE, $_GET['suppr'])) {
                 $parametres->deleteFromList(Parametres::SERIE, $_GET['suppr']);
             } else {
-                $erreurA = "Vous ne pouvez supprimer cette série tant qu'elle est utilisée dans le profil d'un élève ou d'un admissible";
+                $erreurA = "Vous ne pouvez supprimer cette sï¿½rie tant qu'elle est utilisï¿½e dans le profil d'un ï¿½lï¿½ve ou d'un admissible";
             }
         }
-        if (isset($_POST['intitule']) && isset($_POST['date_debut']) && isset($_POST['date_fin'])) { // Insertion d'une nouvelle série
+        if (isset($_POST['intitule']) && isset($_POST['date_debut']) && isset($_POST['date_fin'])) { // Insertion d'une nouvelle sï¿½rie
             if (!empty($_POST['intitule']) && strlen($_POST['intitule']) <= 50 && preg_match("#^[0-9]{2}/[0-9]{2}/[0-9]{4}$#",$_POST['date_debut']) && preg_match("#^[0-9]{2}/[0-9]{2}/[0-9]{4}$#",$_POST['date_fin'])) {
                 $expDateD = explode("/",$_POST['date_debut']);
                 $expDateF = explode("/",$_POST['date_fin']);
                 $date_debut = mktime(0,0,0,$expDateD[1],$expDateD[0],$expDateD[2]);
                 $date_fin = mktime(0,0,0,$expDateF[1],$expDateF[0],$expDateF[2]);
-                // L'ouverture des demandes sera réglée lors de l'insertion de la liste des admissibles
-                // La fermeture des demandes correspond Ã  minuit la veille du début des oraux
+                // L'ouverture des demandes sera rï¿½glï¿½e lors de l'insertion de la liste des admissibles
+                // La fermeture des demandes correspond Ã  minuit la veille du dï¿½but des oraux
                 $parametres->addToList(Parametres::SERIE, array("intitule" => $_POST['intitule'], "date_debut" => $date_debut, "date_fin" => $date_fin, "ouverture" => $date_debut, "fermeture" => $date_debut));
             } else {
-                $erreurA = "Erreur lors de l'ajout d'une nouvelle série";
+                $erreurA = "Erreur lors de l'ajout d'une nouvelle sï¿½rie";
             }
         }
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
-        echo "<h2>Séries d'admissibilité</h2>";
+        echo "<a href='index.php?page=admin'>Retour ï¿½ l'accueil</a>";
+        echo "<h2>Sï¿½ries d'admissibilitï¿½</h2>";
         $series = $parametres->getList(Parametres::SERIE);
         echo "<span style='color:red;'>".@$erreurA."</span>";
         echo "<form action='index.php?page=admin&action=series' method='post'>";
         echo "<table border=1 cellspacing=0>";
-        echo "<tr><td>Intitulé</td><td>Date de début des oraux</td><td>Date de fin des oraux</td><td>Action</td></tr>";
+        echo "<tr><td>Intitulï¿½</td><td>Date de dï¿½but des oraux</td><td>Date de fin des oraux</td><td>Action</td></tr>";
         foreach ($series as $value) {
             echo "<tr>";
                 echo "<td>".$value['intitule']."</td></td>";
@@ -153,34 +155,34 @@ else {
         echo "</tr>";
         echo "</table>";
         echo "</form>";
-    } elseif (isset($_GET['action']) && $_GET['action'] == "admissibles") { // Modification des listes d'admissibilité
-        if (isset($_POST['serie']) && isset($_POST['filiere']) && isset($_POST['liste'])) { // Traitement de la liste ajoutée
+    } elseif (isset($_GET['action']) && $_GET['action'] == "admissibles") { // Modification des listes d'admissibilitï¿½
+        if (isset($_POST['serie']) && isset($_POST['filiere']) && isset($_POST['liste'])) { // Traitement de la liste ajoutï¿½e
             if (is_numeric($_POST['serie']) && is_numeric($_POST['filiere']) && preg_match("#^(.+\s\(.+\)(\r)?(\n)?)+$#", $_POST['liste'])) {
                 $parametres->parseADM($_POST['serie'],$_POST['filiere'],$_POST['liste']);
-                $erreurA = "Ajout des admissibles réussi !";
+                $erreurA = "Ajout des admissibles rï¿½ussi !";
             } else {
                 $erreurA = "Mauvais formatage de la liste";
             }
         }
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
-        echo "<h2>Insertion d'une liste d'admissibilité</h2>";
+        echo "<a href='index.php?page=admin'>Retour ï¿½ l'accueil</a>";
+        echo "<h2>Insertion d'une liste d'admissibilitï¿½</h2>";
         echo "<span style='color:red;'>".@$erreurA."</span>";
-        echo "<p>Attention : l'insertion d'une liste d'admissibilité marque l'ouverture des demandes d'hébergement pour la série considérée !</p>";
+        echo "<p>Attention : l'insertion d'une liste d'admissibilitï¿½ marque l'ouverture des demandes d'hï¿½bergement pour la sï¿½rie considï¿½rï¿½e !</p>";
         $filieres = $parametres->getList(Parametres::FILIERE);
         $series = $parametres->getList(Parametres::SERIE);
         ?>
         <form action="index.php?page=admin&action=admissibles" method="post">
-            Série d'admissibilité : <select name="serie">
+            Sï¿½rie d'admissibilitï¿½ : <select name="serie">
                 <option value="" selected></option>
         <?php
         foreach ($series as $value) {
-            if ($value['fermeture'] > time()) { // On n'affiche que les séries non encore commencées
+            if ($value['fermeture'] > time()) { // On n'affiche que les sï¿½ries non encore commencï¿½es
                 echo '<option value="'.$value['id'].'">'.$value['intitule'].' (du '.date("d.m.Y", $value['date_debut']).' au '.date("d.m.Y", $value['date_fin']).')</option>';
             }
         }
         ?>
             </select><br/><br/>
-            Filière : <select name="filiere">
+            Filiï¿½re : <select name="filiere">
                 <option value=""></option>
         <?php
         foreach ($filieres as $value) {
@@ -188,54 +190,54 @@ else {
         }
         ?>
             </select><br/><br/>
-            Liste des candidats reçus de la forme suivante :<br/>
-            <i>Nom (Prénom)<br/>
-            Nom (Prénom)<br/>
-            Nom (Prénom)</i><br/>
+            Liste des candidats reï¿½us de la forme suivante :<br/>
+            <i>Nom (Prï¿½nom)<br/>
+            Nom (Prï¿½nom)<br/>
+            Nom (Prï¿½nom)</i><br/>
             <textarea name="liste" rows="10" cols="40"></textarea><br/><br/>
-            En validant ce formulaire, vous publiez cette liste d'admissibilité et ouvrez les demandes d'hébergement pour ces admissibles :
+            En validant ce formulaire, vous publiez cette liste d'admissibilitï¿½ et ouvrez les demandes d'hï¿½bergement pour ces admissibles :
             <input type="submit" value="Valider"/>
         </form>
         <?php
-    } elseif (isset($_GET['action']) && $_GET['action'] == "RAZ") { // Interface de remise à zéro de la plate-forme
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
+    } elseif (isset($_GET['action']) && $_GET['action'] == "RAZ") { // Interface de remise ï¿½ zï¿½ro de la plate-forme
+        echo "<a href='index.php?page=admin'>Retour ï¿½ l'accueil</a>";
         if (isset($_POST['raz']) && $_POST['raz']) {
             $parametres->remiseAZero();
-            echo "<h3 style='color:red;'>Remise à zéro effectuée</h3>";
+            echo "<h3 style='color:red;'>Remise ï¿½ zï¿½ro effectuï¿½e</h3>";
         }
         ?>
-        <p style="color:red;">Attention : la remise à zéro de l'interface est irréversible.</p>
-        <p>Cette action efface toutes les informations relatives aux séries, aux admissibles, aux élèves, et aux demandes d'hébergement.</p>
+        <p style="color:red;">Attention : la remise ï¿½ zï¿½ro de l'interface est irrï¿½versible.</p>
+        <p>Cette action efface toutes les informations relatives aux sï¿½ries, aux admissibles, aux ï¿½lï¿½ves, et aux demandes d'hï¿½bergement.</p>
         <form action="index.php?page=admin&action=RAZ" method="post">
         
-        <p id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remmise à zéro de l'interface :</label>
+        <p id="champ-raz"><label for="raz">Cocher cette case si vous ï¿½tes certain de vouloir effectuer une remmise ï¿½ zï¿½ro de l'interface :</label>
         <input type="checkbox" name="raz"/></p>
         <input type="submit" value="Effectuer la remise Ã  zÃ©ro"/>
         </form>
         <?php
-    } elseif (isset($_GET['action']) && $_GET['action'] == "hotel") { // Interface de gestion des hébergements à proximité du campus
+    } elseif (isset($_GET['action']) && $_GET['action'] == "hotel") { // Interface de gestion des hï¿½bergements ï¿½ proximitï¿½ du campus
         $adresseManager = new AdresseManager($db);
-        if (isset($_GET['suppr_cat'])) { // Suppression d'une catégorie
+        if (isset($_GET['suppr_cat'])) { // Suppression d'une catï¿½gorie
             if (!is_numeric($_GET['suppr_cat'])) {
-                throw new RuntimeException('Corruption des paramètres GET'); // Ne se produit jamais en exécution courante
+                throw new RuntimeException('Corruption des paramï¿½tres GET'); // Ne se produit jamais en exï¿½cution courante
             }
             if (!$adresseManager->isUsedCat($_GET['suppr_cat'])) {
                 $adresseManager->deleteCategorie($_GET['suppr_cat']);
             } else {
-                $erreurA = "Vous ne pouvez supprimer cette catégorie tant qu'elle contient des adresses";
+                $erreurA = "Vous ne pouvez supprimer cette catï¿½gorie tant qu'elle contient des adresses";
             }
         }
         if (isset($_GET['suppr'])) { // Suppression d'une annonce
             if (!is_numeric($_GET['suppr'])) {
-                throw new RuntimeException('Corruption des paramètres GET'); // Ne se produit jamais en exécution courante
+                throw new RuntimeException('Corruption des paramï¿½tres GET'); // Ne se produit jamais en exï¿½cution courante
             }
             $adresseManager->delete($_GET['suppr']);
         }
-        if (isset($_POST['nom_cat'])) { // Ajout d'une catégorie
+        if (isset($_POST['nom_cat'])) { // Ajout d'une catï¿½gorie
             if (!empty($_POST['nom_cat']) && strlen($_POST['nom_cat']) <= 100) {
                 $adresseManager->addCategorie($_POST['nom_cat']);
             } else {
-                $erreurA = "Erreur lors de l'ajout d'une nouvelle catégorie";
+                $erreurA = "Erreur lors de l'ajout d'une nouvelle catï¿½gorie";
             }
         }
         if (isset ($_POST['nom'])) { // Ajout ou Modification d'une annonce
@@ -260,8 +262,8 @@ else {
             }
            }
         $categories = $adresseManager->getCategories();
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
-        echo "<h2>Gestion de la liste des hébergements à proximité de l'école</h2>";
+        echo "<a href='index.php?page=admin'>Retour ï¿½ l'accueil</a>";
+        echo "<h2>Gestion de la liste des hï¿½bergements ï¿½ proximitï¿½ de l'ï¿½cole</h2>";
         if (isset($_GET['ajout']) || isset($_GET['modif']) || isset($erreurModif)) { // Interface de modification d'une adresse
             if (isset($_GET['modif'])) {
                 $adresse = $adresseManager->getUnique($_GET['modif']);
@@ -270,11 +272,11 @@ else {
             <form action="index.php?page=admin&action=hotel" method="post">
             Nom : <input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::NOM_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Adresse : <input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::ADRESSE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Téléphone : <input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::TEL_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            Tï¿½lï¿½phone : <input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::TEL_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Email : <input type="text" name="email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::EMAIL_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Description : <?php if (isset($erreurModif) && in_array(Adresse::DESCRIPTION_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             <textarea name="description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><br/><br/>
-            Catégorie : <select name="categorie">
+            Catï¿½gorie : <select name="categorie">
                         <option value=""></option>
             <?php 
             foreach ($categories as $value) {
@@ -307,13 +309,13 @@ else {
             </form>
             <?php
         } else { 
-            echo "<a href='index.php?page=adresses'>Voir la page publique affichant les adresses</a>"; // a régler
-            // Gestion des catégories
-            echo "<h3>Catégories d'hébergement</h3>";
+            echo "<a href='index.php?page=adresses'>Voir la page publique affichant les adresses</a>"; // a rï¿½gler
+            // Gestion des catï¿½gories
+            echo "<h3>Catï¿½gories d'hï¿½bergement</h3>";
             echo "<span style='color:red;'>".@$erreurA."</span>";
             echo "<form action='index.php?page=admin&action=hotel' method='post'>";
             echo "<table border=1 cellspacing=0>";
-            echo "<tr><td>Catégories</td><td>Action</td></tr>";
+            echo "<tr><td>Catï¿½gories</td><td>Action</td></tr>";
             foreach ($categories as $value) {
                 echo "<tr>";
                     echo "<td>".$value['nom']."</td></td>";
@@ -326,29 +328,29 @@ else {
             echo "</tr>";
             echo "</table>";
             echo "</form>";
-            // Gestion des adresses affichées
-            echo "<h3>Adresses affichées actuellement sur le site</h3>";
+            // Gestion des adresses affichï¿½es
+            echo "<h3>Adresses affichï¿½es actuellement sur le site</h3>";
             echo "<a href='index.php?page=admin&action=hotel&ajout=1'>Ajouter une annonce</a>";
             $adressesValides = $adresseManager->getListAffiche();
             echo "<table border=1 cellspacing=0>";
-            echo "<tr><td>Annonce comme affichée</td><td>Catégorie</td><td>Actions</td></tr>";
+            echo "<tr><td>Annonce comme affichï¿½e</td><td>Catï¿½gorie</td><td>Actions</td></tr>";
             foreach ($adressesValides as $adresse) {
                 echo "<tr>";
-                    echo "<td>".$adresse->nom()."<br/>".$adresse->adresse()."<br/>Tél : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description())."</td>";
+                    echo "<td>".$adresse->nom()."<br/>".$adresse->adresse()."<br/>Tï¿½l : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description())."</td>";
                     echo "<td>".$adresse->categorie()."</td>";
                     echo "<td><a href='index.php?page=admin&action=hotel&modif=".$adresse->id()."'>Modif</a> <a href='index.php?page=admin&action=hotel&suppr=".$adresse->id()."'>Suppr</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
-            // Gestion des adresses à valider
-            echo "<h3>Adresses non affichées (proposées par les élèves)</h3>";
+            // Gestion des adresses ï¿½ valider
+            echo "<h3>Adresses non affichï¿½es (proposï¿½es par les ï¿½lï¿½ves)</h3>";
             echo "<p>Pour valider une annonce, cliquez sur Modifier et cocher la case correspondannte</p>";
             $adressesValides = $adresseManager->getListAffiche(0);
             echo "<table border=1 cellspacing=0>";
-            echo "<tr><td>Annonce comme affichée</td><td>Catégorie</td><td>Actions</td></tr>";
+            echo "<tr><td>Annonce comme affichï¿½e</td><td>Catï¿½gorie</td><td>Actions</td></tr>";
             foreach ($adressesValides as $adresse) {
                 echo "<tr>";
-                    echo "<td>".$adresse->nom()."<br/>".$adresse->adresse()."<br/>Tél : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description())."</td>";
+                    echo "<td>".$adresse->nom()."<br/>".$adresse->adresse()."<br/>Tï¿½l : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description())."</td>";
                     echo "<td>".$adresse->categorie()."</td>";
                     echo "<td><a href='index.php?page=admin&action=hotel&modif=".$adresse->id()."'>Modif</a> <a href='index.php?page=admin&action=hotel&suppr=".$adresse->id()."'>Suppr</a></td>";
                 echo "</tr>";
@@ -357,15 +359,15 @@ else {
         }
     } else { // Interface de gestion courante
         ?>
-        <a href="index.php?page=admin&action=deconnect">Se déconnecter</a><br/>
-        <a href="index.php?page=admin&action=RAZ">Remise à zéro de l'interface d'hébergement</a><br/>
-        <a href="index.php?page=admin&action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::PROMO; ?>">Modifier les promotions présentes sur le platal</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::ETABLISSEMENT; ?>">Modifier les établissements de provenance des élèves</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::FILIERE; ?>">Modifier les filières d'entrée des élèves</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::SECTION; ?>">Modifier les sections sportives des élèves</a><br/>
-        <a href="index.php?page=admin&action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
-        <a href="index.php?page=admin&action=hotel">Modifier la liste des hèbergements à proximitè de l'école</a><br/>
+        <a href="index.php?page=admin&action=deconnect">Se dï¿½connecter</a><br/>
+        <a href="index.php?page=admin&action=RAZ">Remise ï¿½ zï¿½ro de l'interface d'hï¿½bergement</a><br/>
+        <a href="index.php?page=admin&action=series">Modifier les sï¿½ries d'admissibilitï¿½s (dates d'ouverture du site)</a><br/>
+        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::PROMO; ?>">Modifier les promotions prï¿½sentes sur le platal</a><br/>
+        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::ETABLISSEMENT; ?>">Modifier les ï¿½tablissements de provenance des ï¿½lï¿½ves</a><br/>
+        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::FILIERE; ?>">Modifier les filiï¿½res d'entrï¿½e des ï¿½lï¿½ves</a><br/>
+        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::SECTION; ?>">Modifier les sections sportives des ï¿½lï¿½ves</a><br/>
+        <a href="index.php?page=admin&action=admissibles">Entrer la liste des admissibles pour la prochaine sï¿½rie</a><br/>
+        <a href="index.php?page=admin&action=hotel">Modifier la liste des hï¿½bergements ï¿½ proximitï¿½ de l'ï¿½cole</a><br/>
         <?php
     }
 }

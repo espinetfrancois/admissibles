@@ -10,7 +10,8 @@
  * @todo logs
  * @todo gerer le problème de db
  */
-$db = $_SESSION['db'];
+
+include_once(APPLICATION_PATH.'/inc/sql.php');
 
 $eleveManager = new EleveManager($db);
 $demandeManager = new DemandeManager($db);
