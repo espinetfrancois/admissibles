@@ -61,8 +61,8 @@ class Layout {
     
     public function __construct() {
         $this->_meta[] = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'."\n".
-        '<link href="./public/images/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
-        '<link href="./public/images/favicon.png" type="image/png" rel="icon">'."\n";
+        '<link href="'.HTTP_IMAGES_PATH.'/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
+        '<link href="'.HTTP_IMAGES_PATH.'/favicon.png" type="image/png" rel="icon">'."\n";
         $this->appendCss('layout.css');
         $this->appendCss('forms.css');
         $this->addMenu("menu.html");
@@ -86,7 +86,6 @@ class Layout {
         ob_start(array($this, "_addContent"));
         include($page);
         ob_end_clean();
-            /* $this->_content[] = $sContent; */
     }
 
     public function _addContent($sContent) {
@@ -178,9 +177,9 @@ class Layout {
 
     protected function ___generateUrl($sUrl, $nType) {
         if ($nType == self::JS) {
-            return '<script type="text/javascript" src="'.JS_PATH.'/'.$sUrl.'"></script>';
+            return '<script type="text/javascript" src="'.HTTP_JS_PATH.'/'.$sUrl.'"></script>';
         } else {
-            return '<link type="text/css" href="'.CSS_PATH.'/'.$sUrl.'" rel="stylesheet" media="all" />';
+            return '<link type="text/css" href="'.HTTP_CSS_PATH.'/'.$sUrl.'" rel="stylesheet" media="all" />';
         }
     }
     
@@ -234,7 +233,7 @@ class Layout {
         $libraries = "";
         if (count($this->_libraries)) {
             foreach ($this->_libraries as $library) {
-                $libraries .= '<script type="text/javascript" src="'.LIBRARY_PATH.'/'.$library.'"></script>'."\n";
+                $libraries .= '<script type="text/javascript" src="'.HTTP_LIBRARY_PATH.'/'.$library.'"></script>'."\n";
             }
         }
         return $libraries;
@@ -244,7 +243,7 @@ class Layout {
         $templates = "";
         if (count($this->_templates)) {
             foreach ($this->_templates as $template) {
-                $templates .= '<script type="text/javascript" src="'.LIBRARY_PATH.'/'.$template.'"></script>'."\n";
+                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.' rel="stylesheet" media="all" />'."\n";
             }
         }
         return $templates;
