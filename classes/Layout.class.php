@@ -89,10 +89,10 @@ class Layout {
             /* $this->_content[] = $sContent; */
     }
 
-    protected function _addContent($sContent) {
-        $this->_content[] = $sContent;
-        return $sContent; 
-    }
+    public function _addContent($sContent) {
+    	$this->_content[] = $sContent;
+    	return $sContent; 
+	}
     /**
      * Ajout du contenu à la page en le positionnant avant le contenu courant
      * @param String $sContent
