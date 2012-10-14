@@ -63,7 +63,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
 // Acceptation d'une demande de logement
 if (isset($_SESSION['eleve']) && isset($_POST['code']) && !empty($_POST['code'])) {
     $demande = $demandeManager->getUnique($_POST['code']);
-    $demande->setCode($demandeManager->updateStatus($_POST['code'], "2"));
+    $demandeManager->updateStatus($_POST['code'], "2");
     // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
 }
 
