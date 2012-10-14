@@ -71,14 +71,14 @@ if (isset($_POST['code']) && !empty($_POST['code'])) {
 }
 
 // Interface de connexion
-if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { // Eleve non identifià
+if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { // Eleve non identifié
     session_destroy();
 ?>
 <!-- <div class="form"> -->
 <h2>Connexion</h2>
 <p>Connectez-vous à l'aide de vos identifiants LDAP (DSI) :</p>
 <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
-<form action="index.php?page=eleve" method="post">
+<form action="/x/connexion" method="post">
 <p id="champ-user" class="champ" class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p>
 <p id="champ-pass" class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p>
 <br/>
@@ -90,7 +90,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
 
 <?php
 } else { // Eleve identifié
-    if ((isset($_GET['action']) && $_GET['action'] == "modify") || !$_SESSION['eleve']->isValid()) { // on teste si l'àléle a dédà entrà ses infos personnelles
+    if ((isset($_GET['action']) && $_GET['action'] == "modify") || !$_SESSION['eleve']->isValid()) { // on teste si l'élève a déjà entré ses infos personnelles
         $promos = $parametres->getList(Parametres::PROMO);
         $sections = $parametres->getList(Parametres::SECTION);
         $prepas = $parametres->getList(Parametres::ETABLISSEMENT);
@@ -99,16 +99,16 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
 
 <h2>Modifier mes informations personnelles</h2>
 <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
-<form action="index.php?page=eleve" method="post">
-<p id="champ-sexe" class="champ"><label for="sexe">Sexe</label> : M <input type="radio" name="sexe" value="M"
+<form action="/x/connexion" method="post">
+<p id="champ-sexe" class="champ"><label for="sexe">Sexe</label> <label>: M <input type="radio" name="sexe" value="M"
     <?php 
         if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "") { 
             echo 'checked="checked"'; 
-        }?>/> / F<input type="radio" name="sexe" value="F"
+        }?>/></label> <label>/ F<input type="radio" name="sexe" value="F"
         <?php
         if ($_SESSION['eleve']->sexe() == "F") {
             echo 'checked="checked"'; 
-        }?>/>
+        }?>/></label>
 <?php if (isset($erreurs) && in_array(Eleve::SEXE_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
 </p>
 <p id="champ-promo" class="champ"> <label for="promo">Promotion : </label><select name="promo">
@@ -210,7 +210,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         }
         ?>
 <br/>
-<input type="submit" value="Modifier mes disponibilitét d'accueil"/>
+<input type="submit" value="Modifier mes disponibilités d'accueil"/>
 </form>
         <?php
         } else {

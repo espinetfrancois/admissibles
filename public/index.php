@@ -10,5 +10,13 @@ $layout = new Layout();
 if ($router->not_found) {
 	$layout->not_found = true;
 }
-$layout->addContent($router->file);
+try {
+	$layout->addPage($router->file);
+} catch (RuntimeException $e) {
+	$layout->addContent(TEMPLATE_PATH.'/probleme.html');
+	if (APP_ENV != 'production') {
+		$layout->addContent($e->getMessage());
+		$layout->addContent($e->getTraceAsString());
+	}
+}
 echo $layout;

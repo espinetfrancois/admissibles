@@ -82,10 +82,19 @@ class Layout {
      * ajoute du contenu à la page
      * @param string $sContent
      */
-    public function addContent($page) {
+    public function addPage($page) {
         ob_start(array($this, "_addContent"));
         include($page);
         ob_end_clean();
+    }
+    
+    /**
+     * 
+     * @author francois.espinet
+     * @param string $sContent
+     */
+    public function addContent($sContent) {
+    	$this->content[] = $sContent;
     }
 
     public function _addContent($sContent) {
