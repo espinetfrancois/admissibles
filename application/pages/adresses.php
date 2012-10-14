@@ -1,12 +1,10 @@
 <?php
 /**
- * Page d'affichage des adresses d'h�bergement � proximit� de l'�cole
+ * Page d'affichage des adresses d'hébergement à proximité de l'école
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
  */
-
-include_once(APPLICATION_PATH.'/inc/sql.php');
 
 $adresseManager = new AdresseManager($db);
 $adressesValides = $adresseManager->getListAffiche();
@@ -17,8 +15,7 @@ foreach ($adressesValides as $adresse) {
         $cat = $adresse->categorie();
     }
     echo "<p>";
-    echo $adresse->nom()."<br/>".$adresse->adresse()."<br/>T�l : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description());
+    echo $adresse->nom()."<br/>".$adresse->adresse()."<br/>Tél : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description());
     echo "</p>";
 }
 ?>
-<span id="page_id">2</span>
