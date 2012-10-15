@@ -16,6 +16,17 @@ class EleveManager {
      */
     protected  $db;
 
+	/**
+     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
+     * @access public
+     * @param PDO $db 
+     * @return void
+     */
+
+    public  function __construct(PDO $db) {
+        $this->db = $db;
+    }
+
 
     /**
      * Méthode permettant d'ajouter un élève
@@ -74,17 +85,6 @@ class EleveManager {
         }
     }
 
-
-    /**
-     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
-     * @access public
-     * @param PDO $db 
-     * @return void
-     */
-
-    public  function __construct(PDO $db) {
-        $this->db = $db;
-    }
 
 
     /**

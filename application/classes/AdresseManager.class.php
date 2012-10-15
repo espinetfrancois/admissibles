@@ -17,6 +17,19 @@ class AdresseManager {
     protected  $db;
 
 
+ /**
+     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
+     * @access public
+     * @param PDO $db 
+     * @return void
+     */
+
+    public  function __construct(PDO $db) {
+        $this->db = $db;
+    }
+
+
+
     /**
      * Méthode permettant d'ajouter une adresse
      * @access protected
@@ -70,18 +83,6 @@ class AdresseManager {
         $requete->bindValue(':adresse', $adresse->adresse());
         $requete->bindValue(':categorie', $adresse->categorie());
         $requete->execute();
-    }
-
-
-    /**
-     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
-     * @access public
-     * @param PDO $db 
-     * @return void
-     */
-
-    public  function __construct(PDO $db) {
-        $this->db = $db;
     }
 
 

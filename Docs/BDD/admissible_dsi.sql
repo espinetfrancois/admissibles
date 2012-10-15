@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Jeu 11 Octobre 2012 à 11:03
+-- Généré le: Lun 15 Octobre 2012 à 19:59
 -- Version du serveur: 5.5.24-log
 -- Version de PHP: 5.4.3
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `admissibles` (
   KEY `ref_etablissements_admissibles_fk` (`ID_ETABLISSEMENT`),
   KEY `ref_filiaires_admissibles_fk` (`ID_FILIERE`),
   KEY `series_admissibles_fk` (`SERIE`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tables contenant les admissibles ˆ l''Žcole polytechnique' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tables contenant les admissibles ˆ l''Žcole polytechnique' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `annonces` (
   `ADRESSE` varchar(250) NOT NULL,
   `ID_CATEGORIE` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `ref_categories` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `NOM` varchar(200) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Référence pour les catégories d''annonces proposées' AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Référence pour les catégories d''annonces proposées' AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -123,10 +123,10 @@ CREATE TABLE IF NOT EXISTS `ref_categories` (
 
 CREATE TABLE IF NOT EXISTS `ref_etablissements` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `NOM` varchar(250) NOT NULL,
-  `COMMUNE` varchar(250) NOT NULL,
+  `NOM` varchar(250) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
+  `COMMUNE` varchar(250) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `series` (
   `OUVERTURE` int(11) NOT NULL,
   `FERMETURE` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 

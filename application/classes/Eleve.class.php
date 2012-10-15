@@ -39,21 +39,21 @@ class Eleve {
 
     /**
      * Section sportive
-     * @var string
+     * @var int
      * @access protected
      */
     protected  $section;
 
     /**
      * Etablissement scolaire d'origine
-     * @var string
+     * @var int
      * @access protected
      */
     protected  $prepa;
 
     /**
      * Filière d'origine
-     * @var string
+     * @var int
      * @access protected
      */
     protected  $filiere;

@@ -79,7 +79,7 @@ class Parametres {
     /**
      * Méthode retournant les series pour lesquelles l'interface est actuellement en ligne
      * @access public
-     * @return array
+     * @return array(int)
      */
 
     public  function getCurrentSeries() {
@@ -158,7 +158,7 @@ class Parametres {
      * Méthode ajoutant un élément à une liste
      * @access public
      * @param int $type 
-     * @param array $liste 
+     * @param array $donnees 
      * @return void
      */
 

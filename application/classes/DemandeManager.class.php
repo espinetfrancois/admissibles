@@ -131,7 +131,7 @@ class DemandeManager {
      * Méthode permettant de mettre à jour le status d'une demande
      * @access public
      * @param string $code
-     * @return string
+     * @return void
      */
 
     public  function updateStatus($code, $status) {
@@ -139,17 +139,13 @@ class DemandeManager {
             throw new RuntimeException('updateStatus : mauvais paramétrage'); // Ne se produit jamais en exécution courante
         }
 
-        $newCode = md5(sha1(time().$code));
         $requete = $this->db->prepare('UPDATE demandes
                                        SET ID_STATUS = :status,
-                                           LIEN = :newCode,
                                        WHERE LIEN = :code'); 
         $requete->bindValue(':status', $status);
-        $requete->bindValue(':newCode', $newCode);
         $requete->bindValue(':code', $code);
 
         $requete->execute();
-        return $newCode;
     }
 
 
@@ -194,7 +190,7 @@ class DemandeManager {
     /**
      * Méthode retournant la liste de toutes les demandes
      * @access public
-     * @return array
+     * @return array(Demande)
      */
 
     public  function getList() {

@@ -10,37 +10,89 @@
 
 class Config {
 
+	/**
+     * @var string
+     * @access protected
+     */
     protected $_dbhost;
+	
+	/**
+     * @var string
+     * @access protected
+     */
     protected $_dblogin;
+	
+	/**
+     * @var string
+     * @access protected
+     */
     protected $_dbbase;
+	
+	/**
+     * @var string
+     * @access protected
+     */
     protected $_dbpass;
+	
+	/**
+     * @var string
+     * @access protected
+     */
     protected $_otherparam = array();
 
-    public function get_dbhost() {
-        return $this->_dbhost;
-    }
 
-    public function get_dblogin() {
-        return $this->_dblogin;
-    }
-
-    public function get_dbbase() {
-        return $this->_dbbase;
-    }
-
-    public function get_dbpass() {
-        return $this->_dbpass;
-    }
-
-
+	/**
+     * Constructeur de la classe
+     * @access public
+     * @return void
+     */
     public function __construct() {
         self::defineConstantes();
         self::setErrors();
         $this->loadConfig();
     }
 
+
+	/**
+     * @access public
+     * @return string
+     */
+    public function get_dbhost() {
+        return $this->_dbhost;
+    }
+
+
+	/**
+     * @access public
+     * @return string
+     */
+    public function get_dblogin() {
+        return $this->_dblogin;
+    }
+
+
+	/**
+     * @access public
+     * @return string
+     */
+    public function get_dbbase() {
+        return $this->_dbbase;
+    }
+
+
+	/**
+     * @access public
+     * @return string
+     */
+    public function get_dbpass() {
+        return $this->_dbpass;
+    }
+
+
     /**
      * Définition des constantes de l'application
+	 * @access public
+     * @return void
      */
     static function defineConstantes() {
         //define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
@@ -55,11 +107,15 @@ class Config {
         define('HTTP_LIBRARY_PATH', HTTP_PUBLIC_PATH."/library");
         define('HTTP_IMAGES_PATH', HTTP_PUBLIC_PATH.'/images');
         
-        
-        
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
     }
 
+
+	/**
+	 * Ajuste le niveau de verbosité des erreurs
+	 * @access public
+     * @return void
+     */
     static function setErrors() {
         if (APP_ENV != "production") {
             ini_set('error_reporting', E_ALL);
@@ -67,6 +123,12 @@ class Config {
         }
     }
 
+
+	/**
+	 * Chargement du fichier de configuration
+	 * @access protected
+     * @return void
+     */
     protected function loadConfig() {
         if (APP_ENV != "production") {
             $file = CONFIG_PATH."/dev.ini";
@@ -91,12 +153,19 @@ class Config {
 
     }
 
+
+	/**
+	 * Hydratation
+	 * @access protected
+     * @return void
+     */
     protected function initBdd($aConfig) {
         $this->_dbhost = $aConfig['host'];
         $this->_dblogin = $aConfig['login'];
         $this->_dbbase = $aConfig['base'];
         $this->_dbpass = $aConfig['password'];
     }
+
 
     /* protected function initLibrary($aConfig) {
         foreach ($aConfig as $key => $value) {
@@ -106,6 +175,11 @@ class Config {
     } */
 
 
+	/**
+	 * Lecture de paramètres facultatifs
+	 * @access public
+     * @return void
+     */
     public function get_otherparam() {
         return $this->_otherparam;
     }
