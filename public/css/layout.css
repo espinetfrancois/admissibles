@@ -244,24 +244,24 @@ div#pied_page {
 	width: 100%;
 }
 
-ul#actions,ul#liens {
+/* ul#actions,ul#liens {
 	color: #31313b;
 	background: #ffba00;
 	margin: 10px 0 6px;
 	padding: 0.1em;
-	float: left;
+	float: right;
 }
 
 ul#actions {
 	padding: 0.1em 20px;
 	width: 216px;
-}
+} */
 
-ul#actions li,ul#liens li {
+div#pied_page ul li {
 	display: inline;
 }
 
-ul#actions a,ul#liens a {
+/* ul#actions a,ul#liens a {
 	color: #31313b;
 	text-decoration: none;
 }
@@ -274,14 +274,10 @@ ul#liens {
 	margin: 10px 0 6px 8px;
 	padding: 0.1em 6px;
 }
-
+ */
 ul#ours {
 	padding: 0.1em 7px;
 	clear: both;
-}
-
-ul#ours li {
-	display: inline;
 }
 
 ul#ours a:hover {
@@ -293,8 +289,9 @@ ul#ours,ul#ours a {
 	color: #fff;
 	text-decoration: none;
 }
+
 /**
-id de la page
+id de la page - sert pour la coloration du menu
 */
 
 span#page_id {
@@ -306,11 +303,11 @@ span#page_id {
 	padding-bottom : 5px;
 }
 
-
+/**
+ * page non-trouvée
+ */
 .not_found {
 	background-color : red;
 	font-size : 1.4em;
 	text-align : center;
-	
-}
 }
