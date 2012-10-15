@@ -210,9 +210,9 @@ else {
         <p>Cette action efface toutes les informations relatives aux séries, aux admissibles, aux élèves, et aux demandes d'hébergement.</p>
         <form action="/administration/gestion?action=RAZ" method="post">
         
-        <p id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remmise à zéro de l'interface :</label>
+        <p id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remise à zéro de l'interface :</label>
         <input type="checkbox" name="raz"/></p>
-        <input type="submit" value="Effectuer la remise Ã  zéro"/>
+        <input type="submit" value="Effectuer la remise à zéro"/>
         </form>
         <?php
     } elseif (isset($_GET['action']) && $_GET['action'] == "hotel") { // Interface de gestion des hébergements à proximité du campus

@@ -10,12 +10,12 @@ $layout = new Layout();
 $router = new Router($_SERVER['REQUEST_URI'], $layout);
 
 try {
-	$layout->addPage($router->file);
+    $layout->addPage($router->file);
 } catch (RuntimeException $e) {
-	$layout->addContent(TEMPLATE_PATH.'/probleme.html');
-	if (APP_ENV != 'production') {
-		$layout->addContent($e->getMessage());
-		$layout->addContent($e->getTraceAsString());
-	}
+    $layout->addContent(TEMPLATE_PATH.'/probleme.html');
+    if (APP_ENV != 'production') {
+        $layout->addContent($e->getMessage());
+        $layout->addContent($e->getTraceAsString());
+    }
 }
 echo $layout;

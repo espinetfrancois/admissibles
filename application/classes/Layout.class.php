@@ -6,6 +6,8 @@
  * @version 1.0
  *
  */
+
+
 class Layout {
 
     /**
@@ -62,14 +64,14 @@ class Layout {
      */
     const doctype = '<!DOCTYPE html>';
 
-    const PREPEND	= 1;
-    const APPEND	= 2;
-    const JS		= 1;
-    const CSS		= 2;
+    const PREPEND    = 1;
+    const APPEND    = 2;
+    const JS        = 1;
+    const CSS        = 2;
 
     const MENU_APPENDICE_ADMIN = "menu_adminpart.php";
     
-    protected $_libraries = array("jquery/jquery-1.8.2.min.js", "jquery/jquery-ui-1.8.24.custom.min.js", "jquery/jquery.ui.datepicker-fr.js");
+    protected $_libraries = array("jquery/jquery-1.8.2.min.js", "jquery/jquery-ui-1.8.24.custom.min.js");
     protected $_templates = array("jquery/jquery-ui-1.8.24.custom.css");
 
     public function __construct() {
@@ -80,7 +82,6 @@ class Layout {
         $this->appendCss('forms.css');
         $this->addMenu("menu.html");
         $this->appendJs('menu.js');
-        $this->appendJs('form.js');
     }
 
     public function setTitle($sTitre) {
@@ -99,7 +100,7 @@ class Layout {
     public function addPage($page) {
         ob_start(array($this, "_addContent"));
         include($page);
-        ob_end_clean();
+        ob_end_flush();
     }
 
     /**
@@ -264,9 +265,9 @@ class Layout {
 
     protected function renderCssTemplates() {
         $templates = "";
-        if (count($this->_templates) > 0) {
+        if (count($this->_templates)) {
             foreach ($this->_templates as $template) {
-                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.'" rel="stylesheet" media="all" />'."\n";
+                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.' rel="stylesheet" media="all" />'."\n";
             }
         }
         return $templates;
@@ -287,7 +288,7 @@ class Layout {
         if ($this->_menu != null) {
             $sMenu = "\n".'<div class= menu>
                            <div id="navigation">
-	                       <ul class="menu_deroulant" id="menu_principal">'.
+                           <ul class="menu_deroulant" id="menu_principal">'.
                            file_get_contents(TEMPLATE_PATH.'/'.$this->_menu);
             if ($this->is_admin) {
                 ob_start();
