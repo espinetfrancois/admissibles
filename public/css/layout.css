@@ -101,7 +101,7 @@ div#navigation {
 	float: left;
 	font-size: 1.35em;
 	padding: 0 0 3px 0;
-	width: 16em;
+	width: 19em;
 	min-height: 300px;
 	z-index: 20;
 }
@@ -221,7 +221,7 @@ div#page_deco {
 	padding: 10px 1em 3px 3em;
 	line-height: 1.7em;
 	text-align: justify;
-	margin: 0 0 0 21.6em;
+	margin: 0 0 0 25.7em;
 	left: 0;
 	right: 0;
 	border-right : 1px solid;

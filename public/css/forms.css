@@ -3,7 +3,7 @@
 /* Décoration des formulaires*/
 form {
 	border-radius : 1em;
-	background-color : rgba(22, 77, 109, 0.5);
+	background-color : rgba(255, 186, 0, 0.8);/* rgba(0, 35, 52, 0.8); */
 	padding : 2em;
 	/* width : 35em; */
 	overflow : auto;
@@ -20,7 +20,7 @@ form p.champ {
 	margin : 0;
 }
 
-p.champ input {
+p.champ input, p.champ textarea, p.champ select {
 	float : right;
 	clear : right;
 }
@@ -29,7 +29,7 @@ p.champ label {
 	float : left;
 }
 
-form input[type=text], form input[type=password] {
+form input[type=text], form input[type=password], form textarea {
 	border-radius : 4px;
 }
 
