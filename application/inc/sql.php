@@ -1,5 +1,4 @@
 <?php
-
 $config = $_SESSION['config'];
 
 $db     = new PDO('mysql:host='.$config->get_dbhost().';dbname='.$config->get_dbbase(),$config->get_dblogin(),$config->get_dbpass());

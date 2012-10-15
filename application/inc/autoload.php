@@ -21,5 +21,3 @@ function autoloader($class) {
 }
 
 spl_autoload_register('autoloader');
-
-$_SESSION['config'] = new Config();

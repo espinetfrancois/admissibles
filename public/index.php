@@ -3,6 +3,7 @@ define('ROOT_PATH', realpath(dirname(__FILE__).'/../'));
 define('APPLICATION_PATH', ROOT_PATH.'/application');
 require_once(APPLICATION_PATH.'/inc/autoload.php');
 session_start();
+$_SESSION['config'] = new Config();
 //require_once(APPLICATION_PATH.'/inc/sql.php');
 
 $layout = new Layout();
