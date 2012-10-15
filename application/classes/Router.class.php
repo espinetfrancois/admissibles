@@ -29,13 +29,6 @@ class Router {
 	 */
 	protected $requete = null;
 
-
-	/**
-	 * Booléen qui indique si on a un 404
-	 * @var bool page trouvée ou non
-	 */
-	public $not_found = false;
-
 	/**
 	 * Section spéciale pour les routes sans préfixes
 	 * @var string
@@ -50,11 +43,18 @@ class Router {
 	const SECTION_ROOT = "root";
 
 	/**
+	 * le layout de l'application
+	 * @var Layout
+	 */
+	protected $layout = null;
+	/**
 	 * Constructeur, prend en argument l'url demandée ($_SERVER['REQUEST_URI'])
 	 * @author francois.espinet
 	 * @param string $request l'url demandée par l'utilisateur
+	 * @param Layout $layout le l'objet layout de l'application
 	 */
-	public function __construct($request) {
+	public function __construct($request, $layout) {
+	    $this->layout = $layout;
 		//chargement du fichier ini, initialisation des tableaux
 		$this->_loadIni(CONFIG_PATH.'/'.self::INI_FILE);
 		//initialisation de l'objet requete
@@ -62,7 +62,7 @@ class Router {
 
 		//si la requete est invalide
 		if ($this->requete->is_invalide) {
-			$this->not_found = true;
+			$this->layout->not_found = true;
 			$this->setAccueil();
 		}
 
@@ -102,14 +102,14 @@ class Router {
 		$this->file = PAGES_PATH.'/';
 		if ($this->requete->prefixe != null) {
 			$prefix = $this->__traitementPrefixe();
-			if (! $this->not_found) {
+			if (! $this->layout->not_found) {
 				$this->__traitementSuffixe($prefix);
 			}
 		} else {
 			$this->__traitementSuffixe();
 		}
 
-		if ($this->not_found) {
+		if ($this->layout->not_found) {
 			$this->setAccueil();
 		}
 			
@@ -119,17 +119,20 @@ class Router {
 		if (array_key_exists($this->requete->prefixe, $this->urls)) {
 			return $this->requete->prefixe;
 		} else {
-			$this->not_found = true;
+			$this->layout->not_found = true;
 		}
 	}
 
 	private function __traitementSuffixe($prefix = self::SECTION_ROOT) {
 		if (array_key_exists($this->requete->suffixe, $this->urls[$prefix]) ) {
 			$this->file .= $this->urls[$prefix][$this->requete->suffixe];
+			if ($this->requete->prefixe == 'administration') {
+			    $this->layout->is_admin = true;
+			}
 		} elseif ($this->requete->suffixe == null) {
 			$this->setAccueil();
 		} else {
-			$this->not_found = true;
+			$this->layout->not_found = true;
 		}
 	}
 

@@ -5,11 +5,9 @@ session_start();
 require_once(APPLICATION_PATH.'/inc/autoload.php');
 //require_once(APPLICATION_PATH.'/inc/sql.php');
 
-$router = new Router($_SERVER['REQUEST_URI']);
 $layout = new Layout();
-if ($router->not_found) {
-	$layout->not_found = true;
-}
+$router = new Router($_SERVER['REQUEST_URI'], $layout);
+
 try {
 	$layout->addPage($router->file);
 } catch (RuntimeException $e) {

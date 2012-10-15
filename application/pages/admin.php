@@ -368,6 +368,7 @@ else {
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::SECTION; ?>">Modifier les sections sportives des élèves</a><br/>
         <a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
         <a href="/administration/gestion?action=hotel">Modifier la liste des hèbergements à proximitè de l'école</a><br/>
+        <span id="page_id">4</span>
         <?php
     }
 }
