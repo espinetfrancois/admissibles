@@ -28,7 +28,7 @@ session_destroy();
 ?>
     <h2>Connexion</h2>
     <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
-    <form action="index.php?page=admin" method="post">
+    <form action="/administration/gestion" method="post">
     Utilisateur : <input type="text" name="user"/><br/>
     Mot de passe : <input type="password" name="pass"/><br/>
     <input type="submit" value="Se connecter"/>
@@ -38,7 +38,7 @@ session_destroy();
 else {
     echo "<h2>Interface d'administration</h2>";
     if (isset($_GET['action']) && $_GET['action'] == "param" && isset($_GET['type'])) { // Gestion des listes de paramètres
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
+        echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
         switch ($_GET['type']) {
             case Parametres::PROMO: 
                 echo "<h2>Promotions présentes sur le platâl</h2>";
@@ -90,7 +90,7 @@ else {
             }
             $liste = $parametres->getList($_GET['type']);
             echo "<span style='color:red;'>".@$erreurA."</span>";
-            echo "<form action='index.php?page=admin&action=param&type=".$_GET['type']."' method='post'>";
+            echo "<form action='/administration/gestion?action=param&type=".$_GET['type']."' method='post'>";
             echo "<table border=1 cellspacing=0>";
             echo "<tr><td>Valeur</td><td>Action</td></tr>";
             foreach ($liste as $res) {
@@ -98,7 +98,7 @@ else {
                     $res['nom'] = $res['ville']." - ".$res['nom'];
                 }
                 echo "<tr>";
-                    echo "<td>".$res['nom']."</td><td><a href='index.php?page=admin&action=param&type=".$_GET['type']."&suppr=".$res['id']."'>Suppr</a></td>";
+                    echo "<td>".$res['nom']."</td><td><a href='/administration/gestion?action=param&type=".$_GET['type']."&suppr=".$res['id']."'>Suppr</a></td>";
                 echo "</tr>";
             }
             echo "<tr>";
@@ -132,11 +132,11 @@ else {
                 $erreurA = "Erreur lors de l'ajout d'une nouvelle série";
             }
         }
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
+        echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
         echo "<h2>Séries d'admissibilité</h2>";
         $series = $parametres->getList(Parametres::SERIE);
         echo "<span style='color:red;'>".@$erreurA."</span>";
-        echo "<form action='index.php?page=admin&action=series' method='post'>";
+        echo "<form action='/administration/gestion?action=series' method='post'>";
         echo "<table border=1 cellspacing=0>";
         echo "<tr><td>Intitulé</td><td>Date de début des oraux</td><td>Date de fin des oraux</td><td>Action</td></tr>";
         foreach ($series as $value) {
@@ -144,7 +144,7 @@ else {
                 echo "<td>".$value['intitule']."</td></td>";
                 echo "<td>".date("d/m/Y", $value['date_debut'])."</td>";
                 echo "<td>".date("d/m/Y", $value['date_fin'])."</td>";
-                echo "<td><a href='index.php?page=admin&action=series&suppr=".$value['id']."'>Suppr</a></td>";
+                echo "<td><a href='/administration/gestion?action=series&suppr=".$value['id']."'>Suppr</a></td>";
             echo "</tr>";
         }
         echo "<tr>";
@@ -164,14 +164,14 @@ else {
                 $erreurA = "Mauvais formatage de la liste";
             }
         }
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
+        echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
         echo "<h2>Insertion d'une liste d'admissibilité</h2>";
         echo "<span style='color:red;'>".@$erreurA."</span>";
         echo "<p>Attention : l'insertion d'une liste d'admissibilité marque l'ouverture des demandes d'hébergement pour la série considérée !</p>";
         $filieres = $parametres->getList(Parametres::FILIERE);
         $series = $parametres->getList(Parametres::SERIE);
         ?>
-        <form action="index.php?page=admin&action=admissibles" method="post">
+        <form action="/administration/gestion?action=admissibles" method="post">
             Série d'admissibilité : <select name="serie">
                 <option value="" selected></option>
         <?php
@@ -200,7 +200,7 @@ else {
         </form>
         <?php
     } elseif (isset($_GET['action']) && $_GET['action'] == "RAZ") { // Interface de remise à zéro de la plate-forme
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
+        echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
         if (isset($_POST['raz']) && $_POST['raz']) {
             $parametres->remiseAZero();
             echo "<h3 style='color:red;'>Remise à zéro effectuée</h3>";
@@ -208,7 +208,7 @@ else {
         ?>
         <p style="color:red;">Attention : la remise à zéro de l'interface est irréversible.</p>
         <p>Cette action efface toutes les informations relatives aux séries, aux admissibles, aux élèves, et aux demandes d'hébergement.</p>
-        <form action="index.php?page=admin&action=RAZ" method="post">
+        <form action="/administration/gestion?action=RAZ" method="post">
         
         <p id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remmise à zéro de l'interface :</label>
         <input type="checkbox" name="raz"/></p>
@@ -262,14 +262,14 @@ else {
             }
            }
         $categories = $adresseManager->getCategories();
-        echo "<a href='index.php?page=admin'>Retour à l'accueil</a>";
+        echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
         echo "<h2>Gestion de la liste des hébergements à proximité de l'école</h2>";
         if (isset($_GET['ajout']) || isset($_GET['modif']) || isset($erreurModif)) { // Interface de modification d'une adresse
             if (isset($_GET['modif'])) {
                 $adresse = $adresseManager->getUnique($_GET['modif']);
             }
             ?>
-            <form action="index.php?page=admin&action=hotel" method="post">
+            <form action="/admistration/gestion?action=hotel" method="post">
             Nom : <input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::NOM_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Adresse : <input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::ADRESSE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Téléphone : <input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::TEL_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
@@ -309,17 +309,17 @@ else {
             </form>
             <?php
         } else { 
-            echo "<a href='index.php?page=adresses'>Voir la page publique affichant les adresses</a>"; // a régler
+            echo "<a href='/admissible/adresses'>Voir la page publique affichant les adresses</a>"; // a régler
             // Gestion des catégories
             echo "<h3>Catégories d'hébergement</h3>";
             echo "<span style='color:red;'>".@$erreurA."</span>";
-            echo "<form action='index.php?page=admin&action=hotel' method='post'>";
+            echo "<form action='/administration/gestion?action=hotel' method='post'>";
             echo "<table border=1 cellspacing=0>";
             echo "<tr><td>Catégories</td><td>Action</td></tr>";
             foreach ($categories as $value) {
                 echo "<tr>";
                     echo "<td>".$value['nom']."</td></td>";
-                    echo "<td><a href='index.php?page=admin&action=hotel&suppr_cat=".$value['id']."'>Suppr</a></td>";
+                    echo "<td><a href='/administration/gestion?action=hotel&suppr_cat=".$value['id']."'>Suppr</a></td>";
                 echo "</tr>";
             }
             echo "<tr>";
@@ -330,7 +330,7 @@ else {
             echo "</form>";
             // Gestion des adresses affichées
             echo "<h3>Adresses affichées actuellement sur le site</h3>";
-            echo "<a href='index.php?page=admin&action=hotel&ajout=1'>Ajouter une annonce</a>";
+            echo "<a href='/administration/gestion?action=hotel&ajout=1'>Ajouter une annonce</a>";
             $adressesValides = $adresseManager->getListAffiche();
             echo "<table border=1 cellspacing=0>";
             echo "<tr><td>Annonce comme affichée</td><td>Catégorie</td><td>Actions</td></tr>";
@@ -338,7 +338,7 @@ else {
                 echo "<tr>";
                     echo "<td>".$adresse->nom()."<br/>".$adresse->adresse()."<br/>Tél : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description())."</td>";
                     echo "<td>".$adresse->categorie()."</td>";
-                    echo "<td><a href='index.php?page=admin&action=hotel&modif=".$adresse->id()."'>Modif</a> <a href='index.php?page=admin&action=hotel&suppr=".$adresse->id()."'>Suppr</a></td>";
+                    echo "<td><a href='/administration/gestion?action=hotel&modif=".$adresse->id()."'>Modif</a> <a href='/administration/gestion?action=hotel&suppr=".$adresse->id()."'>Suppr</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
@@ -352,22 +352,22 @@ else {
                 echo "<tr>";
                     echo "<td>".$adresse->nom()."<br/>".$adresse->adresse()."<br/>Tél : ".$adresse->tel()."<br/>Mail : ".$adresse->email()."<br/>".nl2br($adresse->description())."</td>";
                     echo "<td>".$adresse->categorie()."</td>";
-                    echo "<td><a href='index.php?page=admin&action=hotel&modif=".$adresse->id()."'>Modif</a> <a href='index.php?page=admin&action=hotel&suppr=".$adresse->id()."'>Suppr</a></td>";
+                    echo "<td><a href='/administration/gestion?action=hotel&modif=".$adresse->id()."'>Modif</a> <a href='/administration/gestion?action=hotel&suppr=".$adresse->id()."'>Suppr</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
         }
     } else { // Interface de gestion courante
         ?>
-        <a href="index.php?page=admin&action=deconnect">Se déconnecter</a><br/>
-        <a href="index.php?page=admin&action=RAZ">Remise à zéro de l'interface d'hébergement</a><br/>
-        <a href="index.php?page=admin&action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::PROMO; ?>">Modifier les promotions présentes sur le platal</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::ETABLISSEMENT; ?>">Modifier les établissements de provenance des élèves</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::FILIERE; ?>">Modifier les filières d'entrée des élèves</a><br/>
-        <a href="index.php?page=admin&action=param&type=<?php echo Parametres::SECTION; ?>">Modifier les sections sportives des élèves</a><br/>
-        <a href="index.php?page=admin&action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
-        <a href="index.php?page=admin&action=hotel">Modifier la liste des hèbergements à proximitè de l'école</a><br/>
+        <a href="/administration/gestion?action=deconnect">Se déconnecter</a><br/>
+        <a href="/administration/gestion?action=RAZ">Remise à zéro de l'interface d'hébergement</a><br/>
+        <a href="/administration/gestion?action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::PROMO; ?>">Modifier les promotions présentes sur le platal</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::ETABLISSEMENT; ?>">Modifier les établissements de provenance des élèves</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::FILIERE; ?>">Modifier les filières d'entrée des élèves</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::SECTION; ?>">Modifier les sections sportives des élèves</a><br/>
+        <a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
+        <a href="/administration/gestion?action=hotel">Modifier la liste des hèbergements à proximitè de l'école</a><br/>
         <?php
     }
 }

@@ -20,3 +20,4 @@ foreach ($adressesValides as $adresse) {
     echo "</p>";
 }
 ?>
+<span id="page_id">2</span>

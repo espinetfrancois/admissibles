@@ -46,7 +46,9 @@ class Requete {
 	 * @param string $request la requete de l'utilisateur
 	 */
 	protected function _setRequete($request) {
-		$aRequeteParts = explode('/', $request);
+		//contient tous les éléments de la requète
+		$aAllRequestParts= parse_url($request);
+		$aRequeteParts = explode('/', $aAllRequestParts['path']);
 		//le +1 se justifie par le fait que le premier élément est toujours ""
 		if (count($aRequeteParts) > self::PROFONDEUR_MAX_REQUETE+1) {
 			$this->is_invalide = true;

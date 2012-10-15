@@ -73,7 +73,7 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
             $sections = $parametres->getList(Parametres::SECTION);
             
             if (isset($erreurD) && in_array(Demande::NON_ADMISSIBLE, $erreurD)) echo '<span style="color:red;">Merci de vérifier vos informations personnelles : vous ne semblez pas être dans les listes d\'admissibilité !</span>'; ?>
-            <form action="index.php?page=admissible&action=demande" method="post">
+            <form action="/admissible/inscription?action=demande" method="post">
             Nom : <input type="text" name="nom" value="<?php if (isset($demande)) { echo $demande->nom(); } ?>"/>
             <?php if (isset($erreurD) && in_array(Demande::NOM_INVALIDE, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Prénom : <input type="text" name="prenom" value="<?php if (isset($demande)) { echo $demande->prenom(); } ?>"/>
@@ -138,12 +138,12 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
 } else { // Page affichée 
     ?>
     <p>Cette interface vous permet de trouver un élève présent sur le campus pour vous héberger pendant la période des oraux.<br/>
-Dès la sortie des listes d'admissibilités pour votre série et jusqu'à la veille du début des épreuves orales minuit, rendez-vous sur la page <a href="index.php?page=admissible&action=demande">Faire une demande de logement</a>, 
+Dès la sortie des listes d'admissibilités pour votre série et jusqu'à la veille du début des épreuves orales minuit, rendez-vous sur la page <a href="/admissible/inscription?action=demande">Faire une demande de logement</a>, 
 remplissez le formulaire avec vos informations personnelles et envoyer votre demande auprès de l'élève qui vous correspond le mieux (même lycée de provenance, même filière ou autres...).<br/><br/>
 Dès l'aceptation par l'élève concerné, vous recevrez un email de confirmation vous permettant de prendre contact avec lui pour organiser votre arrivée.<br/>
 Si votre demande semble prendre trop de temps pour être acceptée par l'élève que vous avez choisi, annulez votre première demande et remplissez-en une autre...<br/><br/>
-Par ailleurs, n'hésitez pas à consulter la liste des <a href="index.php?page=adresses">bonnes adresses</a> si vous souhaitez vous loger par vos propres moyens à proximité du campus (hôtel, pension...)</p>
+Par ailleurs, n'hésitez pas à consulter la liste des <a href="/admissible/adresses">bonnes adresses</a> si vous souhaitez vous loger par vos propres moyens à proximité du campus (hôtel, pension...)</p>
     <?php
 }
-
 ?>
+<span id="page_id">12</span>
