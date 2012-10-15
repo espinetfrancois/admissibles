@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Site des admissibles de l'école polytechnique" company="" webLink="http://" view-date="2012-09-10" view-index="0" gantt-divider-location="526" resource-divider-location="355" version="2.0">
+<project name="Site des admissibles de l'école polytechnique" company="" webLink="http://" view-date="2012-10-01" view-index="0" gantt-divider-location="508" resource-divider-location="355" version="2.0">
     <description/>
-    <view zooming-state="default:6" id="gantt-chart"/>
+    <view zooming-state="default:5" id="gantt-chart"/>
     <view id="resource-table">
         <field id="0" name="Nom" width="50" order="0"/>
         <field id="1" name="Rôle par défaut" width="49" order="1"/>
@@ -169,9 +169,9 @@
         <displaycolumn property-id="tpd9" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd8" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd0" order="-1" width="75" visible="false"/>
-        <displaycolumn property-id="tpd3" order="0" width="335" visible="true"/>
-        <displaycolumn property-id="tpd4" order="1" width="85" visible="true"/>
-        <displaycolumn property-id="tpd5" order="2" width="85" visible="true"/>
+        <displaycolumn property-id="tpd3" order="0" width="322" visible="true"/>
+        <displaycolumn property-id="tpd4" order="1" width="83" visible="true"/>
+        <displaycolumn property-id="tpd5" order="2" width="82" visible="true"/>
     </taskdisplaycolumns>
     <previous/>
     <roles roleset-name="Default"/>

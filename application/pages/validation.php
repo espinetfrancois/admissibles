@@ -7,6 +7,7 @@
  * @todo logs
  * @todo envoi mail
  */
+include_once(APPLICATION_PATH.'/inc/sql.php');
 
 $demandeManager = new DemandeManager($db);
 

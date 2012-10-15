@@ -5,6 +5,7 @@
  * @version 1.0
  *
  */
+include_once(APPLICATION_PATH.'/inc/sql.php');
 
 $adresseManager = new AdresseManager($db);
 $adressesValides = $adresseManager->getListAffiche();
