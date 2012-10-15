@@ -269,7 +269,7 @@ else {
                 $adresse = $adresseManager->getUnique($_GET['modif']);
             }
             ?>
-            <form action="/admistration/gestion?action=hotel" method="post">
+            <form action="/administration/gestion?action=hotel" method="post">
             Nom : <input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::NOM_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Adresse : <input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::ADRESSE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             Téléphone : <input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::TEL_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
@@ -309,7 +309,7 @@ else {
             </form>
             <?php
         } else { 
-            echo "<a href='/admissible/adresses'>Voir la page publique affichant les adresses</a>"; // a régler
+            echo "<a href='/admissible/adresses' target='_blank'>Voir la page publique affichant les adresses</a>"; // a régler
             // Gestion des catégories
             echo "<h3>Catégories d'hébergement</h3>";
             echo "<span style='color:red;'>".@$erreurA."</span>";
@@ -367,7 +367,7 @@ else {
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::FILIERE; ?>">Modifier les filières d'entrée des élèves</a><br/>
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::SECTION; ?>">Modifier les sections sportives des élèves</a><br/>
         <a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
-        <a href="/administration/gestion?action=hotel">Modifier la liste des hèbergements à proximitè de l'école</a><br/>
+        <a href="/administration/gestion?action=hotel">Modifier la liste des hébergements à proximitè de l'école</a><br/>
         <span id="page_id">4</span>
         <?php
     }
