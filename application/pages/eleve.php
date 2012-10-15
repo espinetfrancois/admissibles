@@ -184,13 +184,13 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         ?>
 <h2>Disponibilitét d'accueil</h2>
 <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
-<a href="index.php?page=eleve&action=deconnect">Se déconnecter</a> -- <a href="index.php?page=eleve&action=modify">Modifier mes informations personnelles</a>
+<a href="/x/connexion?action=deconnect">Se déconnecter</a> -- <a href="/x/connexion?&action=modify">Modifier mes informations personnelles</a>
 <hr/>
         <?php 
         if (!empty($series)) {
         ?>
 <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible :</p>
-<form action="index.php?page=eleve" method="post">
+<form action="/x/connexion" method="post">
 <input type="hidden" name="serie" value="1"/>
         <?php
         foreach ($series as $value) {
@@ -227,7 +227,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
                   <td>Prérom</td>
                   <td>Sexe</td>
                   <td>Etablissement</td>
-                  <td>Filiéie</td>
+                  <td>Filière</td>
                   <td>Série</td>
                   <td>Statut</td>
                   <td>Action possible</td>
