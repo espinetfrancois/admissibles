@@ -120,9 +120,9 @@ class EleveManager {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
             throw new RuntimeException('delete Dispo : parametres invalides'); // Ne se produit jamais en exécution courante
         }
-        $requete = $this->db->prepare('DELETE 
-                                       SET ID_X = :user,
-                                       ID_SERIE = :serie');
+        $requete = $this->db->prepare('DELETE FROM disponibilites
+                                       WHERE ID_X = :user
+                                       AND ID_SERIE = :serie');
         $requete->bindValue(':user', $user);
         $requete->bindValue(':serie', $serie);
         $requete->execute();

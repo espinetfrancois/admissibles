@@ -260,7 +260,7 @@ else {
             } else {
                 $erreurModif = $adresse->erreurs();
             }
-           }
+        }
         $categories = $adresseManager->getCategories();
         echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
         echo "<h2>Gestion de la liste des hébergements à proximité de l'école</h2>";
