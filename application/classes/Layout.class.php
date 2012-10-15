@@ -67,6 +67,8 @@ class Layout {
     const JS		= 1;
     const CSS		= 2;
 
+    const MENU_APPENDICE_ADMIN = "menu_adminpart.php";
+    
     protected $_libraries = array("jquery/jquery-1.8.2.min.js", "jquery/jquery-ui-1.8.24.custom.min.js");
     protected $_templates = array("jquery/jquery-ui-1.8.24.custom.css");
 
@@ -287,7 +289,10 @@ class Layout {
 	                       <ul class="menu_deroulant" id="menu_principal">'.
                            file_get_contents(TEMPLATE_PATH.'/'.$this->_menu);
             if ($this->is_admin) {
-                $sMenu .= file_get_contents(TEMPLATE_PATH.'/menu_adminpart.html');
+                ob_start();
+                include(TEMPLATE_PATH.'/'.self::MENU_APPENDICE_ADMIN);
+                $sMenu .= ob_get_clean();
+                //$sMenu .= file_get_contents(TEMPLATE_PATH.'/menu_adminpart.html');
             }
         }
         return $sMenu.'</ul></div></div>';
