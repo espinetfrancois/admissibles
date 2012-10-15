@@ -69,7 +69,7 @@ class Layout {
 
     const MENU_APPENDICE_ADMIN = "menu_adminpart.php";
     
-    protected $_libraries = array("jquery/jquery-1.8.2.min.js", "jquery/jquery-ui-1.8.24.custom.min.js");
+    protected $_libraries = array("jquery/jquery-1.8.2.min.js", "jquery/jquery-ui-1.8.24.custom.min.js", "jquery/jquery.ui.datepicker-fr.js");
     protected $_templates = array("jquery/jquery-ui-1.8.24.custom.css");
 
     public function __construct() {
@@ -80,6 +80,7 @@ class Layout {
         $this->appendCss('forms.css');
         $this->addMenu("menu.html");
         $this->appendJs('menu.js');
+        $this->appendJs('form.js');
     }
 
     public function setTitle($sTitre) {
@@ -263,9 +264,9 @@ class Layout {
 
     protected function renderCssTemplates() {
         $templates = "";
-        if (count($this->_templates)) {
+        if (count($this->_templates) > 0) {
             foreach ($this->_templates as $template) {
-                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.' rel="stylesheet" media="all" />'."\n";
+                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.'" rel="stylesheet" media="all" />'."\n";
             }
         }
         return $templates;
