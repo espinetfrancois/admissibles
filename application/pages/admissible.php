@@ -142,7 +142,7 @@ Dès la sortie des listes d'admissibilités pour votre série et jusqu'à la vei
 remplissez le formulaire avec vos informations personnelles et envoyer votre demande auprès de l'élève qui vous correspond le mieux (même lycée de provenance, même filière ou autres...).<br/><br/>
 Dès l'aceptation par l'élève concerné, vous recevrez un email de confirmation vous permettant de prendre contact avec lui pour organiser votre arrivée.<br/>
 Si votre demande semble prendre trop de temps pour être acceptée par l'élève que vous avez choisi, annulez votre première demande et remplissez-en une autre...<br/><br/>
-Par ailleurs, n'hésitez pas à consulter la liste des <a href="/admissible/adresses">bonnes adresses</a> si vous souhaitez vous loger par vos propres moyens à proximité du campus (hôtel, pension...)</p>
+</p>
     <?php
 }
 ?>
