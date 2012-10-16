@@ -6,7 +6,6 @@
  *
  */
 
-
 class Requete {
     
     /**
@@ -15,6 +14,7 @@ class Requete {
      * @var int
      */
     const PROFONDEUR_MAX_REQUETE = 2;
+    
     /**
      * Le préfixe de la requête, peut être nul
      * @var string
@@ -33,6 +33,7 @@ class Requete {
      * @var boolean
      */
     public $is_invalide = false;
+    
     /**
      * Constructeur de la classe reque^te
      * @author francois.espinet
@@ -50,11 +51,14 @@ class Requete {
     protected function _setRequete($request) {
         //contient tous les éléments de la requète
         $aAllRequestParts= parse_url($request);
+        //séparation de la requête en éléments
         $aRequeteParts = explode('/', $aAllRequestParts['path']);
         //le +1 se justifie par le fait que le premier élément est toujours ""
         if (count($aRequeteParts) > self::PROFONDEUR_MAX_REQUETE+1) {
+            //si la requette est trop longue, elle est invalide
             $this->is_invalide = true;
         } elseif(count($aRequeteParts) == self::PROFONDEUR_MAX_REQUETE+1) {
+            //si elle est tout juste de la bonne taille, on remplit le prefix et le suffixe
             $this->prefixe = $aRequeteParts[1];
             $this->suffixe = $aRequeteParts[2];
         } elseif(count($aRequeteParts) == self::PROFONDEUR_MAX_REQUETE) {
