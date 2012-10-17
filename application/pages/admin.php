@@ -5,7 +5,6 @@
  * @version 1.0
  *
  * @todo identification LDAP
- * @todo log
  */
 
 include_once(APPLICATION_PATH.'/inc/sql.php');
@@ -15,9 +14,11 @@ if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
 {
     if ($_POST['user'] == $parametres->getAdmin() && true) { // LDAP
         $_SESSION['administrateur'] = true;
+        Logs::logger(1, "Connexion a l'interface d'administration reussie");
     }
     else {
         $erreurID = 1;
+        Logs::logger(3, "Tentative de connexion a l'interface d'administration echouee");
     }
 }
 
@@ -25,6 +26,7 @@ if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
 // Interface de connexion
 if (!isset($_SESSION['administrateur']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { 
 session_destroy();
+Logs::logger(1, "Deconnexion administrateur");
 ?>
     <h2>Connexion</h2>
     <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
@@ -62,30 +64,37 @@ else {
 
             default: 
                 $erreurP = 1; echo "<h2>Erreur de paramétrage...</h2>";
+                Logs::logger(2, "Corruption des parametres admin.php::GET type");
                 break;
         }
         if (!isset($erreurP)) { // Si aucune erreure de paramétrage
             if (isset($_GET['suppr'])) { // Suppression d'un élément de liste
                 if (!is_numeric($_GET['suppr'])) {
-                    throw new RuntimeException('Corruption des paramètres GET'); // Ne se produit jamais en exécution courante
+                    Logs::logger(3, "Corruption des parametres. admin.php::GET");
                 }
                 if (!$parametres->isUsedList($_GET['type'], $_GET['suppr'])) {
                     $parametres->deleteFromList($_GET['type'], $_GET['suppr']);
+                    Logs::logger(1, "Administrateur : Suppression d'un element de liste");
                 } else {
                     $erreurA = "Vous ne pouvez supprimer cet élément tant qu'il est utilisé dans le profil d'un élève ou d'un admissible";
+                    Logs::logger(1, "Administrateur : Tentative de suppression d'un element de liste encore utilise");
                 }
             }
             if (isset($_POST['nom']) && isset($_POST['ville'])) { // Ajout d'un élément de liste (Etablissement)
                 if (!empty($_POST['nom']) && !empty($_POST['ville']) && strlen($_POST['nom']) <= 50 && strlen($_POST['ville']) <= 50) {
                     $parametres->addToList($_GET['type'], array("nom" => $_POST['nom'], "commune" => $_POST['ville']));
+                    Logs::logger(1, "Administrateur : Ajout d'un element a une liste");
                 } else {
-                    $erreurA = "Erreur lors de l'ajout d'un nouvel élèment";
+                    $erreurA = "Erreur lors de l'ajout d'un nouvel élément";
+                    Logs::logger(2, "Administrateur : Erreur dans le remplissage du formulaire d'ajout d'un element a une liste");
                 }
             } elseif (isset($_POST['nom'])) { // Ajout d'un élément de liste (autre)
                 if (!empty($_POST['nom']) && strlen($_POST['nom']) <= 50) {
                     $parametres->addToList($_GET['type'], array("nom" => $_POST['nom']));
+                    Logs::logger(1, "Administrateur : Ajout d'un element a une liste");
                 } else {
                     $erreurA = "Erreur lors de l'ajout d'un nouvel élément";
+                    Logs::logger(2, "Administrateur : Erreur dans le remplissage du formulaire d'ajout d'un element a une liste");
                 }
             }
             $liste = $parametres->getList($_GET['type']);
@@ -111,12 +120,14 @@ else {
     } elseif (isset($_GET['action']) && $_GET['action'] == "series") { // Modification des séries d'admissibilité
         if (isset($_GET['suppr'])) { // Suppression d'une série
             if (!is_numeric($_GET['suppr'])) {
-                throw new RuntimeException('Corruption des paramétres GET'); // Ne se produit jamais en exécution courante
+                Logs::logger(3, "Corruption des parametres. admin.php::GET");
             }
             if (!$parametres->isUsedList(Parametres::SERIE, $_GET['suppr'])) {
                 $parametres->deleteFromList(Parametres::SERIE, $_GET['suppr']);
+                Logs::logger(1, "Administrateur : Suppression d'une serie");
             } else {
                 $erreurA = "Vous ne pouvez supprimer cette série tant qu'elle est utilisée dans le profil d'un élève ou d'un admissible";
+                Logs::logger(2, "Administrateur : Tentative de suppression d'une serie encore utilise");
             }
         }
         if (isset($_POST['intitule']) && isset($_POST['date_debut']) && isset($_POST['date_fin'])) { // Insertion d'une nouvelle série
@@ -128,8 +139,10 @@ else {
                 // L'ouverture des demandes sera réglée lors de l'insertion de la liste des admissibles
                 // La fermeture des demandes correspond Ã  minuit la veille du début des oraux
                 $parametres->addToList(Parametres::SERIE, array("intitule" => $_POST['intitule'], "date_debut" => $date_debut, "date_fin" => $date_fin, "ouverture" => $date_debut, "fermeture" => $date_debut));
+                Logs::logger(1, "Administrateur : Ajout d'une serie");
             } else {
                 $erreurA = "Erreur lors de l'ajout d'une nouvelle série";
+                Logs::logger(2, "Administrateur : Erreur dans le remplissage du formulaire d'ajout d'une serie");
             }
         }
         echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
@@ -160,8 +173,10 @@ else {
             if (is_numeric($_POST['serie']) && is_numeric($_POST['filiere']) && preg_match("#^(.+\s\(.+\)(\r)?(\n)?)+$#", $_POST['liste'])) {
                 $parametres->parseADM($_POST['serie'],$_POST['filiere'],$_POST['liste']);
                 $erreurA = "Ajout des admissibles réussi !";
+                Logs::logger(1, "Administrateur : Ajout d'une liste d'admissibilite");
             } else {
                 $erreurA = "Mauvais formatage de la liste";
+                Logs::logger(2, "Administrateur : Erreur dans le remplissage du formulaire d'ajout d'une liste d'admissibilite");
             }
         }
         echo "<a href='/administration/gestion'>Retour à l'accueil</a>";
@@ -204,6 +219,7 @@ else {
         if (isset($_POST['raz']) && $_POST['raz']) {
             $parametres->remiseAZero();
             echo "<h3 style='color:red;'>Remise à zéro effectuée</h3>";
+            Logs::logger(1, "Administrateur : Remise a zero de l'interface effectuee");
         }
         ?>
         <p style="color:red;">Attention : la remise à zéro de l'interface est irréversible.</p>
@@ -219,25 +235,30 @@ else {
         $adresseManager = new AdresseManager($db);
         if (isset($_GET['suppr_cat'])) { // Suppression d'une catégorie
             if (!is_numeric($_GET['suppr_cat'])) {
-                throw new RuntimeException('Corruption des paramètres GET'); // Ne se produit jamais en exécution courante
+                Logs::logger(3, "Corruption des parametres. admin.php::GET");
             }
             if (!$adresseManager->isUsedCat($_GET['suppr_cat'])) {
                 $adresseManager->deleteCategorie($_GET['suppr_cat']);
+                Logs::logger(1, "Administrateur : Suppression d'une categorie d'adresse");
             } else {
                 $erreurA = "Vous ne pouvez supprimer cette catégorie tant qu'elle contient des adresses";
+                Logs::logger(2, "Administrateur : Tentative de suppression d'une categorie d'adresse encore utilisee");
             }
         }
         if (isset($_GET['suppr'])) { // Suppression d'une annonce
             if (!is_numeric($_GET['suppr'])) {
-                throw new RuntimeException('Corruption des paramètres GET'); // Ne se produit jamais en exécution courante
+                Logs::logger(3, "Corruption des parametres. admin.php::GET");
             }
             $adresseManager->delete($_GET['suppr']);
+            Logs::logger(1, "Administrateur : Suppression d'une adresse");
         }
         if (isset($_POST['nom_cat'])) { // Ajout d'une catégorie
             if (!empty($_POST['nom_cat']) && strlen($_POST['nom_cat']) <= 100) {
                 $adresseManager->addCategorie($_POST['nom_cat']);
+                Logs::logger(1, "Administrateur : Ajout d'une adresse");
             } else {
                 $erreurA = "Erreur lors de l'ajout d'une nouvelle catégorie";
+                Logs::logger(2, "Administrateur : Erreur dans le remplissage du formulaire d'ajout d'une categorie d'adresses");
             }
         }
         if (isset ($_POST['nom'])) { // Ajout ou Modification d'une annonce
@@ -257,8 +278,10 @@ else {
             }
             if ($adresse->isValid()) {
                 $adresseManager->save($adresse);
+                Logs::logger(1, "Administrateur : Ajout d'une adresse");
             } else {
                 $erreurModif = $adresse->erreurs();
+                Logs::logger(2, "Administrateur : Erreur dans le remplissage du formulaire d'ajout d'une adresses");
             }
         }
         $categories = $adresseManager->getCategories();

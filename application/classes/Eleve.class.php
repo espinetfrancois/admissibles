@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo : gestion logs
  */
 
 class Eleve {

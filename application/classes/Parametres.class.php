@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo logs
  */
 
 
@@ -46,16 +45,20 @@ class Parametres {
      */
     
     public  function getAdmin() {
-        $requete = $this->db->prepare('SELECT VALEUR AS admin
-                                       FROM administration
-                                       WHERE PARAMETRE = "administrateur"');
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT VALEUR AS admin
+                                           FROM administration
+                                           WHERE PARAMETRE = "administrateur"');
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::getAdmin : ".$e->getMessage());
+        }
         if ($requete->rowCount() != 1) {
-            throw new RuntimeException('Corruption de la table des paramètres'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption de la table 'administration' : plusieurs administrateurs");
         }
         $res = $requete->fetch();
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$res['admin'])) {
-            throw new RuntimeException('Corruption de la table des paramètres'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption de la table 'administration' : login administrateur non conforme");
         }
         return $res['admin'];
     }
@@ -68,11 +71,15 @@ class Parametres {
      */
     
     public  function remiseAZero() {
-        $requete = $this->db->query('DELETE FROM disponibilites');
-        $requete = $this->db->query('DELETE FROM series');
-        $requete = $this->db->query('DELETE FROM demandes');
-        $requete = $this->db->query('DELETE FROM x');
-        $requete = $this->db->query('DELETE FROM admissibles');
+        try {
+            $requete = $this->db->query('DELETE FROM disponibilites');
+            $requete = $this->db->query('DELETE FROM series');
+            $requete = $this->db->query('DELETE FROM demandes');
+            $requete = $this->db->query('DELETE FROM x');
+            $requete = $this->db->query('DELETE FROM admissibles');
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::remiseAZero : ".$e->getMessage());
+        }
     }
 
 
@@ -83,15 +90,19 @@ class Parametres {
      */
 
     public  function getCurrentSeries() {
-        $requete = $this->db->prepare('SELECT ID AS id,
-                                              INTITULE AS intitule,
-                                              DATE_DEBUT AS date_debut,
-                                              DATE_FIN AS date_fin
-                                       FROM series
-                                       WHERE OUVERTURE <= :time
-                                       AND FERMETURE >= :time');
-        $requete->bindValue(':time', time());
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT ID AS id,
+                                                  INTITULE AS intitule,
+                                                  DATE_DEBUT AS date_debut,
+                                                  DATE_FIN AS date_fin
+                                           FROM series
+                                           WHERE OUVERTURE <= :time
+                                           AND FERMETURE >= :time');
+            $requete->bindValue(':time', time());
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::getCurrentSeries : ".$e->getMessage());
+        }
         $n = $requete->rowCount();
         if ($n == 0) {
             return (array());
@@ -141,13 +152,17 @@ class Parametres {
             break;
         
         default:
-            throw new RuntimeException('Mauvais type de liste'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. Parametres::getList");
             break;
         }
-        $requete = $this->db->prepare('SELECT '.$champs.'
-                                       FROM '.$table.'
-                                       ORDER BY '.$order.'');
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT '.$champs.'
+                                           FROM '.$table.'
+                                           ORDER BY '.$order.'');
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::getList : ".$e->getMessage());
+        }
         $liste = $requete->fetchAll();
         $requete->closeCursor();
         return $liste;
@@ -195,15 +210,19 @@ class Parametres {
             break;
         
         default:
-            throw new RuntimeException('Mauvais type de liste'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. Parametres::addToList");
             break;
         }
-        $requete = $this->db->prepare('INSERT INTO '.$table.'
-                                       SET '.$valeurs);
-        foreach($array as $key => $value) {
-            $requete->bindValue(':'.$key, $value);
+        try {
+            $requete = $this->db->prepare('INSERT INTO '.$table.'
+                                           SET '.$valeurs);
+            foreach($array as $key => $value) {
+                $requete->bindValue(':'.$key, $value);
+            }
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::addToList : ".$e->getMessage());
         }
-        $requete->execute();
     }
     
     
@@ -238,24 +257,31 @@ class Parametres {
             break;
         
         default:
-            throw new RuntimeException('Mauvais type de liste'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. Parametres::deleteFromList");
             break;
         }
-        $requete = $this->db->prepare('SELECT ID
-                                       FROM '.$table.'
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $id);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT ID
+                                           FROM '.$table.'
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::deleteFromList : ".$e->getMessage());
+        }
         
         if ($requete->rowCount() != 1) {
-            throw new RuntimeException('Element de liste inconnu'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption de la table ".$table.". Tentative de suppression d'un element inexistant");
         }
         $requete->closeCursor();
-        
-        $requete = $this->db->prepare('DELETE FROM '.$table.'
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $id);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('DELETE FROM '.$table.'
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::deleteFromList : ".$e->getMessage());
+        }
     }
     
     
@@ -270,16 +296,20 @@ class Parametres {
     public  function isUsedList($type, $id) {
         switch ($type) {
         case self::ETABLISSEMENT:
-            $requete = $this->db->prepare('SELECT *
-                                           FROM x
-                                           WHERE x.ID_ETABLISSEMENT = :id');
-            $requete->bindValue(':id', $id);
-            $requete->execute();
-            $requete2 = $this->db->prepare('SELECT *
-                                           FROM admissibles
-                                           WHERE admissibles.ID_ETABLISSEMENT = :id');
-            $requete2->bindValue(':id', $id);
-            $requete2->execute();
+            try {
+                $requete = $this->db->prepare('SELECT *
+                                               FROM x
+                                               WHERE x.ID_ETABLISSEMENT = :id');
+                $requete->bindValue(':id', $id);
+                $requete->execute();
+                $requete2 = $this->db->prepare('SELECT *
+                                               FROM admissibles
+                                               WHERE admissibles.ID_ETABLISSEMENT = :id');
+                $requete2->bindValue(':id', $id);
+                $requete2->execute();
+            } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+            }
             
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
                 return true;
@@ -289,16 +319,20 @@ class Parametres {
             break;
         
         case self::FILIERE:
-            $requete = $this->db->prepare('SELECT *
-                                           FROM x
-                                           WHERE x.ID_FILIERE = :id');
-            $requete->bindValue(':id', $id);
-            $requete->execute();
-            $requete2 = $this->db->prepare('SELECT *
-                                           FROM admissibles
-                                           WHERE admissibles.ID_FILIERE = :id');
-            $requete2->bindValue(':id', $id);
-            $requete2->execute();
+            try {
+                $requete = $this->db->prepare('SELECT *
+                                               FROM x
+                                               WHERE x.ID_FILIERE = :id');
+                $requete->bindValue(':id', $id);
+                $requete->execute();
+                $requete2 = $this->db->prepare('SELECT *
+                                               FROM admissibles
+                                               WHERE admissibles.ID_FILIERE = :id');
+                $requete2->bindValue(':id', $id);
+                $requete2->execute();
+            } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+            }
             
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
                 return true;
@@ -308,11 +342,15 @@ class Parametres {
             break;
             
         case self::PROMO:
-            $requete = $this->db->prepare('SELECT *
-                                           FROM x
-                                           WHERE ID_PROMOTION = :id');
-            $requete->bindValue(':id', $id);
-            $requete->execute();
+            try {
+                $requete = $this->db->prepare('SELECT *
+                                               FROM x
+                                               WHERE ID_PROMOTION = :id');
+                $requete->bindValue(':id', $id);
+                $requete->execute();
+            } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+            }
             
             if ($requete->rowCount() > 0) {
                 return true;
@@ -322,11 +360,15 @@ class Parametres {
             break;
             
         case self::SECTION:
-            $requete = $this->db->prepare('SELECT *
-                                           FROM x
-                                           WHERE ID_SECTION = :id');
-            $requete->bindValue(':id', $id);
-            $requete->execute();
+            try {
+                $requete = $this->db->prepare('SELECT *
+                                               FROM x
+                                               WHERE ID_SECTION = :id');
+                $requete->bindValue(':id', $id);
+                $requete->execute();
+            } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+            }
             
             if ($requete->rowCount() > 0) {
                 return true;
@@ -336,16 +378,20 @@ class Parametres {
             break;
             
         case self::SERIE:
-            $requete = $this->db->prepare('SELECT *
-                                           FROM admissibles
-                                           WHERE admissibles.SERIE = :id');
-            $requete->bindValue(':id', $id);
-            $requete->execute();
-            $requete2 = $this->db->prepare('SELECT *
-                                           FROM disponibilites
-                                           WHERE disponibilites.ID_SERIE = :id');
-            $requete2->bindValue(':id', $id);
-            $requete2->execute();
+            try {
+                $requete = $this->db->prepare('SELECT *
+                                               FROM admissibles
+                                               WHERE admissibles.SERIE = :id');
+                $requete->bindValue(':id', $id);
+                $requete->execute();
+                $requete2 = $this->db->prepare('SELECT *
+                                               FROM disponibilites
+                                               WHERE disponibilites.ID_SERIE = :id');
+                $requete2->bindValue(':id', $id);
+                $requete2->execute();
+            } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+            }
             
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
                 return true;
@@ -355,7 +401,7 @@ class Parametres {
             break;
         
         default:
-            throw new RuntimeException('Mauvais type de liste'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. Parametres::isUsedList");
             break;
         }
     }
@@ -372,27 +418,35 @@ class Parametres {
 
     public  function parseADM($serie, $filiere, $donnees) {
         // vérification du paramètre $serie
-        $requete = $this->db->prepare('SELECT ID
-                                       FROM series
-                                       WHERE ID = :id
-                                       AND FERMETURE > '.time());
-        $requete->bindValue(':id', $serie);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT ID
+                                           FROM series
+                                           WHERE ID = :id
+                                           AND FERMETURE > '.time());
+            $requete->bindValue(':id', $serie);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+        }
         
         if ($requete->rowCount() != 1) {
-            throw new RuntimeException("Série d'admissibilité inconnue"); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption du parametre 'serie'. Parametres::parseADM");
         }
         $requete->closeCursor();
         
         // vérification du paramètre $filiere
-        $requete = $this->db->prepare('SELECT ID
-                                       FROM ref_filieres
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $filiere);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT ID
+                                           FROM ref_filieres
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $filiere);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+        }
         
         if ($requete->rowCount() != 1) {
-            throw new RuntimeException("Filière inconnue"); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption du parametre 'filiere'. Parametres::parseADM");
         }
         $requete->closeCursor();
         
@@ -407,24 +461,32 @@ class Parametres {
                                           'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
             $prenom = strtolower(strtr($col[1],'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
                                              'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
-            $requete = $this->db->prepare('INSERT INTO admissibles
-                                           SET NOM = :nom,
-                                               PRENOM = :prenom,
-                                               ID_FILIERE = :filiere,
-                                               SERIE = :serie');
-            $requete->bindValue(':nom', $nom);
-            $requete->bindValue(':prenom', $prenom);
-            $requete->bindValue(':serie', $serie);
-            $requete->bindValue(':filiere', $filiere);
-            $requete->execute();
+            try {
+                $requete = $this->db->prepare('INSERT INTO admissibles
+                                               SET NOM = :nom,
+                                                   PRENOM = :prenom,
+                                                   ID_FILIERE = :filiere,
+                                                   SERIE = :serie');
+                $requete->bindValue(':nom', $nom);
+                $requete->bindValue(':prenom', $prenom);
+                $requete->bindValue(':serie', $serie);
+                $requete->bindValue(':filiere', $filiere);
+                $requete->execute();
+            } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+            }
         }
         
         // Ouverture des demandes d'hébergement pour la série considérée
-        $requete = $this->db->prepare('UPDATE series
-                                       SET OUVERTURE = '.time().'
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $serie);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('UPDATE series
+                                           SET OUVERTURE = '.time().'
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $serie);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+        }
     }
 
 }

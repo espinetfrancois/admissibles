@@ -10,38 +10,38 @@
 
 class Config {
 
-	/**
+    /**
      * @var string
      * @access protected
      */
     protected $_dbhost;
-	
-	/**
+    
+    /**
      * @var string
      * @access protected
      */
     protected $_dblogin;
-	
-	/**
+    
+    /**
      * @var string
      * @access protected
      */
     protected $_dbbase;
-	
-	/**
+    
+    /**
      * @var string
      * @access protected
      */
     protected $_dbpass;
-	
-	/**
+    
+    /**
      * @var string
      * @access protected
      */
     protected $_otherparam = array();
 
 
-	/**
+    /**
      * Constructeur de la classe
      * @access public
      * @return void
@@ -53,7 +53,7 @@ class Config {
     }
 
 
-	/**
+    /**
      * @access public
      * @return string
      */
@@ -62,7 +62,7 @@ class Config {
     }
 
 
-	/**
+    /**
      * @access public
      * @return string
      */
@@ -71,7 +71,7 @@ class Config {
     }
 
 
-	/**
+    /**
      * @access public
      * @return string
      */
@@ -80,7 +80,7 @@ class Config {
     }
 
 
-	/**
+    /**
      * @access public
      * @return string
      */
@@ -91,7 +91,7 @@ class Config {
 
     /**
      * Définition des constantes de l'application
-	 * @access public
+     * @access public
      * @return void
      */
     static function defineConstantes() {
@@ -111,9 +111,9 @@ class Config {
     }
 
 
-	/**
-	 * Ajuste le niveau de verbosité des erreurs
-	 * @access public
+    /**
+     * Ajuste le niveau de verbosité des erreurs
+     * @access public
      * @return void
      */
     static function setErrors() {
@@ -124,9 +124,9 @@ class Config {
     }
 
 
-	/**
-	 * Chargement du fichier de configuration
-	 * @access protected
+    /**
+     * Chargement du fichier de configuration
+     * @access protected
      * @return void
      */
     protected function loadConfig() {
@@ -154,9 +154,9 @@ class Config {
     }
 
 
-	/**
-	 * Hydratation
-	 * @access protected
+    /**
+     * Hydratation
+     * @access protected
      * @return void
      */
     protected function initBdd($aConfig) {
@@ -175,9 +175,9 @@ class Config {
     } */
 
 
-	/**
-	 * Lecture de paramètres facultatifs
-	 * @access public
+    /**
+     * Lecture de paramètres facultatifs
+     * @access public
      * @return void
      */
     public function get_otherparam() {

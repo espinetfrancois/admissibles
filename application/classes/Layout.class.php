@@ -100,8 +100,8 @@ class Layout {
     public function addPage($page) {
         ob_start();
         include($page);
-		$contents = ob_get_clean();
-   		$this->_content[] = $contents;
+        $contents = ob_get_clean();
+           $this->_content[] = $contents;
     }
 
     /**

@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo logs
  */
 
 class AdresseManager {
@@ -38,22 +37,26 @@ class AdresseManager {
      */
 
     protected  function add(Adresse $adresse) {
-        $requete = $this->db->prepare('INSERT INTO annonces 
-                                       SET NOM = :nom,
-                                           TELEPHONE = :tel,
-                                           DESCRIPTION = :description,
-                                           VALIDATION = :valid,
-                                           ADRESSE_MAIL = :email,
-                                           ADRESSE = :adresse,
-                                           ID_CATEGORIE = :categorie'); 
-        $requete->bindValue(':nom', $adresse->nom());
-        $requete->bindValue(':tel', $adresse->tel());
-        $requete->bindValue(':description', $adresse->description());
-        $requete->bindValue(':valid', $adresse->valide());
-        $requete->bindValue(':email', $adresse->email());
-        $requete->bindValue(':adresse', $adresse->adresse());
-        $requete->bindValue(':categorie', $adresse->categorie());
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('INSERT INTO annonces 
+                                           SET NOM = :nom,
+                                               TELEPHONE = :tel,
+                                               DESCRIPTION = :description,
+                                               VALIDATION = :valid,
+                                               ADRESSE_MAIL = :email,
+                                               ADRESSE = :adresse,
+                                               ID_CATEGORIE = :categorie'); 
+            $requete->bindValue(':nom', $adresse->nom());
+            $requete->bindValue(':tel', $adresse->tel());
+            $requete->bindValue(':description', $adresse->description());
+            $requete->bindValue(':valid', $adresse->valide());
+            $requete->bindValue(':email', $adresse->email());
+            $requete->bindValue(':adresse', $adresse->adresse());
+            $requete->bindValue(':categorie', $adresse->categorie());
+            $requete->execute();
+        } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL AdresseManager::add : ".$e->getMessage());
+        }
     }
 
 
@@ -65,24 +68,28 @@ class AdresseManager {
      */
 
     protected  function update(Adresse $adresse) {
-        $requete = $this->db->prepare('UPDATE annonces 
-                                       SET NOM = :nom,
-                                           TELEPHONE = :tel,
-                                           DESCRIPTION = :description,
-                                           VALIDATION = :valid,
-                                           ADRESSE_MAIL = :email,
-                                           ADRESSE = :adresse,
-                                           ID_CATEGORIE = :categorie
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $adresse->id());
-        $requete->bindValue(':nom', $adresse->nom());
-        $requete->bindValue(':tel', $adresse->tel());
-        $requete->bindValue(':description', $adresse->description());
-        $requete->bindValue(':valid', $adresse->valide());
-        $requete->bindValue(':email', $adresse->email());
-        $requete->bindValue(':adresse', $adresse->adresse());
-        $requete->bindValue(':categorie', $adresse->categorie());
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('UPDATE annonces 
+                                           SET NOM = :nom,
+                                               TELEPHONE = :tel,
+                                               DESCRIPTION = :description,
+                                               VALIDATION = :valid,
+                                               ADRESSE_MAIL = :email,
+                                               ADRESSE = :adresse,
+                                               ID_CATEGORIE = :categorie
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $adresse->id());
+            $requete->bindValue(':nom', $adresse->nom());
+            $requete->bindValue(':tel', $adresse->tel());
+            $requete->bindValue(':description', $adresse->description());
+            $requete->bindValue(':valid', $adresse->valide());
+            $requete->bindValue(':email', $adresse->email());
+            $requete->bindValue(':adresse', $adresse->adresse());
+            $requete->bindValue(':categorie', $adresse->categorie());
+            $requete->execute();
+        } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL AdresseManager::update : ".$e->getMessage());
+        }
     }
 
 
@@ -97,7 +104,7 @@ class AdresseManager {
         if ($adresse->isValid()) {
             $adresse->isNew() ? $this->add($adresse) : $this->update($adresse);
         } else {
-            throw new RuntimeException('Les champs doivent être valides pour être enregistrés'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres : AdresseManager::save");
         }
     }
     
@@ -111,12 +118,16 @@ class AdresseManager {
 
     public final  function delete($id) {
         if (is_numeric($id)) {
-            $requete = $this->db->prepare('DELETE FROM annonces
-                                           WHERE ID = :id');
-            $requete->bindValue(':id', $id);
-            $requete->execute();
+            try {
+                $requete = $this->db->prepare('DELETE FROM annonces
+                                               WHERE ID = :id');
+                $requete->bindValue(':id', $id);
+                $requete->execute();
+            } catch (Exception $e) {
+                    Logs::logger(3, "Erreur SQL AdresseManager::delete : ".$e->getMessage());
+            }
         } else {
-            throw new RuntimeException('Delete : mauvais identifiant'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres : AdresseManager::delete");
         }
     }
 
@@ -130,22 +141,26 @@ class AdresseManager {
 
     public  function getUnique($id) {
         if (!is_numeric($id)) {
-            throw new RuntimeException('ID invalide'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres : AdresseManager::getUnique");
         }
-        $requete = $this->db->prepare('SELECT ID AS id,
-                                              NOM AS nom,
-                                              TELEPHONE AS tel,
-                                              DESCRIPTION AS description,
-                                              VALIDATION AS valide,
-                                              ADRESSE_MAIL AS email,
-                                              ADRESSE AS adresse,
-                                              ID_CATEGORIE AS categorie
-                                       FROM annonces
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $id);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT ID AS id,
+                                                  NOM AS nom,
+                                                  TELEPHONE AS tel,
+                                                  DESCRIPTION AS description,
+                                                  VALIDATION AS valide,
+                                                  ADRESSE_MAIL AS email,
+                                                  ADRESSE AS adresse,
+                                                  ID_CATEGORIE AS categorie
+                                           FROM annonces
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL AdresseManager::getUnique : ".$e->getMessage());
+        }
         if ($requete->rowCount() != 1) {
-            throw new RuntimeException('Plusieurs annoncent ont le même identifiant'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption de la table 'annonces'. ID non unique");
         }
             
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse');
@@ -161,20 +176,24 @@ class AdresseManager {
      */
 
     public  function getListAffiche($valid = 1) {
-        $requete = $this->db->prepare('SELECT annonces.ID AS id,
-                                              annonces.NOM AS nom,
-                                              annonces.TELEPHONE AS tel,
-                                              annonces.DESCRIPTION AS description,
-                                              annonces.ADRESSE_MAIL AS email,
-                                              annonces.ADRESSE AS adresse,
-                                              ref_categories.NOM AS categorie
-                                       FROM annonces
-                                       INNER JOIN ref_categories
-                                       ON ref_categories.ID = annonces.ID_CATEGORIE
-                                       WHERE annonces.VALIDATION = :valid
-                                       ORDER BY ref_categories.NOM');
-        $requete->bindValue(':valid', $valid);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT annonces.ID AS id,
+                                                  annonces.NOM AS nom,
+                                                  annonces.TELEPHONE AS tel,
+                                                  annonces.DESCRIPTION AS description,
+                                                  annonces.ADRESSE_MAIL AS email,
+                                                  annonces.ADRESSE AS adresse,
+                                                  ref_categories.NOM AS categorie
+                                           FROM annonces
+                                           INNER JOIN ref_categories
+                                           ON ref_categories.ID = annonces.ID_CATEGORIE
+                                           WHERE annonces.VALIDATION = :valid
+                                           ORDER BY ref_categories.NOM');
+            $requete->bindValue(':valid', $valid);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL AdresseManager::getListAffiche : ".$e->getMessage());
+        }
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse'); // les champs références contiennent maintenant la valeur
             
         $listeAdresse = $requete->fetchAll();
@@ -190,10 +209,14 @@ class AdresseManager {
      */
 
     public  function getCategories() {
-        $requete = $this->db->prepare('SELECT ID AS id,
-                                              NOM AS nom
-                                       FROM ref_categories');
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT ID AS id,
+                                                  NOM AS nom
+                                           FROM ref_categories');
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL AdresseManager::getCategories : ".$e->getMessage());
+        }
         return $requete->fetchAll();
     }
 
@@ -206,10 +229,14 @@ class AdresseManager {
      */
 
     public  function addCategorie($nom) {
-        $requete = $this->db->prepare('INSERT INTO ref_categories
-                                       SET NOM = :nom');
-        $requete->bindValue(':nom', $nom);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('INSERT INTO ref_categories
+                                           SET NOM = :nom');
+            $requete->bindValue(':nom', $nom);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL AdresseManager::addCategorie : ".$e->getMessage());
+        }
     }
     
     
@@ -221,11 +248,15 @@ class AdresseManager {
      */
 
     public  function deleteCategorie($id) {
-        $requete = $this->db->prepare('DELETE
-                                       FROM ref_categories
-                                       WHERE ID = :id');
-        $requete->bindValue(':id', $id);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('DELETE
+                                           FROM ref_categories
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL AdresseManager::deleteCategorie : ".$e->getMessage());
+        }
     }
     
     
@@ -237,11 +268,15 @@ class AdresseManager {
      */
 
     public  function isUsedCat($id) {
-        $requete = $this->db->prepare('SELECT *
-                                       FROM annonces
-                                       WHERE ID_CATEGORIE = :id');
-        $requete->bindValue(':id', $id);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT *
+                                           FROM annonces
+                                           WHERE ID_CATEGORIE = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL AdresseManager::isUsedCat : ".$e->getMessage());
+        }
         if ($requete->rowCount() > 0) {
             return true;
         } else {
