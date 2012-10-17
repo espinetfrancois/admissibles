@@ -50,6 +50,7 @@ class Config {
         self::defineConstantes();
         self::setErrors();
         $this->loadConfig();
+        self::addLibraries();
     }
 
 
@@ -100,6 +101,8 @@ class Config {
         define('PUBLIC_PATH', ROOT_PATH."/public");
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
+        define('LIBRARY_PATH', APPLICATION_PATH.'/library');
+        
         
         define('HTTP_PUBLIC_PATH', '');
         define('HTTP_CSS_PATH', HTTP_PUBLIC_PATH."/css");
@@ -107,7 +110,9 @@ class Config {
         define('HTTP_LIBRARY_PATH', HTTP_PUBLIC_PATH."/library");
         define('HTTP_IMAGES_PATH', HTTP_PUBLIC_PATH.'/images');
         
+        //constantes d'environement
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
+        define('APP_MAIL', false);
     }
 
 
@@ -123,6 +128,9 @@ class Config {
         }
     }
 
+    static function addLibraries() {
+        require_once(LIBRARY_PATH.'/phpmailer/phpmailer.class.php');
+    }
 
 	/**
 	 * Chargement du fichier de configuration
