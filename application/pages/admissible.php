@@ -5,7 +5,6 @@
  * @version 1.0
  *
  * @todo gestion de l'envoi du mail de validation/annulation
- * @todo logs
  */
 include_once(APPLICATION_PATH.'/inc/sql.php');
 
@@ -18,15 +17,18 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
     $dispos = $eleveManager->getDispos($_POST['user']);
     if (!in_array($_SESSION['demande']->serie(),$dispos)) {
         echo "<p>Désolé, l'élève que vous avez choisi vient d'être sollicité. Merci de reitérer votre recherche.</p>";
+        Logs::logger(2, "Demandes d'admissibles simultannees sur l'eleve ".$_POST['user']);
     }
     elseif (!$demandeManager->autorisation($_SESSION['demande'])) {
         echo "<p>Désolé, vous avez déjà effectué une demande d'hébergement. Merci d'attendre la réponse de l'élève ou d'annuler votre demande.</p>";
+        Logs::logger(2, "Tentative de sur-demande de l'admissible ".$_SESSION['demande']->id());
     } else {
         $_SESSION['demande']->setUserEleve($_POST['user']);
         $_SESSION['demande']->setStatus("0");
         $_SESSION['demande']->setCode(md5(sha1(time().$_SESSION['demande']->email())));
         // envoi d'un email de validation contenant <a href="http://.../validation.php?code=$_SESSION['demande']->code()">Valider votre demande</a> <a href="http://.../?code=$_SESSION['demande']->code()">Annuler votre demande</a>
         $eleveManager->deleteDispo($_POST['user'], $_SESSION['demande']->serie());
+        Logs::logger(1, "Demande de logement ".$_SESSION['demande']->id()." effectuee");
     }
 }
 
@@ -50,13 +52,18 @@ if (isset($_GET['action']) && $_GET['action'] == "demande") {
             $erreurD = $demande->erreurs();
             if (!$demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie'])) {
                 $erreurD[] = Demande::NON_ADMISSIBLE;
+                Logs::logger(2, "Formulaire de demande rempli par un non-admissible");
             }
+        }
+        if (!empty($erreurD)) {
+            Logs::logger(2, "Erreur dans le remplissage du formulaire de demande de logement");
         }
         if (isset($demande) && empty($erreurD)) { // Demande réussie : affichage de deux X pouvant les héberger
             $_SESSION['demande'] = $demande;
             $eleves = $eleveManager->getFavorite($demande, 2);
             if (empty($eleves)) {
                 echo "<p>Désolé, aucune correspondance n'a été trouvée (tous les élèves ont déjà été sollicités.<br/>Rendez-vous sur la page <a href=''>Bonnes adresses</a> pour trouver un hébergement à proximité de l'école...</p>";
+                Logs::logger(2, "Plus aucun eleve disponible");
             } else {
                 echo "<p>Voici les élèves qui te correspondent le mieux pour t'héberger :</p>";
                 echo "<table border=1 cellspacing=0>";

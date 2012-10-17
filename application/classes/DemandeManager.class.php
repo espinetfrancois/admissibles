@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo logs
  */
 
 class DemandeManager {
@@ -38,28 +37,32 @@ class DemandeManager {
 
     public  function add(Demande $demande) {
         if (!$demande->isValid()) {
-            throw new RuntimeException('Les champs doivent être valides pour être enregistrés'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. DemandeManager::add");
         } else {
-            $requete = $this->db->prepare('UPDATE admissibles 
-                                           SET SEXE = :sexe,
-                                               ADRESSE_MAIL = :email,
-                                               ID_FILIERE = :filiere,
-                                               ID_ETABLISSEMENT = :prepa
-                                           WHERE ID = :id;
-                                           INSERT INTO demandes 
-                                           SET ID_ADMISSIBLE = :id,
-                                               USER_X = :user,
-                                               LIEN = :code,
-                                               ID_STATUS = :status');
-            $requete->bindValue(':id', $demande->id());
-            $requete->bindValue(':sexe', $demande->sexe());
-            $requete->bindValue(':email', $demande->email());
-            $requete->bindValue(':filiere', $demande->filiere());
-            $requete->bindValue(':prepa', $demande->prepa());
-            $requete->bindValue(':user', $demande->userEleve());
-            $requete->bindValue(':code', $demande->code());
-            $requete->bindValue(':status', $demande->status());
-            $requete->execute();
+            try {
+                $requete = $this->db->prepare('UPDATE admissibles 
+                                               SET SEXE = :sexe,
+                                                   ADRESSE_MAIL = :email,
+                                                   ID_FILIERE = :filiere,
+                                                   ID_ETABLISSEMENT = :prepa
+                                               WHERE ID = :id;
+                                               INSERT INTO demandes 
+                                               SET ID_ADMISSIBLE = :id,
+                                                   USER_X = :user,
+                                                   LIEN = :code,
+                                                   ID_STATUS = :status');
+                $requete->bindValue(':id', $demande->id());
+                $requete->bindValue(':sexe', $demande->sexe());
+                $requete->bindValue(':email', $demande->email());
+                $requete->bindValue(':filiere', $demande->filiere());
+                $requete->bindValue(':prepa', $demande->prepa());
+                $requete->bindValue(':user', $demande->userEleve());
+                $requete->bindValue(':code', $demande->code());
+                $requete->bindValue(':status', $demande->status());
+                $requete->execute();
+            } catch (Exception $e) {
+                Logs::logger(3, "Erreur SQL DemandeManager::add : ".$e->getMessage());
+            }
         }
     }
 
@@ -78,15 +81,19 @@ class DemandeManager {
                                      'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
         $prenom = strtolower(strtr($prenom,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
                                      'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
-        $requete = $this->db->prepare('SELECT ID
-                                       FROM admissibles
-                                       WHERE NOM = :nom
-                                       AND PRENOM = :prenom
-                                       AND SERIE = :serie');
-        $requete->bindValue(':nom', $nom);
-        $requete->bindValue(':prenom', $prenom);
-        $requete->bindValue(':serie', $serie);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT ID
+                                           FROM admissibles
+                                           WHERE NOM = :nom
+                                           AND PRENOM = :prenom
+                                           AND SERIE = :serie');
+            $requete->bindValue(':nom', $nom);
+            $requete->bindValue(':prenom', $prenom);
+            $requete->bindValue(':serie', $serie);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL DemandeManager::isAdmissible : ".$e->getMessage());
+        }
         if ($requete->rowCount() == 0) {
             return -1;
         } elseif ($requete->rowCount() == 1) {
@@ -94,7 +101,10 @@ class DemandeManager {
             $requete->closeCursor();
             return $result['ID'];
         } else {
-            throw new RuntimeException('Plusieurs admissibles ont le meme nom'); // Ne se produit jamais en exécution courante
+            Logs::logger(2, "Corruption de la table 'admissibles'. Non unicite des champs");
+            $result = $requete->fetch(PDO::FETCH_ASSOC);
+            $requete->closeCursor();
+            return $result['ID'];
         }
     }
 
@@ -107,22 +117,26 @@ class DemandeManager {
      */
 
     public  function autorisation($demande) {
-        $requete = $this->db->prepare('SELECT demandes.ID
-                                       FROM demandes
-                                       INNER JOIN admissibles
-                                       ON demandes.ID_ADMISSIBLE = admissibles.ID
-                                       WHERE admissibles.NOM = :nom
-                                       AND admissibles.PRENOM = :prenom
-                                       AND admissibles.ADRESSE_MAIL = :email
-                                       AND admissibles.SERIE = :serie
-                                       AND admissibles.FILIERE = :filiere
-                                       AND demandes.ID_STATUS <= 2');
-        $requete->bindValue(':nom', $demande->nom());
-        $requete->bindValue(':prenom', $demande->prenom());
-        $requete->bindValue(':email', $demande->email());
-        $requete->bindValue(':serie', $demande->serie());
-        $requete->bindValue(':filiere', $demande->filiere());
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT demandes.ID
+                                           FROM demandes
+                                           INNER JOIN admissibles
+                                           ON demandes.ID_ADMISSIBLE = admissibles.ID
+                                           WHERE admissibles.NOM = :nom
+                                           AND admissibles.PRENOM = :prenom
+                                           AND admissibles.ADRESSE_MAIL = :email
+                                           AND admissibles.SERIE = :serie
+                                           AND admissibles.FILIERE = :filiere
+                                           AND demandes.ID_STATUS <= 2');
+            $requete->bindValue(':nom', $demande->nom());
+            $requete->bindValue(':prenom', $demande->prenom());
+            $requete->bindValue(':email', $demande->email());
+            $requete->bindValue(':serie', $demande->serie());
+            $requete->bindValue(':filiere', $demande->filiere());
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL DemandeManager::autorisation : ".$e->getMessage());
+        }
         return ($requete->rowCount() == 0);
     }
     
@@ -136,16 +150,18 @@ class DemandeManager {
 
     public  function updateStatus($code, $status) {
         if (!is_integer($status) || !preg_match('#^[a-z0-9A-Z](32)#',$code)) {
-            throw new RuntimeException('updateStatus : mauvais paramétrage'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. DemandeManager::updateStatus");
         }
-
-        $requete = $this->db->prepare('UPDATE demandes
-                                       SET ID_STATUS = :status,
-                                       WHERE LIEN = :code'); 
-        $requete->bindValue(':status', $status);
-        $requete->bindValue(':code', $code);
-
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('UPDATE demandes
+                                           SET ID_STATUS = :status,
+                                           WHERE LIEN = :code'); 
+            $requete->bindValue(':status', $status);
+            $requete->bindValue(':code', $code);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL DemandeManager::updateStatus : ".$e->getMessage());
+        }
     }
 
 
@@ -158,27 +174,31 @@ class DemandeManager {
 
     public  function getUnique($code) {
         if (!preg_match('#^[a-z0-9A-Z](32)#',$code)) {
-            throw new RuntimeException('Code invalide'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. DemandeManager::getUnique");
         }
-        $requete = $this->db->prepare('SELECT admissibles.ID AS id,
-                                              admissibles.NOM AS nom,
-                                              admissibles.PRENOM AS prenom,
-                                              admissibles.ADRESSE_MAIL AS email,
-                                              admissibles.SEXE AS sexe,
-                                              admissibles.ID_ETABLISSEMENT AS prepa,
-                                              admissibles.ID_FILIERE AS filiere,
-                                              admissibles.SERIE AS serie,
-                                              demandes.USER_X AS userEleve,
-                                              demandes.ID_STATUS AS status,
-                                              demandes.LIEN code
-                                       FROM demandes
-                                       INNER JOIN admissibles
-                                       ON demandes.ID_ADMISSIBLE = admissibles.ID
-                                       WHERE LIEN = :code');
-        $requete->bindValue(':code', $code);
-        $requete->execute();
+        try {
+            $requete = $this->db->prepare('SELECT admissibles.ID AS id,
+                                                  admissibles.NOM AS nom,
+                                                  admissibles.PRENOM AS prenom,
+                                                  admissibles.ADRESSE_MAIL AS email,
+                                                  admissibles.SEXE AS sexe,
+                                                  admissibles.ID_ETABLISSEMENT AS prepa,
+                                                  admissibles.ID_FILIERE AS filiere,
+                                                  admissibles.SERIE AS serie,
+                                                  demandes.USER_X AS userEleve,
+                                                  demandes.ID_STATUS AS status,
+                                                  demandes.LIEN code
+                                           FROM demandes
+                                           INNER JOIN admissibles
+                                           ON demandes.ID_ADMISSIBLE = admissibles.ID
+                                           WHERE LIEN = :code');
+            $requete->bindValue(':code', $code);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL DemandeManager::getUnique : ".$e->getMessage());
+        }
         if ($requete->rowCount() != 1) {
-            throw new RuntimeException('Plusieurs demandes possèdent le même code'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption de la table 'demandes'. Non unicite de 'LIEN'");
         }
             
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
@@ -194,24 +214,26 @@ class DemandeManager {
      */
 
     public  function getList() {
-        $requete = $this->db->prepare('SELECT admissibles.ID AS id,
-                                              admissibles.NOM AS nom,
-                                              admissibles.PRENOM AS prenom,
-                                              admissibles.ADRESSE_MAIL AS email,
-                                              admissibles.SEXE AS sexe,
-                                              admissibles.ID_ETABLISSEMENT AS prepa,
-                                              admissibles.ID_FILIERE AS filiere,
-                                              admissibles.SERIE AS serie,
-                                              demandes.USER_X AS userEleve,
-                                              demandes.ID_STATUS AS status,
-                                              demandes.LIEN code
-                                       FROM demandes
-                                       INNER JOIN admissibles
-                                       ON demandes.ID_ADMISSIBLE = admissibles.ID');
-        $requete->execute();
-
+        try {
+            $requete = $this->db->prepare('SELECT admissibles.ID AS id,
+                                                  admissibles.NOM AS nom,
+                                                  admissibles.PRENOM AS prenom,
+                                                  admissibles.ADRESSE_MAIL AS email,
+                                                  admissibles.SEXE AS sexe,
+                                                  admissibles.ID_ETABLISSEMENT AS prepa,
+                                                  admissibles.ID_FILIERE AS filiere,
+                                                  admissibles.SERIE AS serie,
+                                                  demandes.USER_X AS userEleve,
+                                                  demandes.ID_STATUS AS status,
+                                                  demandes.LIEN code
+                                           FROM demandes
+                                           INNER JOIN admissibles
+                                           ON demandes.ID_ADMISSIBLE = admissibles.ID');
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL DemandeManager::getList : ".$e->getMessage());
+        }
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
-            
         $listeDemandes = $requete->fetchAll();
         $requete->closeCursor();
         return $listeDemandes;
@@ -227,33 +249,36 @@ class DemandeManager {
 
     public  function getDemandes($user) {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
-            throw new RuntimeException('Utilisateur invalide'); // Ne se produit jamais en exécution courante
+            Logs::logger(3, "Corruption des parametres. DemandeManager::getDemandes");
         }
-        $requete = $this->db->prepare('SELECT admissibles.ID AS id,
-                                              admissibles.NOM AS nom,
-                                              admissibles.PRENOM AS prenom,
-                                              admissibles.ADRESSE_MAIL AS email,
-                                              admissibles.SEXE AS sexe,
-                                              CONCAT(ref_etablissements.COMMUNE," - ",ref_etablissements.NOM) AS prepa,
-                                              ref_filieres.NOM AS filiere,
-                                              series.INTITULE AS serie,
-                                              demandes.ID_STATUS AS status,
-                                              demandes.LIEN code
-                                       FROM demandes
-                                       INNER JOIN admissibles
-                                       ON demandes.ID_ADMISSIBLE = admissibles.ID
-                                       INNER JOIN ref_etablissements
-                                       ON admissibles.ID_ETABLISSEMENT = ref_etablissements.ID
-                                       INNER JOIN ref_filieres
-                                       ON admissibles.ID_FILIERE = ref_filieres.ID
-                                       INNER JOIN series
-                                       ON admissibles.SERIE = series.ID
-                                       WHERE demandes.USER_X = :user');
-        $requete->bindValue(':user', $user);
-        $requete->execute();
-
-        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
-            
+        try {
+            $requete = $this->db->prepare('SELECT admissibles.ID AS id,
+                                                  admissibles.NOM AS nom,
+                                                  admissibles.PRENOM AS prenom,
+                                                  admissibles.ADRESSE_MAIL AS email,
+                                                  admissibles.SEXE AS sexe,
+                                                  CONCAT(ref_etablissements.COMMUNE," - ",ref_etablissements.NOM) AS prepa,
+                                                  ref_filieres.NOM AS filiere,
+                                                  series.INTITULE AS serie,
+                                                  demandes.ID_STATUS AS status,
+                                                  demandes.LIEN code
+                                           FROM demandes
+                                           INNER JOIN admissibles
+                                           ON demandes.ID_ADMISSIBLE = admissibles.ID
+                                           INNER JOIN ref_etablissements
+                                           ON admissibles.ID_ETABLISSEMENT = ref_etablissements.ID
+                                           INNER JOIN ref_filieres
+                                           ON admissibles.ID_FILIERE = ref_filieres.ID
+                                           INNER JOIN series
+                                           ON admissibles.SERIE = series.ID
+                                           WHERE demandes.USER_X = :user');
+            $requete->bindValue(':user', $user);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, "Erreur SQL DemandeManager::getDemandes : ".$e->getMessage());
+        }
+        
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs 
         return $requete->fetchAll();
     }
 
