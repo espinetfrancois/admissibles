@@ -96,30 +96,7 @@ div#accroche {
 	****************************************************************************************************************
 	****************************************************************************************************************
 */
-div#navigation {
-	background: #002334;
-	float: left;
-	font-size: 1.35em;
-	padding: 0 0 3px 0;
-	width: 19em;
-	min-height: 300px;
-	z-index: 20;
-}
 
-div#navigation ul {
-	background: #164d6d;
-	font-weight: 700;
-	padding-top: 10px;
-}
-
-div#navigation a {
-	text-decoration: none;
-}
-
-/* div#page {
-	font-size: 1.1em;
-	margin: 0 5em;
-} */
 
 ol,ul {
 	list-style: none;
@@ -152,12 +129,31 @@ a:focus {
 	text-decoration: none;
 }
 
-div#menu {
-	background-color: red;
+/* Gestion du menu*/
+div.menu {
+	background: #002334;
 	float: left;
-	padding-bottom: 1px;
-	width: 100%;
+	font-size: 1.35em;
+	padding: 0 0 3px 0;
+	width: 19em;
+	min-height: 300px;
+	z-index: 20;
 }
+
+div.menu ul {
+	background: #164d6d;
+	font-weight: 700;
+	padding-top: 10px;
+}
+
+div.menu a {
+	text-decoration: none;
+}
+
+/* div#page {
+	font-size: 1.1em;
+	margin: 0 5em;
+} */
 
 ul#menu_principal ul {
 	list-style: none;
@@ -190,19 +186,18 @@ ul#menu_principal li.active>a, ul#menu_principal li.active ul li.active>a {
 }
 
 /*niveau 2*/
-
 ul#menu_principal li.active ul {
 	display : block;
 }
 
 /* gestion des sous-menus */
-div#navigation ul li ul {
+div.menu ul li ul {
 	display	: none;
 }
 
-div#navigation ul li:hover ul {
+/* div#navigation ul li:hover ul {
 	display : block;
-}
+} */
 
 
 

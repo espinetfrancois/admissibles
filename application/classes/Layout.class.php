@@ -284,7 +284,6 @@ class Layout {
         $sMenu ="";
         if ($this->_menu != null) {
             $sMenu = "\n".'<div class= menu>
-                           <div id="navigation">
                            <ul class="menu_deroulant" id="menu_principal">'.
                            file_get_contents(TEMPLATE_PATH.'/'.$this->_menu);
             if ($this->is_admin) {
@@ -294,7 +293,7 @@ class Layout {
                 //$sMenu .= file_get_contents(TEMPLATE_PATH.'/menu_adminpart.html');
             }
         }
-        return $sMenu.'</ul></div></div>';
+        return $sMenu.'</ul></div>';
     }
 
     public function renderNotFound() {
