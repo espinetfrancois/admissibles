@@ -25,6 +25,7 @@ class EleveManager {
     public  function __construct(PDO $db)
     {
         $this->db = $db;
+
     }
 
 
@@ -57,6 +58,7 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::add : '.$e->getMessage());
         }
+
     }
 
 
@@ -93,6 +95,7 @@ class EleveManager {
         } else {
             Logs::logger(3, 'Corruption des parametres : EleveManager::update');
         }
+
     }
 
 
@@ -120,6 +123,7 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::addDispo : '.$e->getMessage());
         }
+
     }
     
     
@@ -146,6 +150,7 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::deleteDispo : '.$e->getMessage());
         }
+
     }
     
     /**    
@@ -213,6 +218,7 @@ class EleveManager {
             $listeDispo[] = $res['serie'];
         }
         $requete->closeCursor();
+
         return $listeDispo;
     }
 
@@ -243,6 +249,7 @@ class EleveManager {
             
         $listeX = $requete->fetchAll();
         $requete->closeCursor();
+
         return $listeX;
     }
 

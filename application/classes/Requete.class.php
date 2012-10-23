@@ -3,17 +3,19 @@
 /**
  * Classe représantant la requete d'un utilisateur
  * @author francois.espinet
+ * @version 1.0
  *
  */
 
-class Requete {
+class Requete
+{
     
     /**
      * Profondeur maximale de la requete
      * la profondeur de /qqqche/qqche/qqche est 3
      * @var int
      */
-    const PROFONDEUR_MAX_REQUETE = 2;
+    const Profondeur_Max_Requete = 2;
     
     /**
      * Le préfixe de la requête, peut être nul
@@ -42,6 +44,7 @@ class Requete {
     public function __construct($request)
     {
         $this->_setRequete($request);
+
     }
     
     /**
@@ -56,18 +59,20 @@ class Requete {
         //séparation de la requête en éléments
         $aRequeteParts = explode('/', $aAllRequestParts['path']);
         //le +1 se justifie par le fait que le premier élément est toujours ""
-        if (count($aRequeteParts) > self::PROFONDEUR_MAX_REQUETE+1) {
+        if (count($aRequeteParts) > self::Profondeur_Max_Requete+1) {
             //si la requette est trop longue, elle est invalide
             $this->is_invalide = true;
-        } elseif(count($aRequeteParts) == self::PROFONDEUR_MAX_REQUETE+1) {
+        } elseif(count($aRequeteParts) == self::Profondeur_Max_Requete+1) {
             //si elle est tout juste de la bonne taille, on remplit le prefix et le suffixe
             $this->prefixe = $aRequeteParts[1];
             $this->suffixe = $aRequeteParts[2];
-        } elseif(count($aRequeteParts) == self::PROFONDEUR_MAX_REQUETE) {
+        } elseif(count($aRequeteParts) == self::Profondeur_Max_Requete) {
             //demande de qqch différent de l'accueil
             if ($aRequeteParts[1] != '') {
                 $this->suffixe = $aRequeteParts[1];
             }
         }
+
     }
+
 }

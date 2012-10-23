@@ -26,6 +26,7 @@ class DemandeManager {
     public  function __construct(PDO $db)
     {
         $this->db = $db;
+
     }
 
 
@@ -66,6 +67,7 @@ class DemandeManager {
                 Logs::logger(3, 'Erreur SQL DemandeManager::add : '.$e->getMessage());
             }
         }
+
     }
 
 
@@ -109,6 +111,7 @@ class DemandeManager {
             $requete->closeCursor();
             return $result['ID'];
         }
+
     }
 
 
@@ -141,6 +144,7 @@ class DemandeManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL DemandeManager::autorisation : '.$e->getMessage());
         }
+
         return ($requete->rowCount() == 0);
     }
     
@@ -167,6 +171,7 @@ class DemandeManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL DemandeManager::updateStatus : '.$e->getMessage());
         }
+
     }
 
 
@@ -243,6 +248,7 @@ class DemandeManager {
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
         $listeDemandes = $requete->fetchAll();
         $requete->closeCursor();
+
         return $listeDemandes;
     }
     
@@ -287,6 +293,7 @@ class DemandeManager {
         }
         
         $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs 
+
         return $requete->fetchAll();
     }
 

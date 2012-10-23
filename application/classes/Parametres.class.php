@@ -20,11 +20,11 @@ class Parametres {
     /**
      * Constantes relatives aux types de données
      */
-    const ETABLISSEMENT = 1;
-    const FILIERE = 2;
-    const PROMO = 3;
-    const SECTION = 4;
-    const SERIE = 5;
+    const Etablissement = 1;
+    const Filiere = 2;
+    const Promo = 3;
+    const Section = 4;
+    const Serie = 5;
 
     /**
      * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
@@ -36,6 +36,7 @@ class Parametres {
     public  function __construct(PDO $db)
     {
         $this->db = $db;
+
     }
 
 
@@ -62,6 +63,7 @@ class Parametres {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$res['admin'])) {
             Logs::logger(3, 'Corruption de la table "administration" : login administrateur non conforme');
         }
+
         return $res['admin'];
     }
     
@@ -83,6 +85,7 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::remiseAZero : '.$e->getMessage());
         }
+
     }
 
 
@@ -113,6 +116,7 @@ class Parametres {
         } else {
             return $requete->fetchAll();
         }
+
     }
 
 
@@ -126,31 +130,31 @@ class Parametres {
     public  function getList($type)
     {
         switch ($type) {
-        case self::ETABLISSEMENT:
+        case self::Etablissement:
             $champs = 'ID AS id, NOM AS nom, COMMUNE AS ville';
             $table = 'ref_etablissements';
             $order = 'COMMUNE, NOM';
             break;
 
-        case self::FILIERE:
+        case self::Filiere:
             $champs = 'ID AS id, NOM AS nom';
             $table = 'ref_filieres';
             $order = 'NOM';
             break;
 
-        case self::PROMO:
+        case self::Promo:
             $champs = 'ID AS id, NOM AS nom';
             $table = 'ref_promotions';
             $order = 'NOM';
             break;
 
-        case self::SECTION:
+        case self::Section:
             $champs = 'ID AS id, NOM AS nom';
             $table = 'ref_sections';
             $order = 'NOM';
             break;
 
-        case self::SERIE:
+        case self::Serie:
             $champs = 'ID AS id, INTITULE AS intitule, DATE_DEBUT AS date_debut, DATE_FIN AS date_fin, OUVERTURE AS ouverture, FERMETURE AS fermeture';
             $table = 'series';
             $order = 'DATE_DEBUT';
@@ -170,6 +174,7 @@ class Parametres {
         }
         $liste = $requete->fetchAll();
         $requete->closeCursor();
+
         return $liste;
     }
     
@@ -185,31 +190,31 @@ class Parametres {
     public  function addToList($type, $donnees)
     {
         switch ($type) {
-        case self::ETABLISSEMENT:
+        case self::Etablissement:
             $valeurs = 'NOM = :nom, COMMUNE = :commune';
             $table = 'ref_etablissements';
             $array = array('nom' => $donnees['nom'], 'commune' => $donnees['commune']);
             break;
         
-        case  self::FILIERE:
+        case  self::Filiere:
             $valeurs = 'NOM = :nom';
             $table = 'ref_filieres';
             $array = array('nom' => $donnees['nom']);
             break;
             
-        case  self::PROMO:
+        case  self::Promo:
             $valeurs = 'NOM = :nom';
             $table = 'ref_promotions';
             $array = array('nom' => $donnees['nom']);
             break;
             
-        case  self::SECTION:
+        case  self::Section:
             $valeurs = 'NOM = :nom';
             $table = 'ref_sections';
             $array = array('nom' => $donnees['nom']);
             break;
             
-        case  self::SERIE:
+        case  self::Serie:
             $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
             $table = 'series';
             $array = array('intitule' => $donnees['intitule'], 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
@@ -229,6 +234,7 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::addToList : '.$e->getMessage());
         }
+
     }
     
     
@@ -243,23 +249,23 @@ class Parametres {
     public  function deleteFromList($type, $id)
     {
         switch ($type) {
-        case self::ETABLISSEMENT:
+        case self::Etablissement:
             $table = 'ref_etablissements';
             break;
         
-        case  self::FILIERE:
+        case  self::Filiere:
             $table = 'ref_filieres';
             break;
             
-        case  self::PROMO:
+        case  self::Promo:
             $table = 'ref_promotions';
             break;
             
-        case  self::SECTION:
+        case  self::Section:
             $table = 'ref_sections';
             break;
             
-        case  self::SERIE:
+        case  self::Serie:
             $table = 'series';
             break;
         
@@ -289,6 +295,7 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::deleteFromList : '.$e->getMessage());
         }
+
     }
     
     
@@ -303,7 +310,7 @@ class Parametres {
     public  function isUsedList($type, $id)
     {
         switch ($type) {
-        case self::ETABLISSEMENT:
+        case self::Etablissement:
             try {
                 $requete = $this->db->prepare('SELECT *
                                                FROM x
@@ -326,7 +333,7 @@ class Parametres {
             }
             break;
         
-        case self::FILIERE:
+        case self::Filiere:
             try {
                 $requete = $this->db->prepare('SELECT *
                                                FROM x
@@ -349,7 +356,7 @@ class Parametres {
             }
             break;
             
-        case self::PROMO:
+        case self::Promo:
             try {
                 $requete = $this->db->prepare('SELECT *
                                                FROM x
@@ -367,7 +374,7 @@ class Parametres {
             }
             break;
             
-        case self::SECTION:
+        case self::Section:
             try {
                 $requete = $this->db->prepare('SELECT *
                                                FROM x
@@ -385,7 +392,7 @@ class Parametres {
             }
             break;
             
-        case self::SERIE:
+        case self::Serie:
             try {
                 $requete = $this->db->prepare('SELECT *
                                                FROM admissibles
@@ -412,6 +419,7 @@ class Parametres {
             Logs::logger(3, 'Corruption des parametres. Parametres::isUsedList');
             break;
         }
+
     }
     
     

@@ -1,9 +1,9 @@
 <?php
-
 /**
  * Classe de configuration du projet
  * Définit les constantes de l'application
  * @author francois
+ * @version 1.0
  *
  */
 
@@ -11,30 +11,35 @@
 class Config {
 
     /**
+     * Host
      * @var string
      * @access protected
      */
     protected $_dbhost;
     
     /**
+     * Login
      * @var string
      * @access protected
      */
     protected $_dblogin;
     
     /**
+     * Base de donnée
      * @var string
      * @access protected
      */
     protected $_dbbase;
     
     /**
+     * Mot de passe
      * @var string
      * @access protected
      */
     protected $_dbpass;
     
     /**
+     * Autres paramètres
      * @var string
      * @access protected
      */
@@ -52,45 +57,54 @@ class Config {
         self::setErrors();
         $this->loadConfig();
         self::addLibraries();
+
     }
 
 
     /**
+     * Getter host
      * @access public
      * @return string
      */
     public function get_dbhost()
     {
+
         return $this->_dbhost;
     }
 
 
     /**
+     * Getter login
      * @access public
      * @return string
      */
     public function get_dblogin()
     {
+
         return $this->_dblogin;
     }
 
 
     /**
+     * Getter base
      * @access public
      * @return string
      */
     public function get_dbbase()
     {
+
         return $this->_dbbase;
     }
 
 
     /**
+     * Getter pass
      * @access public
      * @return string
      */
     public function get_dbpass()
     {
+
         return $this->_dbpass;
     }
 
@@ -119,6 +133,7 @@ class Config {
         //constantes d'environement
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
         define('APP_MAIL', false);
+
     }
 
 
@@ -133,11 +148,18 @@ class Config {
             ini_set('error_reporting', E_ALL);
             ini_set('display_errors', 1);
         }
+
     }
 
+    /**
+     * Include des libraries
+     * @access public
+     * @return void
+     */
     static function addLibraries()
     {
         require_once(LIBRARY_PATH.'/phpmailer/phpmailer.class.php');
+
     }
 
     /**
@@ -182,15 +204,16 @@ class Config {
         $this->_dblogin = $aConfig['login'];
         $this->_dbbase = $aConfig['base'];
         $this->_dbpass = $aConfig['password'];
+
     }
 
 
     /* protected function initLibrary($aConfig)
     {
         foreach ($aConfig as $key => $value) {
-    $aKeys = explode('.', $key);
-        
-    }
+            $aKeys = explode('.', $key);
+        }
+
     } */
 
 
@@ -201,6 +224,7 @@ class Config {
      */
     public function get_otherparam()
     {
+
         return $this->_otherparam;
     }
 }

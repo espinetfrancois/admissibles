@@ -4,19 +4,20 @@
  * Classe mère de gestion des envois de mail
  * Surcouche de PHPMailer
  * @author francois.espinet
+ * @version 1.0
  *
  */
 class Mail extends PHPMailer {
     
-    const INI_FILE = 'mail.ini';
+    const Ini_File = 'mail.ini';
     
-    const SECTION_ADMIN_TECH = 'admin_tech';
-    const SECTION_ADMIN_FONC = 'admin_fonc';
-    const SECTION_X = 'x';
-    const SECTION_ADMISSIBLE = 'admissible';
+    const Section_Admin_Tech = 'admin_tech';
+    const Section_Admin_Fonc = 'admin_fonc';
+    const Section_X = 'x';
+    const Section_Admissible = 'admissible';
     
-    const FROM_MAIL = 'admissible@polytechnique.edu';
-    const FROM_NOM = 'Accueil des admissibles';
+    const From_Mail = 'admissible@polytechnique.edu';
+    const From_Nom = 'Accueil des admissibles';
     
     /**
      * talbeau contenant les textes pour les mails
@@ -24,11 +25,17 @@ class Mail extends PHPMailer {
      */
     private $mails = null;
     
+    /**
+     * Constructeur
+     * @access public
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct(true);
         $this->readIni();
-        $this->SetFrom(self::FROM_MAIL, self::FROM_NOM);
+        $this->SetFrom(self::From_Mail, self::From_Nom);
+
     }
    
     /**
@@ -42,6 +49,7 @@ class Mail extends PHPMailer {
             $this->IsHTML(true);
             parent::Send();
         }
+
     }
     
     /**
@@ -50,7 +58,7 @@ class Mail extends PHPMailer {
      */
     private function readIni()
     {
-        $this->mails = parse_ini_file(CONFIG_PATH.'/'.self::INI_FILE, true);
+        $this->mails = parse_ini_file(CONFIG_PATH.'/'.self::Ini_File, true);
         
     }
     

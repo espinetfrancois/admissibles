@@ -3,11 +3,13 @@
 /**
  * Classe de routage de url
  * @author francois.espinet
+ * @version 1.0
  *
  */
 
 
-class Router {
+class Router
+{
 
     /**
      * Tableau des url d'administration
@@ -15,6 +17,10 @@ class Router {
      */
     protected $urls = array();
 
+    /**
+     * Tableau des préfixes
+     * @var array d'url
+     */
     protected $prefixes = array();
 
     /**
@@ -38,9 +44,13 @@ class Router {
      * Le fichier ini contenant les routes.
      * @var string
      */
-    const INI_FILE = 'router.ini';
+    const Ini_File = 'router.ini';
 
-    const SECTION_ROOT = 'root';
+    /**
+     * Root
+     * @var string
+     */
+    const Section_Root = 'root';
 
     /**
      * le layout de l'application
@@ -58,7 +68,7 @@ class Router {
     {
         $this->layout = $layout;
         //chargement du fichier ini, initialisation des tableaux
-        $this->_loadIni(CONFIG_PATH.'/'.self::INI_FILE);
+        $this->_loadIni(CONFIG_PATH.'/'.self::Ini_File);
         //initialisation de l'objet requete
         $this->requete = new Requete($request);
 
@@ -72,6 +82,7 @@ class Router {
 
         //si la requete est valide, on met en marche le mécanisme de routage.
         $this->_setFileFromUrl();
+
     }
 
     /**
@@ -84,13 +95,14 @@ class Router {
             //tableau des prefixes de l'application , correspond aux sections du fichier ini
             $this->prefixes = $urls['prefixes'];
             //tableau des url, contient suffixe de la route => fichier à charger
-            $this->urls = array(self::SECTION_ROOT => $urls[self::SECTION_ROOT]);
+            $this->urls = array(self::Section_Root => $urls[self::Section_Root]);
             foreach ($this->prefixes as $keypref => $prefixe ) {
                 $this->urls[$prefixe] = $urls[$keypref];
             }
         } else {
             throw new Exception('Impossible de charger le fichier de configuration du routeur');
         }
+
     }
 
     /**
@@ -99,7 +111,8 @@ class Router {
      */
     private function setAccueil()
     {
-        $this->file = PAGES_PATH.'/'.$this->urls[self::SECTION_ROOT]['accueil'];
+        $this->file = PAGES_PATH.'/'.$this->urls[self::Section_Root]['accueil'];
+
         return;
     }
 
@@ -130,6 +143,7 @@ class Router {
         }
 
     }
+
     /**
      * Traitement du préfixe de la requete
      * @author francois.espinet
@@ -145,6 +159,7 @@ class Router {
             $this->layout->not_found = true;
             return null;
         }
+
     }
 
     /**
@@ -152,7 +167,7 @@ class Router {
      * @author francois.espinet
      * @param string $prefix les prefixe précédement calculé (peut-être nul!)
      */
-    private function __traitementSuffixe($prefix = self::SECTION_ROOT)
+    private function __traitementSuffixe($prefix = self::Section_Root)
     {
         if ($this->requete->suffixe == null) {
             // si le suffixe est nul, on renvoie l'accueil

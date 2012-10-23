@@ -42,22 +42,22 @@ else {
     if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])) { // Gestion des listes de paramètres
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         switch ($_GET['type']) {
-            case Parametres::PROMO: 
+            case Parametres::Promo: 
                 echo '<h2>Promotions présentes sur le platâl</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
-            case Parametres::ETABLISSEMENT: 
+            case Parametres::Etablissement: 
                 echo '<h2>Etablissements de provenance des élèves</h2><p>Les élèves gardent la possibilité d\'entrer une autre valeur que celles proposées ci-dessous.</p>';
                 $form = '<input type="text" name="ville" value="VILLE" size="10" maxlength="50"/> - <input type="text" name="nom" value="Nom de l\'établissement" size="30" maxlength="50"/>';
                 break;
 
-            case Parametres::FILIERE:
+            case Parametres::Filiere:
                 echo '<h2>Filières d\'entrée des élèves</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
-            case Parametres::SECTION:
+            case Parametres::Section:
                 echo '<h2>Sections sportives</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
@@ -104,7 +104,7 @@ else {
             echo '<table border=1 cellspacing=0>';
             echo '<tr><td>Valeur</td><td>Action</td></tr>';
             foreach ($liste as $res) {
-                if ($_GET['type'] == Parametres::ETABLISSEMENT) {
+                if ($_GET['type'] == Parametres::Etablissement) {
                     $res['nom'] = $res['ville']." - ".$res['nom'];
                 }
                 echo '<tr>';
@@ -123,8 +123,8 @@ else {
             if (!is_numeric($_GET['suppr'])) {
                 Logs::logger(3, 'Corruption des parametres. admin.php::GET');
             }
-            if (!$parametres->isUsedList(Parametres::SERIE, $_GET['suppr'])) {
-                $parametres->deleteFromList(Parametres::SERIE, $_GET['suppr']);
+            if (!$parametres->isUsedList(Parametres::Serie, $_GET['suppr'])) {
+                $parametres->deleteFromList(Parametres::Serie, $_GET['suppr']);
                 Logs::logger(1, 'Administrateur : Suppression d\'une serie');
             } else {
                 $erreurA = 'Vous ne pouvez supprimer cette série tant qu\'elle est utilisée dans le profil d\'un élève ou d\'un admissible';
@@ -139,7 +139,7 @@ else {
                 $date_fin = mktime(0, 0, 0, $expDateF[1], $expDateF[0], $expDateF[2]);
                 // L'ouverture des demandes sera réglée lors de l'insertion de la liste des admissibles
                 // La fermeture des demandes correspond Ã  minuit la veille du début des oraux
-                $parametres->addToList(Parametres::SERIE, array('intitule' => $_POST['intitule'], 'date_debut' => $date_debut, 'date_fin' => $date_fin, 'ouverture' => $date_debut, 'fermeture' => $date_debut));
+                $parametres->addToList(Parametres::Serie, array('intitule' => $_POST['intitule'], 'date_debut' => $date_debut, 'date_fin' => $date_fin, 'ouverture' => $date_debut, 'fermeture' => $date_debut));
                 Logs::logger(1, 'Administrateur : Ajout d\'une serie');
             } else {
                 $erreurA = 'Erreur lors de l\'ajout d\'une nouvelle série';
@@ -148,7 +148,7 @@ else {
         }
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         echo '<h2>Séries d\'admissibilité</h2>';
-        $series = $parametres->getList(Parametres::SERIE);
+        $series = $parametres->getList(Parametres::Serie);
         echo '<span style="color:red;">'.@$erreurA.'</span>';
         echo '<form action="/administration/gestion?action=series" method="post">';
         echo '<table border=1 cellspacing=0>';
@@ -184,8 +184,8 @@ else {
         echo '<h2>Insertion d\'une liste d\'admissibilité</h2>';
         echo '<span style="color:red;">'.@$erreurA.'</span>';
         echo '<p>Attention : l\'insertion d\'une liste d\'admissibilité marque l\'ouverture des demandes d\'hébergement pour la série considérée !</p>';
-        $filieres = $parametres->getList(Parametres::FILIERE);
-        $series = $parametres->getList(Parametres::SERIE);
+        $filieres = $parametres->getList(Parametres::Filiere);
+        $series = $parametres->getList(Parametres::Serie);
         ?>
         <form action="/administration/gestion?action=admissibles" method="post">
             Série d'admissibilité : <select name="serie">
@@ -294,11 +294,11 @@ else {
             }
             ?>
             <form action="/administration/gestion?action=hotel" method="post">
-            Nom : <input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::NOM_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Adresse : <input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::ADRESSE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Téléphone : <input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::TEL_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Email : <input type="text" name="email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::EMAIL_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Description : <?php if (isset($erreurModif) && in_array(Adresse::DESCRIPTION_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            Nom : <input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Nom_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            Adresse : <input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Adresse_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            Téléphone : <input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Tel_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            Email : <input type="text" name="email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Email_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            Description : <?php if (isset($erreurModif) && in_array(Adresse::Description_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             <textarea name="description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><br/><br/>
             Catégorie : <select name="categorie">
                         <option value=""></option>
@@ -317,8 +317,8 @@ else {
                 $checked = '';
             }
             ?>
-            </select> <?php if (isset($erreurModif) && in_array(Adresse::CATEGORIE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Afficher cette annonce sur le site ? <input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Adresse::VALIDE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            </select> <?php if (isset($erreurModif) && in_array(Adresse::Categorie_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            Afficher cette annonce sur le site ? <input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Adresse::Valide_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
             <?php
             if(isset($adresse) && !$adresse->isNew()) {
                 ?>
@@ -386,10 +386,10 @@ else {
         <a href="/administration/gestion?action=deconnect">Se déconnecter</a><br/>
         <a href="/administration/gestion?action=RAZ">Remise à zéro de l'interface d'hébergement</a><br/>
         <a href="/administration/gestion?action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::PROMO; ?>">Modifier les promotions présentes sur le platal</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::ETABLISSEMENT; ?>">Modifier les établissements de provenance des élèves</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::FILIERE; ?>">Modifier les filières d'entrée des élèves</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::SECTION; ?>">Modifier les sections sportives des élèves</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Promo; ?>">Modifier les promotions présentes sur le platal</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Etablissement; ?>">Modifier les établissements de provenance des élèves</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Filiere; ?>">Modifier les filières d'entrée des élèves</a><br/>
+        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Section; ?>">Modifier les sections sportives des élèves</a><br/>
         <a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
         <a href="/administration/gestion?action=hotel">Modifier la liste des hébergements à proximitè de l'école</a><br/>
         <span id="page_id">4</span>

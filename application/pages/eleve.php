@@ -53,7 +53,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['promo'])
 }
 // Modification des disponibilitét d'acceuil
 if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1") {
-    $series = $parametres->getList(Parametres::SERIE);
+    $series = $parametres->getList(Parametres::Serie);
     $dispo = array();
     foreach ($series as $value) {
         if ($value['ouverture'] > time()) {
@@ -114,10 +114,10 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
     <?php
 } else { // Eleve identifié
     if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve']->isValid()) { // on teste si l'élève a déjà entré ses infos personnelles
-        $promos = $parametres->getList(Parametres::PROMO);
-        $sections = $parametres->getList(Parametres::SECTION);
-        $prepas = $parametres->getList(Parametres::ETABLISSEMENT);
-        $filieres = $parametres->getList(Parametres::FILIERE);
+        $promos = $parametres->getList(Parametres::Promo);
+        $sections = $parametres->getList(Parametres::Section);
+        $prepas = $parametres->getList(Parametres::Etablissement);
+        $filieres = $parametres->getList(Parametres::Filiere);
         ?>
 
         <h2>Modifier mes informations personnelles</h2>
@@ -132,7 +132,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         if ($_SESSION['eleve']->sexe() == "F") {
             echo 'checked="checked"'; 
         }?>/></label>
-        <?php if (isset($erreurs) && in_array(Eleve::SEXE_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
+        <?php if (isset($erreurs) && in_array(Eleve::Sexe_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
         <p id="champ-promo" class="champ"> <label for="promo">Promotion : </label><select name="promo">
             <option value=""></option>
@@ -147,7 +147,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         }
         ?>
         </select>
-        <?php if (isset($erreurs) && in_array(Eleve::PROMO_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
+        <?php if (isset($erreurs) && in_array(Eleve::Promo_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
         <p id="champ-section" class="champ">
         <label for="section">Section : </label><select name="section">
@@ -163,7 +163,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         }
         ?>
         </select>
-        <?php if (isset($erreurs) && in_array(Eleve::SECTION_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
+        <?php if (isset($erreurs) && in_array(Eleve::Section_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
         <p id="champ-prepa" class="champ">
         <label for="prepa">Etablissement d'origine : </label><select name="prepa">
@@ -179,7 +179,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         }
         ?>
         </select>
-        <?php if (isset($erreurs) && in_array(Eleve::PREPA_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
+        <?php if (isset($erreurs) && in_array(Eleve::Prepa_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
         <p id="champ-filiere" class="champ"> <label for="filiere">Filière : </label><select name="filiere">
             <option value=""></option>
@@ -194,14 +194,14 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         }
         ?>
         </select>
-        <?php if (isset($erreurs) && in_array(Eleve::FILIERE_INVALIDE, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
+        <?php if (isset($erreurs) && in_array(Eleve::Filiere_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
         <br/>
         <input type="submit" value="Modifier mes informations personnelles"/>
         </form>
         <?php
     } else {
-        $series = $parametres->getList(Parametres::SERIE);
+        $series = $parametres->getList(Parametres::Serie);
         $dispos = $eleveManager->getDispo($_SESSION['eleve']->user());
         ?>
         <h2>Disponibilitét d'accueil</h2>
@@ -306,11 +306,11 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         $categories = $adresseManager->getCategories();
         ?>
         <form action="/x/connexion" method="post">
-        Nom : <input type="text" name="adr_nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::NOM_INVALIDE, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Adresse : <input type="text" name="adr_adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::ADRESSE_INVALIDE, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Téléphone : <input type="text" name="adr_tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::TEL_INVALIDE, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Email : <input type="text" name="adr_email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::EMAIL_INVALIDE, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Description : <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::DESCRIPTION_INVALIDE, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+        Nom : <input type="text" name="adr_nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Nom_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+        Adresse : <input type="text" name="adr_adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Adresse_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+        Téléphone : <input type="text" name="adr_tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Tel_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+        Email : <input type="text" name="adr_email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Email_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+        Description : <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Description_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
         <textarea name="adr_description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><br/><br/>
         Catégorie : <select name="adr_categorie">
                     <option value=""></option>
@@ -324,7 +324,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
             echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['nom'].'</option>';
         }
         ?>
-        </select> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::CATEGORIE_INVALIDE, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+        </select> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Categorie_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
         <input type="submit" value="Proposer cet établissement" />
         </form>
         <?php

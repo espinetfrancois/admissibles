@@ -26,6 +26,7 @@ class AdresseManager {
     public  function __construct(PDO $db)
     {
         $this->db = $db;
+
     }
 
 
@@ -59,6 +60,7 @@ class AdresseManager {
         } catch (Exception $e) {
                 Logs::logger(3, 'Erreur SQL AdresseManager::add : '.$e->getMessage());
         }
+
     }
 
 
@@ -93,6 +95,7 @@ class AdresseManager {
         } catch (Exception $e) {
                 Logs::logger(3, 'Erreur SQL AdresseManager::update : '.$e->getMessage());
         }
+
     }
 
 
@@ -110,6 +113,7 @@ class AdresseManager {
         } else {
             Logs::logger(3, 'Corruption des parametres : AdresseManager::save');
         }
+
     }
     
     
@@ -134,6 +138,7 @@ class AdresseManager {
         } else {
             Logs::logger(3, 'Corruption des parametres : AdresseManager::delete');
         }
+
     }
 
 
@@ -205,6 +210,7 @@ class AdresseManager {
             
         $listeAdresse = $requete->fetchAll();
         $requete->closeCursor();
+
         return $listeAdresse;
     }
 
@@ -225,6 +231,7 @@ class AdresseManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL AdresseManager::getCategories : '.$e->getMessage());
         }
+
         return $requete->fetchAll();
     }
 
@@ -246,6 +253,7 @@ class AdresseManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL AdresseManager::addCategorie : '.$e->getMessage());
         }
+
     }
     
     
@@ -267,6 +275,7 @@ class AdresseManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL AdresseManager::deleteCategorie : '.$e->getMessage());
         }
+
     }
     
     
@@ -293,6 +302,7 @@ class AdresseManager {
         } else {
             return false;
         }
+
     }
 
 }
