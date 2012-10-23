@@ -21,13 +21,13 @@ if (isset($_POST['user']) && isset($_POST['pass']) && !empty($_POST['user']) && 
         $_SESSION['eleve'] = $eleveManager->getUnique($_POST['user']);
         if ($_SESSION['eleve'] == NULL) {
             $_SESSION['new'] = 1; // Première connexion de l'élève
-            $_SESSION['eleve'] = new Eleve(array("user" => $_POST['user'], "email" => "LDAP@poly.edu")); //***
+            $_SESSION['eleve'] = new Eleve(array('user' => $_POST['user'], 'email' => 'LDAP@poly.edu')); //***
         }
-        Logs::logger(1, "Connexion de l'eleve ".$_POST['user']." reussie");
+        Logs::logger(1, 'Connexion de l\'eleve '.$_POST['user'].' reussie');
     }
     else {
         $erreurID = true;
-        Logs::logger(2, "Tentative de connexion eleve echouee (user : ".$_POST['user']);
+        Logs::logger(2, 'Tentative de connexion eleve echouee (user : '.$_POST['user'].')');
     }
 }
 //Modification des informations personnelles
@@ -45,10 +45,10 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['promo'])
         } else {
             $eleveManager->update($_SESSION['eleve']);
         }
-        Logs::logger(1, "Modification des informations personnelles eleve (user : ".$_SESSION['eleve']->user().")");
+        Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
     } else {
         $erreurs = $_SESSION['eleve']->erreurs();
-        Logs::logger(2, "Erreur de remplissage du formulaire informations personnelles eleve (user : ".$_SESSION['eleve']->user().")");
+        Logs::logger(2, 'Erreur de remplissage du formulaire informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
     }
 }
 // Modification des disponibilitét d'acceuil
@@ -57,21 +57,21 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
     $dispo = array();
     foreach ($series as $value) {
         if ($value['ouverture'] > time()) {
-            if (isset($_POST["serie".$value['id']]) && $_POST["serie".$value['id']]) {
+            if (isset($_POST['serie'.$value['id']]) && $_POST['serie'.$value['id']]) {
                 $eleveManager->addDispo($_SESSION['eleve']->user(), $value['id']);
             } else {
                 $eleveManager->deleteDispo($_SESSION['eleve']->user(), $value['id']);
             }
         }
     }
-    Logs::logger(1, "Modification des disponibilites eleve (user : ".$_SESSION['eleve']->user().")");
+    Logs::logger(1, 'Modification des disponibilites eleve (user : '.$_SESSION['eleve']->user().')');
 }
 // Acceptation d'une demande de logement
 if (isset($_POST['code']) && !empty($_POST['code'])) {
     $demande = $demandeManager->getUnique($_POST['code']);
     $demande->setCode($demandeManager->updateStatus($_POST['code'], "2"));
     // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
-    Logs::logger(1, "Acceptation d'une demande de logement (user : ".$_SESSION['eleve']->user().")");
+    Logs::logger(1, 'Acceptation d\'une demande de logement (user : '.$_SESSION['eleve']->user().')');
 }
 
 // Propostion d'une adresse
@@ -87,16 +87,16 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
         $adresseManager->save($adresse);
         unset($adresse);
         $successAjoutAdresse = 1;
-        Logs::logger(1, "Proposition d'une adresse (user : ".$_SESSION['eleve']->user().")");
+        Logs::logger(1, 'Proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
     } else {
         $erreurAjoutAdresse = $adresse->erreurs();
-        Logs::logger(2, "Erreur de remplissage du formulaire de proposition d'une adresse (user : ".$_SESSION['eleve']->user().")");
+        Logs::logger(2, 'Erreur de remplissage du formulaire de proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
     }
 }
 
 // Interface de connexion
-if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="deconnect")) { // Eleve non identifié
-    Logs::logger(1, "Deconnexion eleve (user : ".$_SESSION['eleve']->user().")");
+if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) { // Eleve non identifié
+    Logs::logger(1, 'Deconnexion eleve (user : '.$_SESSION['eleve']->user().')');
     session_destroy();
     ?>
     <!-- <div class="form"> -->
@@ -113,7 +113,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
     <!-- </div> -->
     <?php
 } else { // Eleve identifié
-    if ((isset($_GET['action']) && $_GET['action'] == "modify") || !$_SESSION['eleve']->isValid()) { // on teste si l'élève a déjà entré ses infos personnelles
+    if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve']->isValid()) { // on teste si l'élève a déjà entré ses infos personnelles
         $promos = $parametres->getList(Parametres::PROMO);
         $sections = $parametres->getList(Parametres::SECTION);
         $prepas = $parametres->getList(Parametres::ETABLISSEMENT);
@@ -218,18 +218,18 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
             <?php
             foreach ($series as $value) {
                 if ($value['ouverture'] < time()) {
-                    $disabled = "disabled";
-                    $name = "";
+                    $disabled = 'disabled';
+                    $name = '';
                 } else {
-                    $disabled = "";
-                    $name = "name='serie".$value['id']."'";
+                    $disabled = '';
+                    $name = 'name="serie'.$value['id'].'"';
                 }
                 if (in_array($value['id'], $dispos)) {
-                    $checked = "checked";
+                    $checked = 'checked';
                 } else {
-                    $checked = "";
+                    $checked = '';
                 }
-                echo $value['intitule'].' (du '.date("d.m.Y", $value['date_debut']).' au '.date("d.m.Y", $value['date_fin']).') : <input type="checkbox" '.$name.' '.$checked.' '.$disabled.'/><br/>';
+                echo $value['intitule'].' (du '.date('d.m.Y', $value['date_debut']).' au '.date('d.m.Y', $value['date_fin']).') : <input type="checkbox" '.$name.' '.$checked.' '.$disabled.'/><br/>';
             }
             ?>
             <br/>
@@ -237,7 +237,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
             </form>
             <?php
         } else {
-            echo "<p>Il n'est pas encore possible de mettre à jour vos disponibilitées d'hébergement. Merci de repasser plus tard...</p>";
+            echo '<p>Il n\'est pas encore possible de mettre à jour vos disponibilitées d\'hébergement. Merci de repasser plus tard...</p>';
         }
         ?>
         <hr/>
@@ -245,7 +245,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         <?php
         $demandes = $demandeManager->getDemandes($_SESSION['eleve']->user());
         if (empty($demandes)) {
-            echo "Vous n'avez reçu aucune demande jusqu'à présent. Vous recevrez une alerte email pour toute demande à valider...";
+            echo 'Vous n\'avez reçu aucune demande jusqu\'à présent. Vous recevrez une alerte email pour toute demande à valider...';
         } else {
             echo '<table border=1 cellspacing=0>';
             echo '<tr>
@@ -261,23 +261,23 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
             foreach ($demandes as $demande) {
                 switch ($demande->status()) {
                 case 0:
-                    $status_libele = "En cours de validation par l'admissible";
-                    $action = "Merci d'attendre que l'admissible ait vérifié son adresse email. Vous ne recevrez pas d'autre demande que celle-ci pour cette série.";
+                    $status_libele = 'En cours de validation par l\'admissible';
+                    $action = 'Merci d\'attendre que l\'admissible ait vérifié son adresse email. Vous ne recevrez pas d\'autre demande que celle-ci pour cette série.';
                     break;
                 case 1:
-                    $status_libele = "En attente d'acceptation";
-                    $action = "<form action='index.php?page=eleve' method='post'><input type='hidden' name='accept' value='".$demande->code()."'><input type='submit' value='Accepter la demande'/></form>";
+                    $status_libele = 'En attente d\'acceptation';
+                    $action = '<form action="index.php?page=eleve" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
                     break;
                 case 2:
-                    $status_libele = "Validée";
-                    $action = "Prendre contact avec l'admissible pour définir les modalités de son arrivée : ".$demande->email();
+                    $status_libele = 'Validée';
+                    $action = 'Prendre contact avec l\'admissible pour définir les modalités de son arrivée : '.$demande->email();
                     break;
                 case 3:
-                    $status_libele = "Annulée";
-                    $action = "";
+                    $status_libele = 'Annulée';
+                    $action = '';
                     break;
                 default:
-                    Logs::logger(3, "Corruption des parametres. eleve.php::statut");
+                    Logs::logger(3, 'Corruption des parametres. eleve.php::statut');
                        break;
                 }
                 
@@ -301,7 +301,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         N'hésitez pas à partager avec les futurs admissibles les adresses qui vous ont aidées !</p>
         <?php
         if (isset($successAjoutAdresse)) {
-            echo "<p style='color:red;'>Votre annonce a bien été prise en compte. Elle sera examinée par un administrateur avant d'être publiée sur le site du concours.</p>";
+            echo '<p style="color:red;">Votre annonce a bien été prise en compte. Elle sera examinée par un administrateur avant d\'être publiée sur le site du concours.</p>';
         }
         $categories = $adresseManager->getCategories();
         ?>
@@ -317,9 +317,9 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action']=="d
         <?php 
         foreach ($categories as $value) {
             if (isset($adresse) && $adresse->categorie() == $value['id']) {
-                $selected = "selected";
+                $selected = 'selected';
             } else {
-                $selected = "";
+                $selected = '';
             }
             echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['nom'].'</option>';
         }

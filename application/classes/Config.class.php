@@ -46,7 +46,8 @@ class Config {
      * @access public
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         self::defineConstantes();
         self::setErrors();
         $this->loadConfig();
@@ -58,7 +59,8 @@ class Config {
      * @access public
      * @return string
      */
-    public function get_dbhost() {
+    public function get_dbhost()
+    {
         return $this->_dbhost;
     }
 
@@ -67,7 +69,8 @@ class Config {
      * @access public
      * @return string
      */
-    public function get_dblogin() {
+    public function get_dblogin()
+    {
         return $this->_dblogin;
     }
 
@@ -76,7 +79,8 @@ class Config {
      * @access public
      * @return string
      */
-    public function get_dbbase() {
+    public function get_dbbase()
+    {
         return $this->_dbbase;
     }
 
@@ -85,7 +89,8 @@ class Config {
      * @access public
      * @return string
      */
-    public function get_dbpass() {
+    public function get_dbpass()
+    {
         return $this->_dbpass;
     }
 
@@ -95,19 +100,20 @@ class Config {
      * @access public
      * @return void
      */
-    static function defineConstantes() {
+    static function defineConstantes()
+    {
         //define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
-        define('CONFIG_PATH', APPLICATION_PATH."/configs");
-        define('PUBLIC_PATH', ROOT_PATH."/public");
+        define('CONFIG_PATH', APPLICATION_PATH.'/configs');
+        define('PUBLIC_PATH', ROOT_PATH.'/public');
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
         define('LIBRARY_PATH', APPLICATION_PATH.'/library');
         
         
         define('HTTP_PUBLIC_PATH', '');
-        define('HTTP_CSS_PATH', HTTP_PUBLIC_PATH."/css");
-        define('HTTP_JS_PATH', HTTP_PUBLIC_PATH."/js");
-        define('HTTP_LIBRARY_PATH', HTTP_PUBLIC_PATH."/library");
+        define('HTTP_CSS_PATH', HTTP_PUBLIC_PATH.'/css');
+        define('HTTP_JS_PATH', HTTP_PUBLIC_PATH.'/js');
+        define('HTTP_LIBRARY_PATH', HTTP_PUBLIC_PATH.'/library');
         define('HTTP_IMAGES_PATH', HTTP_PUBLIC_PATH.'/images');
         
         //constantes d'environement
@@ -121,14 +127,16 @@ class Config {
      * @access public
      * @return void
      */
-    static function setErrors() {
-        if (APP_ENV != "production") {
+    static function setErrors()
+    {
+        if (APP_ENV != 'production') {
             ini_set('error_reporting', E_ALL);
             ini_set('display_errors', 1);
         }
     }
 
-    static function addLibraries() {
+    static function addLibraries()
+    {
         require_once(LIBRARY_PATH.'/phpmailer/phpmailer.class.php');
     }
 
@@ -137,17 +145,18 @@ class Config {
      * @access protected
      * @return void
      */
-    protected function loadConfig() {
-        if (APP_ENV != "production") {
-            $file = CONFIG_PATH."/dev.ini";
+    protected function loadConfig()
+    {
+        if (APP_ENV != 'production') {
+            $file = CONFIG_PATH.'/dev.ini';
         } else {
-            $file = CONFIG_PATH."/prod.ini";
+            $file = CONFIG_PATH.'/prod.ini';
         }
 
         $config = parse_ini_file($file, true);
         foreach ($config as $item=>$configitem) {
             switch ($item) {
-                case "bdd":
+                case 'bdd':
                     $this->initBdd($configitem);
                     break;
                     /* case "libraries" :
@@ -167,7 +176,8 @@ class Config {
      * @access protected
      * @return void
      */
-    protected function initBdd($aConfig) {
+    protected function initBdd($aConfig)
+    {
         $this->_dbhost = $aConfig['host'];
         $this->_dblogin = $aConfig['login'];
         $this->_dbbase = $aConfig['base'];
@@ -175,7 +185,8 @@ class Config {
     }
 
 
-    /* protected function initLibrary($aConfig) {
+    /* protected function initLibrary($aConfig)
+    {
         foreach ($aConfig as $key => $value) {
     $aKeys = explode('.', $key);
         
@@ -188,7 +199,8 @@ class Config {
      * @access public
      * @return void
      */
-    public function get_otherparam() {
+    public function get_otherparam()
+    {
         return $this->_otherparam;
     }
 }

@@ -82,7 +82,8 @@ class Eleve {
      * @return void
      */
 
-    public  function __construct($valeurs = array()) {
+    public  function __construct($valeurs = array())
+    {
         if (!empty($valeurs)) { // Si on a spécifié des valeurs, alors on hydrate l'objet
             $this->hydrate($valeurs);
         }
@@ -96,7 +97,8 @@ class Eleve {
      * @return void
      */
 
-    public  function hydrate($donnees) {
+    public  function hydrate($donnees)
+    {
         foreach ($donnees as $attribut => $valeur) {
             $methode = 'set'.ucfirst($attribut);
             if (is_callable(array($this, $methode))) {
@@ -112,7 +114,8 @@ class Eleve {
      * @return bool
      */
 
-    public  function isNew() {
+    public  function isNew()
+    {
         return empty($this->user);
     }
 
@@ -123,7 +126,8 @@ class Eleve {
      * @return bool
      */
 
-    public final  function isValid() {
+    public final  function isValid()
+    {
         return !(empty($this->user) || empty($this->sexe) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
     }
 
@@ -134,7 +138,8 @@ class Eleve {
      * @return void
      */
 
-    public  function setUser($user) {
+    public  function setUser($user)
+    {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom
             $this->erreurs[] = self::USER_INVALIDE;
         } else {
@@ -149,8 +154,9 @@ class Eleve {
      * @return void
      */
 
-    public  function setSexe($sexe) {
-        if ($sexe != "M" && $sexe != "F") { // de la forme M ou F
+    public  function setSexe($sexe)
+    {
+        if ($sexe != 'M' && $sexe != 'F') { // de la forme M ou F
             $this->erreurs[] = self::SEXE_INVALIDE;
         } else {
             $this->sexe = $sexe;
@@ -164,7 +170,8 @@ class Eleve {
      * @return void
      */
 
-    public  function setEmail($email) {
+    public  function setEmail($email)
+    {
         if (!preg_match('#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\.[a-z]{2,4}$#',$email)) { // adresse email
             $this->erreurs[] = self::EMAIL_INVALIDE;
         } else {
@@ -179,7 +186,8 @@ class Eleve {
      * @return void
      */
 
-    public  function setPromo($promo) {
+    public  function setPromo($promo)
+    {
         if (!is_numeric($promo)) { // id numérique
             $this->erreurs[] = self::PROMO_INVALIDE;
         } else {
@@ -194,7 +202,8 @@ class Eleve {
      * @return void
      */
 
-    public  function setSection($section) {
+    public  function setSection($section)
+    {
         if (!is_numeric($section)) { // id numérique
             $this->erreurs[] = self::SECTION_INVALIDE;
         } else {
@@ -209,7 +218,8 @@ class Eleve {
      * @return void
      */
 
-    public  function setPrepa($prepa) {
+    public  function setPrepa($prepa)
+    {
         if (!is_numeric($prepa)) { // id numérique
             $this->erreurs[] = self::PREPA_INVALIDE;
         } else {
@@ -224,7 +234,8 @@ class Eleve {
      * @return void
      */
 
-    public  function setFiliere($filiere) {
+    public  function setFiliere($filiere)
+    {
         if (!is_numeric($filiere)) { // id numérique
             $this->erreurs[] = self::FILIERE_INVALIDE;
         } else {
@@ -238,7 +249,8 @@ class Eleve {
      * @return void
      */
 
-    public  function setErreurs() {
+    public  function setErreurs()
+    {
         $this->erreurs = array();
     }
 
@@ -248,7 +260,8 @@ class Eleve {
      * @return string
      */
 
-    public  function user() {
+    public  function user()
+    {
         return $this->user;
     }
 
@@ -258,7 +271,8 @@ class Eleve {
      * @return string
      */
 
-    public  function sexe() {
+    public  function sexe()
+    {
         return $this->sexe;
     }
 
@@ -268,7 +282,8 @@ class Eleve {
      * @return string
      */
 
-    public  function email() {
+    public  function email()
+    {
         return $this->email;
     }
 
@@ -278,7 +293,8 @@ class Eleve {
      * @return int
      */
 
-    public  function promo() {
+    public  function promo()
+    {
         return $this->promo;
     }
 
@@ -288,7 +304,8 @@ class Eleve {
      * @return string
      */
 
-    public  function section() {
+    public  function section()
+    {
         return $this->section;
     }
 
@@ -298,7 +315,8 @@ class Eleve {
      * @return string
      */
 
-    public  function prepa() {
+    public  function prepa()
+    {
         return $this->prepa;
     }
 
@@ -308,7 +326,8 @@ class Eleve {
      * @return string
      */
 
-    public  function filiere() {
+    public  function filiere()
+    {
         return $this->filiere;
     }
 
@@ -318,7 +337,8 @@ class Eleve {
      * @return array
      */
 
-    public  function erreurs() {
+    public  function erreurs()
+    {
         return $this->erreurs;
     }
 

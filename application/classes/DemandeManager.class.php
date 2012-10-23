@@ -23,7 +23,8 @@ class DemandeManager {
      * @return void
      */
 
-    public  function __construct(PDO $db) {
+    public  function __construct(PDO $db)
+    {
         $this->db = $db;
     }
 
@@ -35,9 +36,10 @@ class DemandeManager {
      * @return void
      */
 
-    public  function add(Demande $demande) {
+    public  function add(Demande $demande)
+    {
         if (!$demande->isValid()) {
-            Logs::logger(3, "Corruption des parametres. DemandeManager::add");
+            Logs::logger(3, 'Corruption des parametres. DemandeManager::add');
         } else {
             try {
                 $requete = $this->db->prepare('UPDATE admissibles 
@@ -61,7 +63,7 @@ class DemandeManager {
                 $requete->bindValue(':status', $demande->status());
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL DemandeManager::add : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL DemandeManager::add : '.$e->getMessage());
             }
         }
     }
@@ -76,7 +78,8 @@ class DemandeManager {
      * @return int
      */
 
-    public  function isAdmissible($nom, $prenom, $serie) {
+    public  function isAdmissible($nom, $prenom, $serie)
+    {
         $nom = strtolower(strtr($nom,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
                                      'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
         $prenom = strtolower(strtr($prenom,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
@@ -92,7 +95,7 @@ class DemandeManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL DemandeManager::isAdmissible : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL DemandeManager::isAdmissible : '.$e->getMessage());
         }
         if ($requete->rowCount() == 0) {
             return -1;
@@ -101,7 +104,7 @@ class DemandeManager {
             $requete->closeCursor();
             return $result['ID'];
         } else {
-            Logs::logger(2, "Corruption de la table 'admissibles'. Non unicite des champs");
+            Logs::logger(2, 'Corruption de la table "admissibles". Non unicite des champs');
             $result = $requete->fetch(PDO::FETCH_ASSOC);
             $requete->closeCursor();
             return $result['ID'];
@@ -116,7 +119,8 @@ class DemandeManager {
      * @return bool
      */
 
-    public  function autorisation($demande) {
+    public  function autorisation($demande)
+    {
         try {
             $requete = $this->db->prepare('SELECT demandes.ID
                                            FROM demandes
@@ -135,7 +139,7 @@ class DemandeManager {
             $requete->bindValue(':filiere', $demande->filiere());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL DemandeManager::autorisation : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL DemandeManager::autorisation : '.$e->getMessage());
         }
         return ($requete->rowCount() == 0);
     }
@@ -148,9 +152,10 @@ class DemandeManager {
      * @return void
      */
 
-    public  function updateStatus($code, $status) {
+    public  function updateStatus($code, $status)
+    {
         if (!is_integer($status) || !preg_match('#^[a-z0-9A-Z](32)#',$code)) {
-            Logs::logger(3, "Corruption des parametres. DemandeManager::updateStatus");
+            Logs::logger(3, 'Corruption des parametres. DemandeManager::updateStatus');
         }
         try {
             $requete = $this->db->prepare('UPDATE demandes
@@ -160,7 +165,7 @@ class DemandeManager {
             $requete->bindValue(':code', $code);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL DemandeManager::updateStatus : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL DemandeManager::updateStatus : '.$e->getMessage());
         }
     }
 
@@ -172,9 +177,10 @@ class DemandeManager {
      * @return Demande
      */
 
-    public  function getUnique($code) {
+    public  function getUnique($code)
+    {
         if (!preg_match('#^[a-z0-9A-Z](32)#',$code)) {
-            Logs::logger(3, "Corruption des parametres. DemandeManager::getUnique");
+            Logs::logger(3, 'Corruption des parametres. DemandeManager::getUnique');
         }
         try {
             $requete = $this->db->prepare('SELECT admissibles.ID AS id,
@@ -195,10 +201,10 @@ class DemandeManager {
             $requete->bindValue(':code', $code);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL DemandeManager::getUnique : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL DemandeManager::getUnique : '.$e->getMessage());
         }
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, "Corruption de la table 'demandes'. Non unicite de 'LIEN'");
+            Logs::logger(3, 'Corruption de la table "demandes". Non unicite de "LIEN"');
         }
             
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
@@ -213,7 +219,8 @@ class DemandeManager {
      * @return array(Demande)
      */
 
-    public  function getList() {
+    public  function getList()
+    {
         try {
             $requete = $this->db->prepare('SELECT admissibles.ID AS id,
                                                   admissibles.NOM AS nom,
@@ -231,7 +238,7 @@ class DemandeManager {
                                            ON demandes.ID_ADMISSIBLE = admissibles.ID');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL DemandeManager::getList : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL DemandeManager::getList : '.$e->getMessage());
         }
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
         $listeDemandes = $requete->fetchAll();
@@ -247,9 +254,10 @@ class DemandeManager {
      * @return array
      */
 
-    public  function getDemandes($user) {
+    public  function getDemandes($user)
+    {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, "Corruption des parametres. DemandeManager::getDemandes");
+            Logs::logger(3, 'Corruption des parametres. DemandeManager::getDemandes');
         }
         try {
             $requete = $this->db->prepare('SELECT admissibles.ID AS id,
@@ -275,7 +283,7 @@ class DemandeManager {
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL DemandeManager::getDemandes : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL DemandeManager::getDemandes : '.$e->getMessage());
         }
         
         $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs 

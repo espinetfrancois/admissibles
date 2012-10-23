@@ -21,7 +21,8 @@ class MailX extends Mail {
      * @param string $prenom le prénom de l'élève
      * @param string $XEmail l'email de l'élève
      */
-    public function __construct($nom, $prenom, $XEmail) {
+    public function __construct($nom, $prenom, $XEmail)
+    {
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->XEmail = $XEmail;
@@ -30,7 +31,8 @@ class MailX extends Mail {
         
     }
 
-    public function demandeAnnulee() {
+    public function demandeAnnulee()
+    {
         $this->AltBody = $this->subsitute($this->mails[self::SECTION_X][self::ACTION_CANCELED.".txt"],array());
 
         $this->Body = $this->subsitute($this->mails[self::SECTION_X][self::ACTION_CANCELED.".html"], array());
@@ -38,7 +40,8 @@ class MailX extends Mail {
         $this->Subject = $this->subsitute($this->mails[self::SECTION_X][self::ACTION_CANCELED.".objet"],array());
     }
     
-    public function nouvelleDemande($sLinkCancel, $sLinkConfirm, $sAdmMail) {
+    public function nouvelleDemande($sLinkCancel, $sLinkConfirm, $sAdmMail)
+    {
         $this->AltBody = $this->subsitute($this->mails[self::SECTION_X][self::ACTION_NVDEMANDE.".txt"],array('HOST' => $_SERVER['HTTP_HOST']));
 
         $this->Body = $this->subsitute($this->mails[self::SECTION_X][self::ACTION_NVDEMANDE.".html"], array('HOST' => $_SERVER['HTTP_HOST']));

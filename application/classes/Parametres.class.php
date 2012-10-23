@@ -33,7 +33,8 @@ class Parametres {
      * @return void
      */
 
-    public  function __construct(PDO $db) {
+    public  function __construct(PDO $db)
+    {
         $this->db = $db;
     }
 
@@ -44,21 +45,22 @@ class Parametres {
      * @return string
      */
     
-    public  function getAdmin() {
+    public  function getAdmin()
+    {
         try {
             $requete = $this->db->prepare('SELECT VALEUR AS admin
                                            FROM administration
                                            WHERE PARAMETRE = "administrateur"');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::getAdmin : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::getAdmin : '.$e->getMessage());
         }
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, "Corruption de la table 'administration' : plusieurs administrateurs");
+            Logs::logger(3, 'Corruption de la table "administration" : plusieurs administrateurs');
         }
         $res = $requete->fetch();
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$res['admin'])) {
-            Logs::logger(3, "Corruption de la table 'administration' : login administrateur non conforme");
+            Logs::logger(3, 'Corruption de la table "administration" : login administrateur non conforme');
         }
         return $res['admin'];
     }
@@ -70,7 +72,8 @@ class Parametres {
      * @return void
      */
     
-    public  function remiseAZero() {
+    public  function remiseAZero()
+    {
         try {
             $requete = $this->db->query('DELETE FROM disponibilites');
             $requete = $this->db->query('DELETE FROM series');
@@ -78,7 +81,7 @@ class Parametres {
             $requete = $this->db->query('DELETE FROM x');
             $requete = $this->db->query('DELETE FROM admissibles');
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::remiseAZero : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::remiseAZero : '.$e->getMessage());
         }
     }
 
@@ -89,7 +92,8 @@ class Parametres {
      * @return array(int)
      */
 
-    public  function getCurrentSeries() {
+    public  function getCurrentSeries()
+    {
         try {
             $requete = $this->db->prepare('SELECT ID AS id,
                                                   INTITULE AS intitule,
@@ -101,7 +105,7 @@ class Parametres {
             $requete->bindValue(':time', time());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::getCurrentSeries : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::getCurrentSeries : '.$e->getMessage());
         }
         $n = $requete->rowCount();
         if ($n == 0) {
@@ -119,40 +123,41 @@ class Parametres {
      * @return array
      */
 
-    public  function getList($type) {
+    public  function getList($type)
+    {
         switch ($type) {
         case self::ETABLISSEMENT:
-            $champs = "ID AS id, NOM AS nom, COMMUNE AS ville";
-            $table = "ref_etablissements";
-            $order = "COMMUNE, NOM";
+            $champs = 'ID AS id, NOM AS nom, COMMUNE AS ville';
+            $table = 'ref_etablissements';
+            $order = 'COMMUNE, NOM';
             break;
 
         case self::FILIERE:
-            $champs = "ID AS id, NOM AS nom";
-            $table = "ref_filieres";
-            $order = "NOM";
+            $champs = 'ID AS id, NOM AS nom';
+            $table = 'ref_filieres';
+            $order = 'NOM';
             break;
 
         case self::PROMO:
-            $champs = "ID AS id, NOM AS nom";
-            $table = "ref_promotions";
-            $order = "NOM";
+            $champs = 'ID AS id, NOM AS nom';
+            $table = 'ref_promotions';
+            $order = 'NOM';
             break;
 
         case self::SECTION:
-            $champs = "ID AS id, NOM AS nom";
-            $table = "ref_sections";
-            $order = "NOM";
+            $champs = 'ID AS id, NOM AS nom';
+            $table = 'ref_sections';
+            $order = 'NOM';
             break;
 
         case self::SERIE:
-            $champs = "ID AS id, INTITULE AS intitule, DATE_DEBUT AS date_debut, DATE_FIN AS date_fin, OUVERTURE AS ouverture, FERMETURE AS fermeture";
-            $table = "series";
-            $order = "DATE_DEBUT";
+            $champs = 'ID AS id, INTITULE AS intitule, DATE_DEBUT AS date_debut, DATE_FIN AS date_fin, OUVERTURE AS ouverture, FERMETURE AS fermeture';
+            $table = 'series';
+            $order = 'DATE_DEBUT';
             break;
         
         default:
-            Logs::logger(3, "Corruption des parametres. Parametres::getList");
+            Logs::logger(3, 'Corruption des parametres. Parametres::getList');
             break;
         }
         try {
@@ -161,7 +166,7 @@ class Parametres {
                                            ORDER BY '.$order.'');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::getList : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::getList : '.$e->getMessage());
         }
         $liste = $requete->fetchAll();
         $requete->closeCursor();
@@ -177,40 +182,41 @@ class Parametres {
      * @return void
      */
 
-    public  function addToList($type, $donnees) {
+    public  function addToList($type, $donnees)
+    {
         switch ($type) {
         case self::ETABLISSEMENT:
-            $valeurs = "NOM = :nom, COMMUNE = :commune";
-            $table = "ref_etablissements";
-            $array = array("nom" => $donnees['nom'], "commune" => $donnees['commune']);
+            $valeurs = 'NOM = :nom, COMMUNE = :commune';
+            $table = 'ref_etablissements';
+            $array = array('nom' => $donnees['nom'], 'commune' => $donnees['commune']);
             break;
         
         case  self::FILIERE:
-            $valeurs = "NOM = :nom";
-            $table = "ref_filieres";
-            $array = array("nom" => $donnees['nom']);
+            $valeurs = 'NOM = :nom';
+            $table = 'ref_filieres';
+            $array = array('nom' => $donnees['nom']);
             break;
             
         case  self::PROMO:
-            $valeurs = "NOM = :nom";
-            $table = "ref_promotions";
-            $array = array("nom" => $donnees['nom']);
+            $valeurs = 'NOM = :nom';
+            $table = 'ref_promotions';
+            $array = array('nom' => $donnees['nom']);
             break;
             
         case  self::SECTION:
-            $valeurs = "NOM = :nom";
-            $table = "ref_sections";
-            $array = array("nom" => $donnees['nom']);
+            $valeurs = 'NOM = :nom';
+            $table = 'ref_sections';
+            $array = array('nom' => $donnees['nom']);
             break;
             
         case  self::SERIE:
-            $valeurs = "INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture";
-            $table = "series";
-            $array = array("intitule" => $donnees['intitule'], "date_debut" => $donnees['date_debut'], "date_fin" => $donnees['date_fin'], "ouverture" => $donnees['ouverture'], "fermeture" => $donnees['fermeture']);
+            $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
+            $table = 'series';
+            $array = array('intitule' => $donnees['intitule'], 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
             break;
         
         default:
-            Logs::logger(3, "Corruption des parametres. Parametres::addToList");
+            Logs::logger(3, 'Corruption des parametres. Parametres::addToList');
             break;
         }
         try {
@@ -221,7 +227,7 @@ class Parametres {
             }
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::addToList : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::addToList : '.$e->getMessage());
         }
     }
     
@@ -234,30 +240,31 @@ class Parametres {
      * @return void
      */
 
-    public  function deleteFromList($type, $id) {
+    public  function deleteFromList($type, $id)
+    {
         switch ($type) {
         case self::ETABLISSEMENT:
-            $table = "ref_etablissements";
+            $table = 'ref_etablissements';
             break;
         
         case  self::FILIERE:
-            $table = "ref_filieres";
+            $table = 'ref_filieres';
             break;
             
         case  self::PROMO:
-            $table = "ref_promotions";
+            $table = 'ref_promotions';
             break;
             
         case  self::SECTION:
-            $table = "ref_sections";
+            $table = 'ref_sections';
             break;
             
         case  self::SERIE:
-            $table = "series";
+            $table = 'series';
             break;
         
         default:
-            Logs::logger(3, "Corruption des parametres. Parametres::deleteFromList");
+            Logs::logger(3, 'Corruption des parametres. Parametres::deleteFromList');
             break;
         }
         try {
@@ -267,11 +274,11 @@ class Parametres {
             $requete->bindValue(':id', $id);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::deleteFromList : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::deleteFromList : '.$e->getMessage());
         }
         
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, "Corruption de la table ".$table.". Tentative de suppression d'un element inexistant");
+            Logs::logger(3, 'Corruption de la table '.$table.'. Tentative de suppression d\'un element inexistant');
         }
         $requete->closeCursor();
         try {
@@ -280,7 +287,7 @@ class Parametres {
             $requete->bindValue(':id', $id);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::deleteFromList : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::deleteFromList : '.$e->getMessage());
         }
     }
     
@@ -293,7 +300,8 @@ class Parametres {
      * @return bool
      */
 
-    public  function isUsedList($type, $id) {
+    public  function isUsedList($type, $id)
+    {
         switch ($type) {
         case self::ETABLISSEMENT:
             try {
@@ -308,7 +316,7 @@ class Parametres {
                 $requete2->bindValue(':id', $id);
                 $requete2->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
             
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
@@ -331,7 +339,7 @@ class Parametres {
                 $requete2->bindValue(':id', $id);
                 $requete2->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
             
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
@@ -349,7 +357,7 @@ class Parametres {
                 $requete->bindValue(':id', $id);
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
             
             if ($requete->rowCount() > 0) {
@@ -367,7 +375,7 @@ class Parametres {
                 $requete->bindValue(':id', $id);
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
             
             if ($requete->rowCount() > 0) {
@@ -390,7 +398,7 @@ class Parametres {
                 $requete2->bindValue(':id', $id);
                 $requete2->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL Parametres::isUsedList : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
             
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
@@ -401,7 +409,7 @@ class Parametres {
             break;
         
         default:
-            Logs::logger(3, "Corruption des parametres. Parametres::isUsedList");
+            Logs::logger(3, 'Corruption des parametres. Parametres::isUsedList');
             break;
         }
     }
@@ -416,7 +424,8 @@ class Parametres {
      * @return void
      */
 
-    public  function parseADM($serie, $filiere, $donnees) {
+    public  function parseADM($serie, $filiere, $donnees)
+    {
         // vérification du paramètre $serie
         try {
             $requete = $this->db->prepare('SELECT ID
@@ -426,11 +435,11 @@ class Parametres {
             $requete->bindValue(':id', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
         
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, "Corruption du parametre 'serie'. Parametres::parseADM");
+            Logs::logger(3, 'Corruption du parametre "serie". Parametres::parseADM');
         }
         $requete->closeCursor();
         
@@ -442,11 +451,11 @@ class Parametres {
             $requete->bindValue(':id', $filiere);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
         
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, "Corruption du parametre 'filiere'. Parametres::parseADM");
+            Logs::logger(3, 'Corruption du parametre "filiere". Parametres::parseADM');
         }
         $requete->closeCursor();
         
@@ -454,8 +463,8 @@ class Parametres {
         $ligne = explode(PHP_EOL, $donnees);
         foreach ($ligne as $value) {
             // Séparation des noms de la forme : 'Nom (Prénom)'
-            $value = preg_replace("#(.+)\s\((.+)\)$#","$1///$2",$value); 
-            $col = explode("///", $value);
+            $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',$value); 
+            $col = explode('///', $value);
             // traitement des donnees : minuscules et sans accents
             $nom = strtolower(strtr($col[0],'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
                                           'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
@@ -473,7 +482,7 @@ class Parametres {
                 $requete->bindValue(':filiere', $filiere);
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
             }
         }
         
@@ -485,7 +494,7 @@ class Parametres {
             $requete->bindValue(':id', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL Parametres::parseADM : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
     }
 

@@ -39,7 +39,8 @@ class Requete {
      * @author francois.espinet
      * @param string $request la requete de l'utilisateur
      */
-    public function __construct($request) {
+    public function __construct($request)
+    {
         $this->_setRequete($request);
     }
     
@@ -48,7 +49,8 @@ class Requete {
      * @author francois.espinet
      * @param string $request la requete de l'utilisateur
      */
-    protected function _setRequete($request) {
+    protected function _setRequete($request)
+    {
         //contient tous les éléments de la requète
         $aAllRequestParts= parse_url($request);
         //séparation de la requête en éléments

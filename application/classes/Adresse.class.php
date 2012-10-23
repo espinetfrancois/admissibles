@@ -90,7 +90,8 @@ class Adresse {
      * @return void
      */
 
-    public  function __construct($valeurs = array()) {
+    public  function __construct($valeurs = array())
+    {
         if (!empty($valeurs)) { // Si on a spécifié des valeurs, alors on hydrate l'objet
             $this->hydrate($valeurs);
         }
@@ -104,7 +105,8 @@ class Adresse {
      * @return void
      */
 
-    public  function hydrate($donnees) {
+    public  function hydrate($donnees)
+    {
         foreach ($donnees as $attribut => $valeur) {
             $methode = 'set'.ucfirst($attribut);
             if (is_callable(array($this, $methode))) {
@@ -120,7 +122,8 @@ class Adresse {
      * @return bool
      */
 
-    public  function isNew() {
+    public  function isNew()
+    {
         return empty($this->id);
     }
 
@@ -131,7 +134,8 @@ class Adresse {
      * @return bool
      */
 
-    public final  function isValid() {
+    public final  function isValid()
+    {
         return !(empty($this->nom) || empty($this->adresse) || empty($this->description) || empty($this->categorie));
     }
 
@@ -142,7 +146,8 @@ class Adresse {
      * @return void
      */
 
-    public  function setId($id) {
+    public  function setId($id)
+    {
         $this->id = (int) $id;
     }
 
@@ -153,8 +158,9 @@ class Adresse {
      * @return void
      */
 
-    public  function setNom($nom) {
-        if (empty($nom) || strlen($nom)>=200) {
+    public  function setNom($nom)
+    {
+        if (empty($nom) || strlen($nom) >= 200) {
             $this->erreurs[] = self::NOM_INVALIDE;
         } else {
             $this->nom = $nom;
@@ -168,8 +174,9 @@ class Adresse {
      * @return void
      */
 
-    public  function setAdresse($adresse) {
-        if (empty($adresse) || strlen($adresse)>=250) {
+    public  function setAdresse($adresse)
+    {
+        if (empty($adresse) || strlen($adresse) >= 250) {
             $this->erreurs[] = self::ADRESSE_INVALIDE;
         } else {
             $this->adresse = $adresse;
@@ -183,7 +190,8 @@ class Adresse {
      * @return void
      */
 
-    public  function setTel($tel) {
+    public  function setTel($tel)
+    {
         if (!preg_match('#^0[1-8]([-. ]?[0-9]{2}){4}$#',$tel) && !empty($tel)) { // n° de téléphone avec ou sans séparateur si non vide
             $this->erreurs[] = self::TEL_INVALIDE;
         } else {
@@ -198,7 +206,8 @@ class Adresse {
      * @return void
      */
 
-    public  function setEmail($email) {
+    public  function setEmail($email)
+    {
         if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email) && !empty($email)) { // adresse email si non vide 
             $this->erreurs[] = self::EMAIL_INVALIDE;
         } else {
@@ -213,8 +222,9 @@ class Adresse {
      * @return void
      */
 
-    public  function setDescription($description) {
-        if (empty($description) || strlen($description)>=250) {
+    public  function setDescription($description)
+    {
+        if (empty($description) || strlen($description) >= 250) {
             $this->erreurs[] = self::DESCRIPTION_INVALIDE;
         } else {
             $this->description = $description;
@@ -228,7 +238,8 @@ class Adresse {
      * @return void
      */
 
-    public  function setCategorie($categorie) {
+    public  function setCategorie($categorie)
+    {
         if (!is_numeric($categorie)) { // id numérique
             $this->erreurs[] = self::CATEGORIE_INVALIDE;
         } else {
@@ -243,7 +254,8 @@ class Adresse {
      * @return void
      */
 
-    public  function setValide($valide) {
+    public  function setValide($valide)
+    {
         if ($valide != 0 && $valide != 1) { // O ou 1
             $this->erreurs[] = self::VALIDE_INVALIDE;
         } else {
@@ -257,7 +269,8 @@ class Adresse {
      * @return void
      */
 
-    public  function setErreurs() {
+    public  function setErreurs()
+    {
         $this->erreurs = array();
     }
 
@@ -266,7 +279,8 @@ class Adresse {
      * @return int
      */
 
-    public  function id() {
+    public  function id()
+    {
         return $this->id;
     }
 
@@ -276,7 +290,8 @@ class Adresse {
      * @return string
      */
 
-    public  function nom() {
+    public  function nom()
+    {
         return $this->nom;
     }
 
@@ -286,7 +301,8 @@ class Adresse {
      * @return string
      */
 
-    public  function adresse() {
+    public  function adresse()
+    {
         return $this->adresse;
     }
 
@@ -296,7 +312,8 @@ class Adresse {
      * @return string
      */
 
-    public  function tel() {
+    public  function tel()
+    {
         return $this->tel;
     }
 
@@ -306,7 +323,8 @@ class Adresse {
      * @return string
      */
 
-    public  function email() {
+    public  function email()
+    {
         return $this->email;
     }
 
@@ -316,7 +334,8 @@ class Adresse {
      * @return string
      */
 
-    public  function description() {
+    public  function description()
+    {
         return $this->description;
     }
 
@@ -326,7 +345,8 @@ class Adresse {
      * @return int
      */
 
-    public  function valide() {
+    public  function valide()
+    {
         return $this->valide;
     }
 
@@ -336,7 +356,8 @@ class Adresse {
      * @return string
      */
 
-    public  function categorie() {
+    public  function categorie()
+    {
         return $this->categorie;
     }
 
@@ -346,7 +367,8 @@ class Adresse {
      * @return array
      */
 
-    public  function erreurs() {
+    public  function erreurs()
+    {
         return $this->erreurs;
     }
 }

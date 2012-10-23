@@ -123,7 +123,8 @@ class Demande {
      * @return void
      */
 
-    public  function __construct($valeurs = array()) {
+    public  function __construct($valeurs = array())
+    {
         if (!empty($valeurs)) { // Si on a spécifié des valeurs, alors on hydrate l'objet
             $this->hydrate($valeurs);
         }
@@ -137,7 +138,8 @@ class Demande {
      * @return void
      */
 
-    public  function hydrate($donnees) {
+    public  function hydrate($donnees)
+    {
         foreach ($donnees as $attribut => $valeur) {
             $methode = 'set'.ucfirst($attribut);
             if (is_callable(array($this, $methode))) {
@@ -153,7 +155,8 @@ class Demande {
      * @return bool
      */
 
-    public final  function isValid() {
+    public final  function isValid()
+    {
         return !(empty($this->nom) || empty($this->prenom) || empty($this->email) || empty($this->sexe) || empty($this->prepa) || empty($this->filiere) || empty($this->sport));
     }
     
@@ -164,7 +167,8 @@ class Demande {
      * @return void
      */
 
-    public  function setId($id) {
+    public  function setId($id)
+    {
         $this->id = (int) $id;
     }
     
@@ -175,7 +179,8 @@ class Demande {
      * @return void
      */
 
-    public  function setNom($nom) {
+    public  function setNom($nom)
+    {
         if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#',$nom)) { // lettres seulement
             $this->erreurs[] = self::NOM_INVALIDE;
         } else {
@@ -190,7 +195,8 @@ class Demande {
      * @return void
      */
 
-    public  function setPrenom($prenom) {
+    public  function setPrenom($prenom)
+    {
         if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#',$prenom)) { // lettres seulement
             $this->erreurs[] = self::PRENOM_INVALIDE;
         } else {
@@ -205,7 +211,8 @@ class Demande {
      * @return void
      */
 
-    public  function setEmail($email) {
+    public  function setEmail($email)
+    {
         if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email)) { // adresse email
             $this->erreurs[] = self::EMAIL_INVALIDE;
         } else {
@@ -220,8 +227,9 @@ class Demande {
      * @return void
      */
 
-    public  function setSexe($sexe) {
-        if ($sexe != "M" && $sexe != "F") { // de la forme M ou F
+    public  function setSexe($sexe)
+    {
+        if ($sexe != 'M' && $sexe != 'F') { // de la forme M ou F
             $this->erreurs[] = self::SEXE_INVALIDE;
         } else {
             $this->sexe = $sexe;
@@ -235,7 +243,8 @@ class Demande {
      * @return void
      */
 
-    public  function setPrepa($prepa) {
+    public  function setPrepa($prepa)
+    {
         if (!is_numeric($prepa)) { // id numérique
             $this->erreurs[] = self::PREPA_INVALIDE;
         } else {
@@ -250,7 +259,8 @@ class Demande {
      * @return void
      */
 
-    public  function setFiliere($filiere) {
+    public  function setFiliere($filiere)
+    {
         if (!is_numeric($filiere)) { // id numérique
             $this->erreurs[] = self::FILIERE_INVALIDE;
         } else {
@@ -265,7 +275,8 @@ class Demande {
      * @return void
      */
 
-    public  function setSerie($serie) {
+    public  function setSerie($serie)
+    {
         if (!is_numeric($serie)) {
             $this->erreurs[] = self::SERIE_INVALIDE;
         } else {
@@ -280,7 +291,8 @@ class Demande {
      * @return void
      */
 
-    public  function setSport($sport) {
+    public  function setSport($sport)
+    {
         if (!is_numeric($sport)) { // id numérique
             $this->erreurs[] = self::SPORT_INVALIDE;
         } else {
@@ -294,7 +306,8 @@ class Demande {
      * @return void
      */
 
-    public  function setUserEleve($user) {
+    public  function setUserEleve($user)
+    {
         if (!preg_match('#[a-z_-]+\.[a-z_-]+#',$user)) { // de la forme prenom.nom
             $this->erreurs[] = self::USER_INVALIDE;
         } else {
@@ -309,7 +322,8 @@ class Demande {
      * @return void
      */
 
-    public  function setStatus($status) {
+    public  function setStatus($status)
+    {
         if (!is_numeric($status)) { // id numérique
             $this->erreurs[] = self::STATUS_INVALIDE;
         } else {
@@ -323,7 +337,8 @@ class Demande {
      * @return string
      */
 
-    public  function nom() {
+    public  function nom()
+    {
         return $this->nom;
     }
 
@@ -333,7 +348,8 @@ class Demande {
      * @return string
      */
 
-    public  function prenom() {
+    public  function prenom()
+    {
         return $this->prenom;
     }
 
@@ -343,7 +359,8 @@ class Demande {
      * @return string
      */
 
-    public  function email() {
+    public  function email()
+    {
         return $this->email;
     }
 
@@ -353,7 +370,8 @@ class Demande {
      * @return string
      */
 
-    public  function sexe() {
+    public  function sexe()
+    {
         return $this->sexe;
     }
 
@@ -363,7 +381,8 @@ class Demande {
      * @return string
      */
 
-    public  function prepa() {
+    public  function prepa()
+    {
         return $this->prepa;
     }
 
@@ -373,7 +392,8 @@ class Demande {
      * @return string
      */
 
-    public  function filiere() {
+    public  function filiere()
+    {
         return $this->filiere;
     }
 
@@ -383,7 +403,8 @@ class Demande {
      * @return int
      */
 
-    public  function serie() {
+    public  function serie()
+    {
         return $this->serie;
     }
     
@@ -392,7 +413,8 @@ class Demande {
      * @return int
      */
 
-    public  function sport() {
+    public  function sport()
+    {
         return $this->sport;
     }
 
@@ -402,7 +424,8 @@ class Demande {
      * @return string
      */
 
-    public  function userEleve() {
+    public  function userEleve()
+    {
         return $this->userEleve;
     }
 
@@ -412,7 +435,8 @@ class Demande {
      * @return int
      */
 
-    public  function status() {
+    public  function status()
+    {
         return $this->status;
     }
 
@@ -422,7 +446,8 @@ class Demande {
      * @return string
      */
 
-    public  function code() {
+    public  function code()
+    {
         return $this->code;
     }
 
@@ -432,7 +457,8 @@ class Demande {
      * @return array
      */
 
-    public  function erreurs() {
+    public  function erreurs()
+    {
         return $this->erreurs;
     }
 

@@ -38,9 +38,9 @@ class Router {
      * Le fichier ini contenant les routes.
      * @var string
      */
-    const INI_FILE = "router.ini";
+    const INI_FILE = 'router.ini';
 
-    const SECTION_ROOT = "root";
+    const SECTION_ROOT = 'root';
 
     /**
      * le layout de l'application
@@ -54,7 +54,8 @@ class Router {
      * @param string $request l'url demandée par l'utilisateur
      * @param Layout $layout le l'objet layout de l'application
      */
-    public function __construct($request, $layout) {
+    public function __construct($request, $layout)
+    {
         $this->layout = $layout;
         //chargement du fichier ini, initialisation des tableaux
         $this->_loadIni(CONFIG_PATH.'/'.self::INI_FILE);
@@ -77,7 +78,8 @@ class Router {
      * Chargement du fichier contenant les routes
      * @author francois.espinet
      */
-    private function _loadIni($IniFile) {
+    private function _loadIni($IniFile)
+    {
         if ( ($urls = parse_ini_file($IniFile, true)) ) {
             //tableau des prefixes de l'application , correspond aux sections du fichier ini
             $this->prefixes = $urls['prefixes'];
@@ -87,7 +89,7 @@ class Router {
                 $this->urls[$prefixe] = $urls[$keypref];
             }
         } else {
-            throw new Exception("Impossible de charger le fichier de configuration du routeur");
+            throw new Exception('Impossible de charger le fichier de configuration du routeur');
         }
     }
 
@@ -95,7 +97,8 @@ class Router {
      * Methode qui prevoit l'affichage de la page d'accueil
      * @author francois.espinet
      */
-    private function setAccueil() {
+    private function setAccueil()
+    {
         $this->file = PAGES_PATH.'/'.$this->urls[self::SECTION_ROOT]['accueil'];
         return;
     }
@@ -105,7 +108,8 @@ class Router {
      * Découpe l'url et retourne le fichier demandée en fonction des morceaux de l'url
      * @author francois.espinet
      */
-    private function _setFileFromUrl() {
+    private function _setFileFromUrl()
+    {
         //on commence par mettre le chemin vers les pages
         $this->file = PAGES_PATH.'/';
         //si le prefix n'est pas null (url de la forme /prefix/suffixe)
@@ -131,7 +135,8 @@ class Router {
      * @author francois.espinet
      * @return prefixe de la requete ou null si le prefix n'existe pas dans la base
      */
-    private function __traitementPrefixe() {
+    private function __traitementPrefixe()
+    {
         if (array_key_exists($this->requete->prefixe, $this->urls)) {
             //on retourne le prefix s'il existe
             return $this->requete->prefixe;
@@ -147,7 +152,8 @@ class Router {
      * @author francois.espinet
      * @param string $prefix les prefixe précédement calculé (peut-être nul!)
      */
-    private function __traitementSuffixe($prefix = self::SECTION_ROOT) {
+    private function __traitementSuffixe($prefix = self::SECTION_ROOT)
+    {
         if ($this->requete->suffixe == null) {
             // si le suffixe est nul, on renvoie l'accueil
             $this->setAccueil();

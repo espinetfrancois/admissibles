@@ -22,7 +22,8 @@ class EleveManager {
      * @return void
      */
 
-    public  function __construct(PDO $db) {
+    public  function __construct(PDO $db)
+    {
         $this->db = $db;
     }
 
@@ -34,7 +35,8 @@ class EleveManager {
      * @return void
      */
 
-    public  function add(Eleve $eleve) {
+    public  function add(Eleve $eleve)
+    {
         try {
             $requete = $this->db->prepare('INSERT INTO x 
                                            SET USER = :user,
@@ -53,7 +55,7 @@ class EleveManager {
             $requete->bindValue(':prepa', $eleve->prepa());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL EleveManager::add : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL EleveManager::add : '.$e->getMessage());
         }
     }
 
@@ -65,7 +67,8 @@ class EleveManager {
      * @return void
      */
 
-    public  function update(Eleve $eleve) {
+    public  function update(Eleve $eleve)
+    {
         if ($eleve->isValid()) {
             try {
                 $requete = $this->db->prepare('UPDATE x 
@@ -85,10 +88,10 @@ class EleveManager {
                 $requete->bindValue(':prepa', $eleve->prepa());
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, "Erreur SQL EleveManager::update : ".$e->getMessage());
+                Logs::logger(3, 'Erreur SQL EleveManager::update : '.$e->getMessage());
             }
         } else {
-            Logs::logger(3, "Corruption des parametres : EleveManager::update");
+            Logs::logger(3, 'Corruption des parametres : EleveManager::update');
         }
     }
 
@@ -102,9 +105,10 @@ class EleveManager {
      * @return void
      */
 
-    public  function addDispo($user, $serie) {
+    public  function addDispo($user, $serie)
+    {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
-            Logs::logger(3, "Corruption des parametres : EleveManager::addDispo");
+            Logs::logger(3, 'Corruption des parametres : EleveManager::addDispo');
         }
         try {
             $requete = $this->db->prepare('INSERT INTO disponibilites
@@ -114,7 +118,7 @@ class EleveManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL EleveManager::addDispo : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL EleveManager::addDispo : '.$e->getMessage());
         }
     }
     
@@ -127,9 +131,10 @@ class EleveManager {
      * @return void
      */
 
-    public  function deleteDispo($user, $serie) {
+    public  function deleteDispo($user, $serie)
+    {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
-            Logs::logger(3, "Corruption des parametres : EleveManager::deleteDispo");
+            Logs::logger(3, 'Corruption des parametres : EleveManager::deleteDispo');
         }
         try {
             $requete = $this->db->prepare('DELETE FROM disponibilites
@@ -139,7 +144,7 @@ class EleveManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL EleveManager::deleteDispo : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL EleveManager::deleteDispo : '.$e->getMessage());
         }
     }
     
@@ -150,12 +155,13 @@ class EleveManager {
      * @return Eleve
      */
 
-    public  function getUnique($user) {
+    public  function getUnique($user)
+    {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, "Corruption des parametres : EleveManager::getUnique");
+            Logs::logger(3, 'Corruption des parametres : EleveManager::getUnique');
         }
         try {
-            $requete = $this->db->prepare("SELECT USER AS user,
+            $requete = $this->db->prepare('SELECT USER AS user,
                                                   SEXE AS sexe,
                                                   ID_SECTION AS section,
                                                   ADRESSE_MAIL AS email,
@@ -163,11 +169,11 @@ class EleveManager {
                                                   ID_PROMOTION AS promo,
                                                   ID_ETABLISSEMENT AS prepa
                                            FROM x
-                                           WHERE USER = :user");
+                                           WHERE USER = :user');
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL EleveManager::getUnique : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL EleveManager::getUnique : '.$e->getMessage());
         }
         if ($requete->rowCount() > 1) {
             throw new RuntimeException('Plusieurs utilisateurs possèdent le même nom'); // Ne se produit jamais en exécution courante
@@ -185,9 +191,10 @@ class EleveManager {
      * @return array
      */
 
-    public  function getDispo($user) {
+    public  function getDispo($user)
+    {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, "Corruption des parametres : EleveManager::getDispo");
+            Logs::logger(3, 'Corruption des parametres : EleveManager::getDispo');
         }
         try {
             $requete = $this->db->prepare('SELECT disponibilites.ID_SERIE AS serie
@@ -198,7 +205,7 @@ class EleveManager {
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL EleveManager::getDispo : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL EleveManager::getDispo : '.$e->getMessage());
         }
         
         $listeDispo = array();
@@ -216,7 +223,8 @@ class EleveManager {
      * @return array
      */
 
-    public  function getList() {
+    public  function getList()
+    {
         try {
             $requete = $this->db->prepare('SELECT USER AS user,
                                                   SEXE AS sexe,
@@ -228,7 +236,7 @@ class EleveManager {
                                            FROM x');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL EleveManager::getList : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL EleveManager::getList : '.$e->getMessage());
         }
         
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
@@ -247,9 +255,10 @@ class EleveManager {
      * @return array(Eleve)
      */
 
-    public  function getFavorite(Demande $demande, $limit) {
+    public  function getFavorite(Demande $demande, $limit)
+    {
         if (!$demande->isValid() || !is_numeric($limit)) {
-            Logs::logger(3, "Corruption des parametres : EleveManager::getFavorite");
+            Logs::logger(3, 'Corruption des parametres : EleveManager::getFavorite');
         }
         try {
             $requete = $this->db->prepare('SELECT x.USER AS user,
@@ -279,7 +288,7 @@ class EleveManager {
             $requete->bindValue(':serie',  $demande->serie());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, "Erreur SQL EleveManager::getFavorite : ".$e->getMessage());
+            Logs::logger(3, 'Erreur SQL EleveManager::getFavorite : '.$e->getMessage());
         }
         
         $requete->setFetchMode(PDO::FETCH_CLASS, 'Eleve'); // Attention : les champs référencées contiennent les valeurs affichables

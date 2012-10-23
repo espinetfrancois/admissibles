@@ -13,7 +13,7 @@ class Logs {
      * Chemin d'accès au fichier log
      * @var string
      */
-    const LOG_PATH = "log.txt";
+    const LOG_PATH = 'log.txt';
     
     /**
      * Méthode de sauvegarde des fichiers log
@@ -23,20 +23,21 @@ class Logs {
      * @return void
      */
 
-    public static  function logger($level, $message) {
+    public static  function logger($level, $message)
+    {
         switch ($level) {
             case 1:
-                $niveau = "Normal     ";
+                $niveau = 'Normal     ';
                 break;
             case 2:
-                $niveau = "Warning    ";
+                $niveau = 'Warning    ';
                 break;
             case 3:
-                $niveau = "Fatal error";
+                $niveau = 'Fatal error';
                 // Envoi d'un mail a l'admin -> erreur ou tentative de piratage
                 break;
         }
-        $texte = $niveau." [".date('Y-m-d H:i:s', time())."] ".$_SERVER['REMOTE_ADDR']." - ".$message."\n";
+        $texte = $niveau.' ['.date('Y-m-d H:i:s', time()).'] '.$_SERVER['REMOTE_ADDR'].' - '.$message.'\n';
         error_log($texte, 3, self::LOG_PATH);
         if ($level == 3) {
             session_destroy();
