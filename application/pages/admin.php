@@ -5,6 +5,7 @@
  * @version 1.0
  *
  * @todo identification LDAP
+ * @todo message en cas d'échec de l'authentification (session compromise au lieu de simple erreur)
  */
 
 include_once(APPLICATION_PATH.'/inc/sql.php');
@@ -32,7 +33,7 @@ Logs::logger(1, 'Deconnexion administrateur');
     <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
     <form action="/administration/gestion" method="post">
     <p class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p>
-    <p class="pass"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p>
+    <p class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p>
     <br/>
     <input type="submit" value="Se connecter"/>
     </form>
@@ -44,27 +45,32 @@ else {
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         switch ($_GET['type']) {
             case Parametres::Promo:
+                echo '<span id="page_id">42</span>';
                 echo '<h2>Promotions présentes sur le platâl</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
             case Parametres::Etablissement:
+                echo '<span id="page_id">43</span>';
                 echo '<h2>Etablissements de provenance des élèves</h2><p>Les élèves gardent la possibilité d\'entrer une autre valeur que celles proposées ci-dessous.</p>';
                 $form = '<input type="text" name="ville" value="VILLE" size="10" maxlength="50"/> - <input type="text" name="nom" value="Nom de l\'établissement" size="30" maxlength="50"/>';
                 break;
 
             case Parametres::Filiere:
+                echo '<span id="page_id">44</span>';
                 echo '<h2>Filières d\'entrée des élèves</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
             case Parametres::Section:
+                echo '<span id="page_id">45</span>';
                 echo '<h2>Sections sportives</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
             default:
                 $erreurP = 1;
+                echo '<span id="page_id">4</span>';
                 echo '<h2>Erreur de paramétrage...</h2>';
                 Logs::logger(2, 'Corruption des parametres admin.php::GET type');
                 break;
@@ -118,6 +124,7 @@ else {
             echo '</tr>';
             echo '</table>';
             echo '</form>';
+
         }
     } elseif (isset($_GET['action']) && $_GET['action'] == 'series') { // Modification des séries d'admissibilité
         if (isset($_GET['suppr'])) { // Suppression d'une série
@@ -149,6 +156,7 @@ else {
         }
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         echo '<h2>Séries d\'admissibilité</h2>';
+        echo '<span id="page_id">41</span>';
         $series = $parametres->getList(Parametres::Serie);
         echo '<span style="color:red;">'.@$erreurA.'</span>';
         echo '<form action="/administration/gestion?action=series" method="post">';
@@ -183,6 +191,7 @@ else {
         }
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         echo '<h2>Insertion d\'une liste d\'admissibilité</h2>';
+        echo '<span id="page_id">46</span>';
         echo '<span style="color:red;">'.@$erreurA.'</span>';
         echo '<p>Attention : l\'insertion d\'une liste d\'admissibilité marque l\'ouverture des demandes d\'hébergement pour la série considérée !</p>';
         $filieres = $parametres->getList(Parametres::Filiere);
@@ -219,6 +228,7 @@ else {
         <?php
     } elseif (isset($_GET['action']) && $_GET['action'] == 'RAZ') { // Interface de remise à zéro de la plate-forme
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
+        echo '<span id="page_id">48</span>';
         if (isset($_POST['raz']) && $_POST['raz']) {
             $parametres->remiseAZero();
             echo '<h3 style="color:red;">Remise à zéro effectuée</h3>';
@@ -383,6 +393,7 @@ else {
                 echo '</tr>';
             }
             echo '</table>';
+            echo '<span id="page_id">47</span>';
         }
     } else { // Interface de gestion courante
         ?>
