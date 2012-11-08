@@ -62,7 +62,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             $_SESSION['demande'] = $demande;
             $eleves = $eleveManager->getFavorite($demande, 2);
             if (empty($eleves)) {
-                echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités.<br/>Rendez-vous sur la page <a href=''>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
+                echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités.<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
                 Logs::logger(2, 'Plus aucun eleve disponible');
             } else {
                 echo '<p>Voici les élèves qui te correspondent le mieux pour t\'héberger :</p>';
@@ -78,7 +78,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             $prepas = $parametres->getList(Parametres::Etablissement);
             $filieres = $parametres->getList(Parametres::Filiere);
             $sections = $parametres->getList(Parametres::Section);
-            
+
             if (isset($erreurD) && in_array(Demande::Non_Admissible, $erreurD)) echo '<span style="color:red;">Merci de vérifier vos informations personnelles : vous ne semblez pas être dans les listes d\'admissibilité !</span>'; ?>
             <form action="/admissible/inscription?action=demande" method="post">
             Nom : <input type="text" name="nom" value="<?php if (isset($demande)) { echo $demande->nom(); } ?>"/>
@@ -142,10 +142,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             <?php
         }
     }
-} else { // Page affichée 
+} else { // Page affichée
     ?>
     <p>Cette interface vous permet de trouver un élève présent sur le campus pour vous héberger pendant la période des oraux.<br/>
-Dès la sortie des listes d'admissibilités pour votre série et jusqu'à la veille du début des épreuves orales minuit, rendez-vous sur la page <a href="/admissible/inscription?action=demande">Faire une demande de logement</a>, 
+Dès la sortie des listes d'admissibilités pour votre série et jusqu'à la veille du début des épreuves orales minuit, rendez-vous sur la page <a href="/admissible/inscription?action=demande">Faire une demande de logement</a>,
 remplissez le formulaire avec vos informations personnelles et envoyer votre demande auprès de l'élève qui vous correspond le mieux (même lycée de provenance, même filière ou autres...).<br/><br/>
 Dès l'aceptation par l'élève concerné, vous recevrez un email de confirmation vous permettant de prendre contact avec lui pour organiser votre arrivée.<br/>
 Si votre demande semble prendre trop de temps pour être acceptée par l'élève que vous avez choisi, annulez votre première demande et remplissez-en une autre...<br/><br/>

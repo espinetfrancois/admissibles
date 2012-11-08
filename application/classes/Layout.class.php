@@ -70,14 +70,14 @@ class Layout {
     const Css        = 2;
 
     const Menu_Appendice_Admin = 'menu_adminpart.php';
-    
+
     /**
      * Libraries
      * @var array
      * @access protected
      */
     protected $_libraries = array('jquery/jquery-1.8.2.min.js', 'jquery/jquery-ui-1.8.24.custom.min.js');
-    
+
     /**
      * Templates
      * @var array
@@ -92,9 +92,9 @@ class Layout {
      */
     public function __construct()
     {
-        $this->_meta[] = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'.'\n'.
-                '<link href="'.HTTP_IMAGES_PATH.'/favicon.ico" type="image/x-icon" rel="shortcut icon">'.'\n'.
-                '<link href="'.HTTP_IMAGES_PATH.'/favicon.png" type="image/png" rel="icon">'.'\n';
+        $this->_meta[] = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'."\n".
+                '<link href="'.HTTP_IMAGES_PATH.'/favicon.ico" type="image/x-icon" rel="shortcut icon">'."\n".
+                '<link href="'.HTTP_IMAGES_PATH.'/favicon.png" type="image/png" rel="icon">'."\n";
         $this->appendCss('layout.css');
         $this->appendCss('forms.css');
         $this->addMenu('menu.html');
@@ -329,10 +329,10 @@ class Layout {
      */
     public function renderHead()
     {
-        $sHead = '<head>'.'\n';
+        $sHead = '<head>'."\n";
         $sHead.=$this->renderMeta().$this->renderCss().$this->renderJs();
 
-        return $sHead.'<title>'.$this->_title.'</title>'.'\n'.'</head>';
+        return $sHead.'<title>'.$this->_title.'</title>'."\n".'</head>';
     }
 
     /**
@@ -364,7 +364,7 @@ class Layout {
     {
         $sMetas = '';
         foreach ($this->_meta as $sMeta) {
-            $sMetas .= $sMeta.'\n';
+            $sMetas .= $sMeta."\n";
         }
 
         return $sMetas;
@@ -380,7 +380,7 @@ class Layout {
         $sJs = $this->renderLibraries();
         if (count($this->_js)) {
             foreach ($this->_js as $saJs) {
-                $sJs .= $saJs.'\n';
+                $sJs .= $saJs."\n";
             }
         }
 
@@ -397,7 +397,7 @@ class Layout {
         $libraries = '';
         if (count($this->_libraries)) {
             foreach ($this->_libraries as $library) {
-                $libraries .= '<script type="text/javascript" src="'.HTTP_LIBRARY_PATH.'/'.$library.'"></script>'.'\n';
+                $libraries .= '<script type="text/javascript" src="'.HTTP_LIBRARY_PATH.'/'.$library.'"></script>'."\n";
             }
         }
 
@@ -414,7 +414,7 @@ class Layout {
         $templates = "";
         if (count($this->_templates)) {
             foreach ($this->_templates as $template) {
-                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.' rel="stylesheet" media="all" />'.'\n';
+                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.' rel="stylesheet" media="all" />'."\n";
             }
         }
 
@@ -431,7 +431,7 @@ class Layout {
         $sCss = $this->renderCssTemplates();
         if (count($this->_css)) {
             foreach ($this->_css as $saCss) {
-                $sCss .= $saCss.'\n';
+                $sCss .= $saCss."\n";
             }
             return $sCss;
         }
@@ -447,7 +447,7 @@ class Layout {
     {
         $sMenu =  '';
         if ($this->_menu != null) {
-            $sMenu = '\n'.'<div class= menu>
+            $sMenu = "\n".'<div class= menu>
                            <ul class="menu_deroulant" id="menu_principal">'.
                            file_get_contents(TEMPLATE_PATH.'/'.$this->_menu);
             if ($this->is_admin) {
@@ -506,10 +506,10 @@ class Layout {
     public function render()
     {
 
-        return self::doctype.'\n'.'<html>'.'\n'.$this->renderHead().
-        '\n<body>'.$this->renderBandeau().$this->renderNotFound().$this->renderMenu().
-        '\n'.$this->renderContent().$this->renderPiedPage().
-        '\n</body>\n</html>\n';
+        return self::doctype."\n".'<html>'."\n".$this->renderHead().
+        "\n<body>".$this->renderBandeau().$this->renderNotFound().$this->renderMenu().
+        "\n".$this->renderContent().$this->renderPiedPage().
+        "\n</body>\n</html>\n";
     }
 
     /**

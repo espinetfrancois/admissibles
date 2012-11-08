@@ -6,6 +6,7 @@
  *
  * @todo identification LDAP
  * @todo gestion du mail d'acceptation
+ * @todo correction du bug dans deconnexion (cf todo infra)
  */
 
 include_once(APPLICATION_PATH.'/inc/sql.php');
@@ -96,7 +97,8 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
 
 // Interface de connexion
 if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) { // Eleve non identifié
-    Logs::logger(1, 'Deconnexion eleve (user : '.$_SESSION['eleve']->user().')');
+    //TODO: si l'élève n'est pas loggé, il n'y a pas de $_SESSION['eleve']
+    //Logs::logger(1, 'Deconnexion eleve (user : '.$_SESSION['eleve']->user().')');
     session_destroy();
     ?>
     <!-- <div class="form"> -->
@@ -124,13 +126,13 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
         <form action="/x/connexion" method="post">
         <p id="champ-sexe" class="champ"><label for="sexe">Sexe</label> <label>: M <input type="radio" name="sexe" value="M"
-    <?php 
-        if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "") { 
-            echo 'checked="checked"'; 
+    <?php
+        if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "") {
+            echo 'checked="checked"';
         }?>/></label> <label>/ F<input type="radio" name="sexe" value="F"
         <?php
         if ($_SESSION['eleve']->sexe() == "F") {
-            echo 'checked="checked"'; 
+            echo 'checked="checked"';
         }?>/></label>
         <?php if (isset($erreurs) && in_array(Eleve::Sexe_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
@@ -208,7 +210,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
         <a href="/x/connexion?action=deconnect">Se déconnecter</a> -- <a href="/x/connexion?&action=modify">Modifier mes informations personnelles</a>
         <hr/>
-        <?php 
+        <?php
         if (!empty($series)) {
             ?>
             <h3>Gestion de vos disponibilités</h3>
@@ -280,7 +282,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
                     Logs::logger(3, 'Corruption des parametres. eleve.php::statut');
                        break;
                 }
-                
+
                 echo '<tr>
                         <td>'.$demande->nom().'</td>
                         <td>'.$demande->prenom().'</td>
@@ -314,7 +316,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         <textarea name="adr_description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><br/><br/>
         Catégorie : <select name="adr_categorie">
                     <option value=""></option>
-        <?php 
+        <?php
         foreach ($categories as $value) {
             if (isset($adresse) && $adresse->categorie() == $value['id']) {
                 $selected = 'selected';
