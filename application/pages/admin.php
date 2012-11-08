@@ -24,15 +24,16 @@ if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
 
 
 // Interface de connexion
-if (!isset($_SESSION['administrateur']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) { 
+if (!isset($_SESSION['administrateur']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) {
 session_destroy();
 Logs::logger(1, 'Deconnexion administrateur');
 ?>
     <h2>Connexion</h2>
     <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
     <form action="/administration/gestion" method="post">
-    Utilisateur : <input type="text" name="user"/><br/>
-    Mot de passe : <input type="password" name="pass"/><br/>
+    <p class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p>
+    <p class="pass"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p>
+    <br/>
     <input type="submit" value="Se connecter"/>
     </form>
 <?php
@@ -42,12 +43,12 @@ else {
     if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])) { // Gestion des listes de paramètres
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         switch ($_GET['type']) {
-            case Parametres::Promo: 
+            case Parametres::Promo:
                 echo '<h2>Promotions présentes sur le platâl</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
-            case Parametres::Etablissement: 
+            case Parametres::Etablissement:
                 echo '<h2>Etablissements de provenance des élèves</h2><p>Les élèves gardent la possibilité d\'entrer une autre valeur que celles proposées ci-dessous.</p>';
                 $form = '<input type="text" name="ville" value="VILLE" size="10" maxlength="50"/> - <input type="text" name="nom" value="Nom de l\'établissement" size="30" maxlength="50"/>';
                 break;
@@ -62,8 +63,8 @@ else {
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
-            default: 
-                $erreurP = 1; 
+            default:
+                $erreurP = 1;
                 echo '<h2>Erreur de paramétrage...</h2>';
                 Logs::logger(2, 'Corruption des parametres admin.php::GET type');
                 break;
@@ -86,7 +87,7 @@ else {
                     $parametres->addToList($_GET['type'], array('nom' => $_POST['nom'], 'commune' => $_POST['ville']));
                     Logs::logger(1, 'Administrateur : Ajout d\'un element a une liste');
                 } else {
-                    $erreurA = 'Erreur lors de l'ajout d\'un nouvel élément';
+                    $erreurA = 'Erreur lors de l\'ajout d\'un nouvel élément';
                     Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'un element a une liste');
                 }
             } elseif (isset($_POST['nom'])) { // Ajout d'un élément de liste (autre)
@@ -188,7 +189,7 @@ else {
         $series = $parametres->getList(Parametres::Serie);
         ?>
         <form action="/administration/gestion?action=admissibles" method="post">
-            Série d'admissibilité : <select name="serie">
+            <p class="champ"><label for="serie">Série d'admissibilité : </label><select name="serie">
                 <option value="" selected></option>
         <?php
         foreach ($series as $value) {
@@ -197,20 +198,21 @@ else {
             }
         }
         ?>
-            </select><br/><br/>
-            Filière : <select name="filiere">
+            </select></p>
+            <p class="champ"><label for="filiere">Filière : </label><select name="filiere">
                 <option value=""></option>
         <?php
         foreach ($filieres as $value) {
             echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
         }
         ?>
-            </select><br/><br/>
-            Liste des candidats reçus de la forme suivante :<br/>
+            </select></p>
+            <p class="champ"><label for="liste">Liste des candidats reçus de la forme suivante :<br/>
             <i>Nom (Prénom)<br/>
             Nom (Prénom)<br/>
-            Nom (Prénom)</i><br/>
-            <textarea name="liste" rows="10" cols="40"></textarea><br/><br/>
+            Nom (Prénom)</i></label><br/>
+            <textarea name="liste" rows="10" cols="40"></textarea></p>
+            <br/>
             En validant ce formulaire, vous publiez cette liste d'admissibilité et ouvrez les demandes d'hébergement pour ces admissibles :
             <input type="submit" value="Valider"/>
         </form>
@@ -226,8 +228,8 @@ else {
         <p style="color:red;">Attention : la remise à zéro de l'interface est irréversible.</p>
         <p>Cette action efface toutes les informations relatives aux séries, aux admissibles, aux élèves, et aux demandes d'hébergement.</p>
         <form action="/administration/gestion?action=RAZ" method="post">
-        
-        <p id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remise à zéro de l'interface :</label>
+
+        <p class="champ" id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remise à zéro de l'interface :</label>
         <input type="checkbox" name="raz"/></p>
         <input type="submit" value="Effectuer la remise à zéro"/>
         </form>
@@ -294,15 +296,15 @@ else {
             }
             ?>
             <form action="/administration/gestion?action=hotel" method="post">
-            Nom : <input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Nom_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Adresse : <input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Adresse_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Téléphone : <input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Tel_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Email : <input type="text" name="email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Email_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Description : <?php if (isset($erreurModif) && in_array(Adresse::Description_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            <textarea name="description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><br/><br/>
-            Catégorie : <select name="categorie">
+            <p class="champ"><label for="nom">Nom : </label><input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Nom_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="adresse">Adresse : </label><input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Adresse_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="tel">Téléphone : </label><input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Tel_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="email">Email : </label><input type="text" name="email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Email_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="description">Description : </label><?php if (isset($erreurModif) && in_array(Adresse::Description_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <textarea name="description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><p/>
+            <p class="champ"><label for="categorie">Catégorie : </label><select name="categorie">
                         <option value=""></option>
-            <?php 
+            <?php
             foreach ($categories as $value) {
                 if (isset($adresse) && $adresse->categorie() == $value['id']) {
                     $selected = 'selected';
@@ -317,8 +319,9 @@ else {
                 $checked = '';
             }
             ?>
-            </select> <?php if (isset($erreurModif) && in_array(Adresse::Categorie_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Afficher cette annonce sur le site ? <input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Adresse::Valide_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            </select></p> <?php if (isset($erreurModif) && in_array(Adresse::Categorie_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+            <p class="champ"><label for="valide">Afficher cette annonce sur le site ? </label><input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Adresse::VALIDE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <br/>
             <?php
             if(isset($adresse) && !$adresse->isNew()) {
                 ?>
@@ -332,7 +335,7 @@ else {
             } ?>
             </form>
             <?php
-        } else { 
+        } else {
             echo '<a href="/admissible/adresses" target="_blank">Voir la page publique affichant les adresses</a>';
             // Gestion des catégories
             echo '<h3>Catégories d\'hébergement</h3>';
