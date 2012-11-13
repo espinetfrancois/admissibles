@@ -330,10 +330,10 @@ class Demande {
 
     public  function setUserEleve($user)
     {
-        if (!preg_match('#[a-z_-]+\.[a-z_-]+#',$user)) { // de la forme prenom.nom
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom
             $this->erreurs[] = self::User_Invalide;
         } else {
-            $this->user = $user;
+            $this->userEleve = $user;
         }
 
     }
@@ -354,6 +354,36 @@ class Demande {
             $this->status = $status;
         }
 
+    }
+
+    /* 
+     * Setter code
+     * @access public
+     * @param string $code
+     * @return void
+     */
+
+    public  function setCode($code)
+    {
+        if (strlen($code) != 32) { // id numérique
+            $this->erreurs[] = self::Code_Invalide;
+        } else {
+            $this->code = $code;
+        }
+
+    }
+
+
+    /**
+     * Getter id
+     * @access public
+     * @return int
+     */
+
+    public  function id()
+    {
+
+        return $this->id;
     }
 
 

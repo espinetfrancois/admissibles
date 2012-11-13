@@ -52,7 +52,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['promo'])
         Logs::logger(2, 'Erreur de remplissage du formulaire informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
     }
 }
-// Modification des disponibilitét d'acceuil
+// Modification des disponibilités d'acceuil
 if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1") {
     $series = $parametres->getList(Parametres::Serie);
     $dispo = array();
@@ -68,9 +68,9 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
     Logs::logger(1, 'Modification des disponibilites eleve (user : '.$_SESSION['eleve']->user().')');
 }
 // Acceptation d'une demande de logement
-if (isset($_POST['code']) && !empty($_POST['code'])) {
-    $demande = $demandeManager->getUnique($_POST['code']);
-    $demande->setCode($demandeManager->updateStatus($_POST['code'], "2"));
+if (isset($_POST['accept']) && !empty($_POST['accept'])) {
+    $demande = $demandeManager->getUnique($_POST['accept']);
+    $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
     // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
     Logs::logger(1, 'Acceptation d\'une demande de logement (user : '.$_SESSION['eleve']->user().')');
 }
@@ -206,7 +206,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         $series = $parametres->getList(Parametres::Serie);
         $dispos = $eleveManager->getDispo($_SESSION['eleve']->user());
         ?>
-        <h2>Disponibilitét d'accueil</h2>
+        <h2>Disponibilité d'accueil</h2>
         <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
         <a href="/x/connexion?action=deconnect">Se déconnecter</a> -- <a href="/x/connexion?&action=modify">Modifier mes informations personnelles</a>
         <hr/>
@@ -214,7 +214,10 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         if (!empty($series)) {
             ?>
             <h3>Gestion de vos disponibilités</h3>
-            <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible :</p>
+            <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible.<br/>
+			Vous pourrez modifier vos choix jusqu'à la publication des listes d'admissibilité de chaque série.<br/>
+			Dès lors, vous serez tenus d'héberger tout admissible vous contactant via cette interface : la validation de ce formulaire tient lieu d'engagement vis à vis de l'admissible qui fera sa demande.<br/>
+			<span style="color:red;">Pensez donc à venir vous désinscrire dans les temps si vous n'êtes plus disponible !</span></p>
             <form action="/x/connexion" method="post">
             <input type="hidden" name="serie" value="1"/>
             <?php
@@ -249,6 +252,8 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         if (empty($demandes)) {
             echo 'Vous n\'avez reçu aucune demande jusqu\'à présent. Vous recevrez une alerte email pour toute demande à valider...';
         } else {
+			echo 'Ci-dessous sont listées toutes les demandes que vous avez reçues. Vérifiez selon leur statut quelle action vous devez faire.<br/>';
+			echo 'Vous devez obligatoirement valider les demandes reçues. Si vous ne pouvez tenir votre engagement, vous devez accepter la demande et prendre contact avec l\'admissible pour lui trouver un hébergement de substitution sur le platal. Par esprit de solidarité, merci de ne pas laisser sans logement un admissible alors que vous vous étiez engagés pour cette période...';
             echo '<table border=1 cellspacing=0>';
             echo '<tr>
                       <td>Nom</td>
@@ -258,7 +263,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
                       <td>Filière</td>
                       <td>Série</td>
                       <td>Statut</td>
-                      <td>Action possible</td>
+                      <td>Action à mener</td>
                   </tr>';
             foreach ($demandes as $demande) {
                 switch ($demande->status()) {
@@ -268,7 +273,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
                     break;
                 case 1:
                     $status_libele = 'En attente d\'acceptation';
-                    $action = '<form action="index.php?page=eleve" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
+                    $action = '<form action="/x/connexion" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
                     break;
                 case 2:
                     $status_libele = 'Validée';
@@ -276,7 +281,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
                     break;
                 case 3:
                     $status_libele = 'Annulée';
-                    $action = '';
+                    $action = 'Vous pouvez recevoir une autre demande pour cette série';
                     break;
                 default:
                     Logs::logger(3, 'Corruption des parametres. eleve.php::statut');

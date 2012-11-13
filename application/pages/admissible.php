@@ -14,21 +14,23 @@ $eleveManager = new EleveManager($db);
 echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>';
 
 if (isset($_SESSION['demande']) && isset($_POST['user'])) {
-    $dispos = $eleveManager->getDispos($_POST['user']);
-    if (!in_array($_SESSION['demande']->serie(),$dispos)) {
+    $dispos = $eleveManager->getDispo($_POST['user']);
+	$demande = unserialize($_SESSION['demande']);
+    if (!in_array($demande->serie(), $dispos)) {
         echo '<p>Désolé, l\'élève que vous avez choisi vient d\'être sollicité. Merci de reitérer votre recherche.</p>';
         Logs::logger(2, 'Demandes d\'admissibles simultannees sur l\'eleve '.$_POST['user']);
-    }
-    elseif (!$demandeManager->autorisation($_SESSION['demande'])) {
+    } elseif (!$demandeManager->autorisation($demande)) {
         echo '<p>Désolé, vous avez déjà effectué une demande d\'hébergement. Merci d\'attendre la réponse de l\'élève ou d\'annuler votre demande.</p>';
-        Logs::logger(2, 'Tentative de sur-demande de l\'admissible '.$_SESSION['demande']->id());
+        Logs::logger(2, 'Tentative de sur-demande de l\'admissible '.$demande->id());
     } else {
-        $_SESSION['demande']->setUserEleve($_POST['user']);
-        $_SESSION['demande']->setStatus('0');
-        $_SESSION['demande']->setCode(md5(sha1(time().$_SESSION['demande']->email())));
-        // envoi d'un email de validation contenant <a href="http://.../validation.php?code=$_SESSION['demande']->code()">Valider votre demande</a> <a href="http://.../?code=$_SESSION['demande']->code()">Annuler votre demande</a>
-        $eleveManager->deleteDispo($_POST['user'], $_SESSION['demande']->serie());
-        Logs::logger(1, 'Demande de logement '.$_SESSION['demande']->id().' effectuee');
+        $demande->setUserEleve($_POST['user']);
+        $demande->setStatus('0');
+        $demande->setCode(md5(sha1(time().$demande->email())));
+        // envoi d'un email de validation contenant <a href="http://.../validation.php?code=$demande->code()">Valider votre demande</a> <a href="http://.../?code=$demande->code()">Annuler votre demande</a>
+        $demandeManager->add($demande);
+		$eleveManager->deleteDispo($_POST['user'], $demande->serie());
+        Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
+		$success = 1;
     }
 }
 
@@ -50,19 +52,22 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                                          'filiere' => $_POST['filiere'],
                                          'serie' => $_POST['serie']));
             $erreurD = $demande->erreurs();
-            if (!$demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie'])) {
+			$id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
+            if ($id == -1) {
                 $erreurD[] = Demande::Non_Admissible;
                 Logs::logger(2, 'Formulaire de demande rempli par un non-admissible');
-            }
+            } else {
+				$demande->setId($id);
+			}
         }
         if (!empty($erreurD)) {
             Logs::logger(2, 'Erreur dans le remplissage du formulaire de demande de logement');
         }
         if (isset($demande) && empty($erreurD)) { // Demande réussie : affichage de deux X pouvant les héberger
-            $_SESSION['demande'] = $demande;
+            $_SESSION['demande'] = serialize($demande);
             $eleves = $eleveManager->getFavorite($demande, 2);
             if (empty($eleves)) {
-                echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités.<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
+                echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités).<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
                 Logs::logger(2, 'Plus aucun eleve disponible');
             } else {
                 echo '<p>Voici les élèves qui te correspondent le mieux pour t\'héberger :</p>';
@@ -70,7 +75,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                 echo '<tr><td>Nom d\'utilisateur</td><td>Sexe</td><td>Etablissement d\'origine</td><td>Filière</td><td>Section sportive</td><td>Contact</td></tr>';
                 foreach ($eleves as $eleve) {
                     echo '<tr><td>'.$eleve->user().'</td><td>'.$eleve->sexe().'</td><td>'.$eleve->prepa().'</td><td>'.$eleve->filiere().'</td><td>'.$eleve->section().'</td>';
-                    echo '<td><form action="index.php?page=admissible" method="post"><input type="hidden" name="user" value="'.$eleve->user().'"/><input type="submit" value="Envoyer une demande de logement"/></form></td></tr>';
+                    echo '<td><form action="/admissible/inscription" method="post"><input type="hidden" name="user" value="'.$eleve->user().'"/><input type="submit" value="Envoyer une demande de logement"/></form></td></tr>';
                 }
                 echo '</table>';
             }
@@ -142,6 +147,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             <?php
         }
     }
+} elseif (isset($success) && $success == 1) {
+	echo '<p>Pour poursuivre votre demande et afin de vérifier votre identité, merci de cliquer sur le lien qui vous a été envoyé par mail.</p>';
 } else { // Page affichée
     ?>
     <p>Cette interface vous permet de trouver un élève présent sur le campus pour vous héberger pendant la période des oraux.<br/>

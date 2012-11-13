@@ -41,7 +41,7 @@ class Parametres {
 
 
     /**
-     * Méthode retournant le nom d'utilisateur de l'administrateur
+     * Méthode retournant le nom d'utilisateur des l'administrateurs
      * @access public
      * @return string
      */
@@ -59,12 +59,15 @@ class Parametres {
         if ($requete->rowCount() != 1) {
             Logs::logger(3, 'Corruption de la table "administration" : plusieurs administrateurs');
         }
-        $res = $requete->fetch();
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$res['admin'])) {
-            Logs::logger(3, 'Corruption de la table "administration" : login administrateur non conforme');
-        }
+		$admins = array();
+        while ($res = $requete->fetch()) {
+			if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $res['admin'])) {
+				Logs::logger(3, 'Corruption de la table "administration" : login administrateur non conforme');
+			}
+			$admins[] = $res['admin'];
+		}
 
-        return $res['admin'];
+        return $admins;
     }
     
     
