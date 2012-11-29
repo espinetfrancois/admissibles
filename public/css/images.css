@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+
+/* texte et images cote à cote*/
+div.img_left {
+	float : right;
+	max-width : 50%;
+}
+
+img.img_left {
+	float : left;
+	max-width : 50%
+}
+
+div.img_right {
+	float : left;
+	max-width : 50%;
+}
+
+img.img_right {
+	float : right;
+	max-width : 50%
+}
+
+img {
+	margin : 4px;
+	box-shadow : 0 0 5px 1px black;
+	border-radius : 3px;
+} 

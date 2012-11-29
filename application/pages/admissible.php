@@ -151,12 +151,31 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
 	echo '<p>Pour poursuivre votre demande et afin de vérifier votre identité, merci de cliquer sur le lien qui vous a été envoyé par mail.</p>';
 } else { // Page affichée
     ?>
-    <p>Cette interface vous permet de trouver un élève présent sur le campus pour vous héberger pendant la période des oraux.<br/>
-Dès la sortie des listes d'admissibilités pour votre série et jusqu'à la veille du début des épreuves orales minuit, rendez-vous sur la page <a href="/admissible/inscription?action=demande">Faire une demande de logement</a>,
-remplissez le formulaire avec vos informations personnelles et envoyer votre demande auprès de l'élève qui vous correspond le mieux (même lycée de provenance, même filière ou autres...).<br/><br/>
-Dès l'aceptation par l'élève concerné, vous recevrez un email de confirmation vous permettant de prendre contact avec lui pour organiser votre arrivée.<br/>
-Si votre demande semble prendre trop de temps pour être acceptée par l'élève que vous avez choisi, annulez votre première demande et remplissez-en une autre...<br/><br/>
-</p>
+    <h3>Détail du fonctionnement</h3>
+<p>Vous pouvez vous inscrire dès la sortie des listes
+	d'admissibilités pour votre série et jusqu'à la veille du début des
+	épreuves orales minuit.</p>
+<p>La procédure commence dès que vous avez déposé votre demande sur
+	le site. Pour s'inscrire, une seule chose à faire : indiquer quelques
+	informations personnelles sur le formulaire d'inscription, elles
+	servent à vous proposez un élève avec qui vous pourriez avoir le plus
+	d'affinités, vous choississez dans cette liste la personne qui vous
+	convient le plus. Ensuite :</p>
+<ul>
+	<li>Vous recevrez ensuite un email de confirmation. Et votre
+		demande sera transmise à l'élève que vous aurez choisit.</li>
+	<li>Vous recevrez ensuite un email lorsque l'élève polytechnicien
+		aura accepté votre demande, et vous pourrez alors contacter la
+		personne correspondante pour arranger les modalités de votre séjour.</li>
+</ul>
+<p>Vous pouvez à tout moment annuler votre demande par le biais du
+	lien fournit dans le mail : Si votre demande semble prendre trop de
+	temps pour être acceptée par l'élève que vous avez choisi, annulez
+	votre première demande et remplissez-en une autre...</p>
+Pour commencer le processus, cliquez
+<a href='/admissible/inscription?action=demande'>ici</a>
+.
+<span id="page_id">11</span>
     <?php
 }
 ?>

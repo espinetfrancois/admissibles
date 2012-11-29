@@ -76,7 +76,7 @@ class Layout {
      * @var array
      * @access protected
      */
-    protected $_libraries = array('jquery/jquery-1.8.2.min.js', 'jquery/jquery-ui-1.8.24.custom.min.js');
+    protected $_libraries = array('jquery/jquery-1.8.2.min.js', 'jquery/jquery-ui-1.8.24.custom.min.js', 'jquery/jquery.visited.js');
 
     /**
      * Templates
@@ -99,6 +99,7 @@ class Layout {
         $this->appendCss('forms.css');
         $this->addMenu('menu.html');
         $this->appendJs('menu.js');
+        $this->appendCss('images.css');
 
     }
 
@@ -414,7 +415,7 @@ class Layout {
         $templates = "";
         if (count($this->_templates)) {
             foreach ($this->_templates as $template) {
-                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.' rel="stylesheet" media="all" />'."\n";
+                $templates .= '<link type="text/css" href="'.HTTP_LIBRARY_PATH.'/'.$template.'" rel="stylesheet" media="all" />'."\n";
             }
         }
 

@@ -291,6 +291,7 @@ id de la page - sert pour la coloration du menu
 
 span#page_id {
 	visibility : hidden;
+	display : none;
 }
 
 .clearfloat {

@@ -16,6 +16,11 @@ function coloreLien(id) {
 	}
 }
 
+function gestionLienAccueil() {
+	$("#12:not(.active)").hide();
+}
+
 $(document).ready(function (){
 	coloreLien($('#page_id').html());
+	gestionLienAccueil();
 });
