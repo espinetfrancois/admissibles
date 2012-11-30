@@ -129,11 +129,11 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
     <?php
         if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "") {
             echo 'checked="checked"';
-        }?>/></label> <label>/ F<input type="radio" name="sexe" value="F"
+        }?>/></label> <label>/ F</label><input type="radio" name="sexe" value="F"
         <?php
         if ($_SESSION['eleve']->sexe() == "F") {
             echo 'checked="checked"';
-        }?>/></label>
+        }?>/>
         <?php if (isset($erreurs) && in_array(Eleve::Sexe_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
         <p id="champ-promo" class="champ"> <label for="promo">Promotion : </label><select name="promo">
