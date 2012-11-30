@@ -9,7 +9,7 @@
  * @todo correction du bug dans deconnexion (cf todo infra)
  */
 
-include_once(APPLICATION_PATH.'/inc/sql.php');
+require_once(APPLICATION_PATH.'/inc/sql.php');
 
 $eleveManager = new EleveManager($db);
 $demandeManager = new DemandeManager($db);
@@ -313,13 +313,13 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         $categories = $adresseManager->getCategories();
         ?>
         <form action="/x/connexion" method="post">
-        Nom : <input type="text" name="adr_nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Nom_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Adresse : <input type="text" name="adr_adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Adresse_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Téléphone : <input type="text" name="adr_tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Tel_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Email : <input type="text" name="adr_email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Email_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        Description : <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Description_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-        <textarea name="adr_description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><br/><br/>
-        Catégorie : <select name="adr_categorie">
+        <p class="champ" id="champ-adr_nom"><label for="adr_nom"> Nom : </label><input type="text" name="adr_nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Nom_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+        <p class="champ" id="champ-adr_adresse"><label for="adr_adresse"> Adresse : </label><input type="text" name="adr_adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Adresse_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+        <p class="champ" id="champ-adr_tel"><label for="adr_tel">Téléphone : </label><input type="text" name="adr_tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Tel_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+        <p class="champ" id="champ-adr_email"><label for="adr_email">Email : </label><input type="text" name="adr_email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Email_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?></p>
+        <p class="champ" id="champ-adr_description"><label for="adr_description">Description : </label><?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Description_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?>
+        <textarea name="adr_description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea><p/>
+        <p class="champ" id="champ-adr_categorie"><label for="adr_categorie">Catégorie : </label><select name="adr_categorie">
                     <option value=""></option>
         <?php
         foreach ($categories as $value) {
@@ -331,7 +331,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
             echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['nom'].'</option>';
         }
         ?>
-        </select> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Categorie_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
+        </select> <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Categorie_Invalide, $erreurAjoutAdresse)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/><br/>
         <input type="submit" value="Proposer cet établissement" />
         </form>
         <?php

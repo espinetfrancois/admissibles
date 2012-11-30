@@ -5,19 +5,23 @@
  * @version 1.0
  *
  */
-include_once(APPLICATION_PATH.'/inc/sql.php');
+require_once(APPLICATION_PATH.'/inc/sql.php');
 
 $adresseManager = new AdresseManager($db);
 $adressesValides = $adresseManager->getListAffiche();
 $cat = '';
 foreach ($adressesValides as $adresse) {
     if ($adresse->categorie() != $cat) {
-        echo '<h3>'.$adresse->categorie().'</h3>';
+        echo '<h3 class="categorie">'.$adresse->categorie().'</h3>';
         $cat = $adresse->categorie();
     }
-    echo '<p>';
-    echo $adresse->nom().'<br/>'.$adresse->adresse().'<br/>Tél : '.$adresse->tel().'<br/>Mail : '.$adresse->email().'<br/>'.nl2br($adresse->description());
-    echo '</p>';
+    echo '<div class="bonne_adresse">';
+    echo '<span class="nom">'.$adresse->nom().'</span><br/>'.
+         '<span class="adresse">'.$adresse->adresse().'</span><br/>'.
+         '<span class="telephone">'.'Tél : '.$adresse->tel().'</span><br/>'.
+         '<span class="email">Mail : <a href="mailto:'.$adresse->email().'">'.$adresse->email().'</a></span><br/>'.
+         '<span class="description">'.nl2br($adresse->description()).'</span><br/>';
+    echo '</div>';
 }
 ?>
 <span id="page_id">2</span>

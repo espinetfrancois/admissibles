@@ -6,7 +6,7 @@
  *
  * @todo gestion de l'envoi du mail de validation/annulation
  */
-include_once(APPLICATION_PATH.'/inc/sql.php');
+require_once(APPLICATION_PATH.'/inc/sql.php');
 
 $demandeManager = new DemandeManager($db);
 $eleveManager = new EleveManager($db);
@@ -86,15 +86,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
 
             if (isset($erreurD) && in_array(Demande::Non_Admissible, $erreurD)) echo '<span style="color:red;">Merci de vérifier vos informations personnelles : vous ne semblez pas être dans les listes d\'admissibilité !</span>'; ?>
             <form action="/admissible/inscription?action=demande" method="post">
-            Nom : <input type="text" name="nom" value="<?php if (isset($demande)) { echo $demande->nom(); } ?>"/>
-            <?php if (isset($erreurD) && in_array(Demande::Nom_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Prénom : <input type="text" name="prenom" value="<?php if (isset($demande)) { echo $demande->prenom(); } ?>"/>
-            <?php if (isset($erreurD) && in_array(Demande::Prenom_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Adresse e-mail valide : <input type="text" name="email" value="<?php if (isset($demande)) { echo $demande->email(); } ?>"/>
-            <?php if (isset($erreurD) && in_array(Demande::Email_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Sexe : M <input type="radio" name="sexe" value="M" <?php if (!isset($demande) || $demande->sexe() == "M") { echo "checked='checked'"; } ?>/>/ F<input type="radio" name="sexe" value="F" <?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/>
-            <?php if (isset($erreurD) && in_array(Demande::Sexe_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Etablissement d'origine : <select name="prepa">
+            <p class="champ"><label for="nom">Nom : </label><input type="text" name="nom" value="<?php if (isset($demande)) { echo $demande->nom(); } ?>"/>
+            <?php if (isset($erreurD) && in_array(Demande::Nom_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="prenom">Prénom : </label><input type="text" name="prenom" value="<?php if (isset($demande)) { echo $demande->prenom(); } ?>"/>
+            <?php if (isset($erreurD) && in_array(Demande::Prenom_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="email">Adresse e-mail valide : </label><input type="text" name="email" value="<?php if (isset($demande)) { echo $demande->email(); } ?>"/>
+            <?php if (isset($erreurD) && in_array(Demande::Email_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="sexe">Sexe : M </label><input type="radio" name="sexe" value="M" <?php if (!isset($demande) || $demande->sexe() == "M") { echo "checked='checked'"; } ?>/>/ F<input type="radio" name="sexe" value="F" <?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/>
+            <?php if (isset($erreurD) && in_array(Demande::Sexe_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="prepa">Etablissement d'origine : </label><select name="prepa">
                 <?php
                 foreach ($prepas as $value) {
                     if (isset($demande) && $demande->prepa() == $value['id']) {
@@ -107,8 +107,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                 ?>
                 <option value="-1">Autre</option>
             </select>
-            <?php if (isset($erreurD) && in_array(Demande::Prepa_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Filière : <select name="filiere">
+            <?php if (isset($erreurD) && in_array(Demande::Prepa_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="filiere">Filière : </label><select name="filiere">
             <?php
             foreach ($filieres as $value) {
                 if (isset($demande) && $demande->filiere() == $value['id']) {
@@ -120,8 +120,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             }
             ?>
             </select>
-            <?php if (isset($erreurD) && in_array(Demande::Filiere_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Série : <select name="serie">
+            <?php if (isset($erreurD) && in_array(Demande::Filiere_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?></p>
+            <p class="champ"><label for="serie">Série : </label><select name="serie">
             <?php
             foreach ($series as $value) {
                 if (isset($demande) && $demande->serie() == $value['id']) {
@@ -133,15 +133,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             }
             ?>
             </select>
-            <?php if (isset($erreurD) && in_array(Demande::Serie_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            Sport préféré : <select name="section">
+            <?php if (isset($erreurD) && in_array(Demande::Serie_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="section">Sport préféré : </label><select name="section">
             <?php
             foreach ($sections as $value) {
                 echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
             }
             ?>
             </select>
-            <?php if (isset($erreurD) && in_array(Demande::Sport_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/><br/>
+            <?php if (isset($erreurD) && in_array(Demande::Sport_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/><br/>
             <input type="submit" value="Rechercher un logement"/>
             </form>
             <?php

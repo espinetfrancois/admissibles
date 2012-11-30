@@ -7,7 +7,7 @@
  * @todo identification LDAP
  */
 
-include_once(APPLICATION_PATH.'/inc/sql.php');
+require_once(APPLICATION_PATH.'/inc/sql.php');
 
 // Identification
 if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
@@ -21,7 +21,6 @@ if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
         Logs::logger(3, 'Tentative de connexion a l\'interface d\'administration echouee'); // Alerte de sécurité de niveau 3
     }
 }
-
 
 // Interface de connexion
 if (!isset($_SESSION['administrateur']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) {

@@ -100,6 +100,7 @@ class Layout {
         $this->addMenu('menu.html');
         $this->appendJs('menu.js');
         $this->appendCss('images.css');
+        $this->appendCss('bonnes_adresses.css');
 
     }
 
