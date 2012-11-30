@@ -336,7 +336,7 @@ else {
             }
             ?>
             </select></p> <?php if (isset($erreurModif) && in_array(Adresse::Categorie_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><br/>
-            <p class="champ"><label for="valide">Afficher cette annonce sur le site ? </label><input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Adresse::VALIDE_INVALIDE, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
+            <p class="champ"><label for="valide">Afficher cette annonce sur le site ? </label><input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Adresse::Valide_Invalide, $erreurModif)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
             <br/>
             <?php
             if(isset($adresse) && !$adresse->isNew()) {
