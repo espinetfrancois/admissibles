@@ -670,7 +670,7 @@ class SMTP
             }
             return false;
         }
-	
+    
         return true;
     }
 
@@ -764,7 +764,7 @@ class SMTP
             }
             return false;
         }
-	
+    
         return true;
     }
 
@@ -788,7 +788,7 @@ class SMTP
         if($this->do_debug >= 1) {
             echo "SMTP -> NOTICE: " . $this->error["error"] . $this->CRLF . '<br />';
         }
-	
+    
         return false;
     }
 

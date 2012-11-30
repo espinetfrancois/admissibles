@@ -215,9 +215,9 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
             ?>
             <h3>Gestion de vos disponibilités</h3>
             <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible.<br/>
-			Vous pourrez modifier vos choix jusqu'à la publication des listes d'admissibilité de chaque série.<br/>
-			Dès lors, vous serez tenus d'héberger tout admissible vous contactant via cette interface : la validation de ce formulaire tient lieu d'engagement vis à vis de l'admissible qui fera sa demande.<br/>
-			<span style="color:red;">Pensez donc à venir vous désinscrire dans les temps si vous n'êtes plus disponible !</span></p>
+            Vous pourrez modifier vos choix jusqu'à la publication des listes d'admissibilité de chaque série.<br/>
+            Dès lors, vous serez tenus d'héberger tout admissible vous contactant via cette interface : la validation de ce formulaire tient lieu d'engagement vis à vis de l'admissible qui fera sa demande.<br/>
+            <span style="color:red;">Pensez donc à venir vous désinscrire dans les temps si vous n'êtes plus disponible !</span></p>
             <form action="/x/connexion" method="post">
             <input type="hidden" name="serie" value="1"/>
             <?php
@@ -252,8 +252,8 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         if (empty($demandes)) {
             echo 'Vous n\'avez reçu aucune demande jusqu\'à présent. Vous recevrez une alerte email pour toute demande à valider...';
         } else {
-			echo 'Ci-dessous sont listées toutes les demandes que vous avez reçues. Vérifiez selon leur statut quelle action vous devez faire.<br/>';
-			echo 'Vous devez obligatoirement valider les demandes reçues. Si vous ne pouvez tenir votre engagement, vous devez accepter la demande et prendre contact avec l\'admissible pour lui trouver un hébergement de substitution sur le platal. Par esprit de solidarité, merci de ne pas laisser sans logement un admissible alors que vous vous étiez engagés pour cette période...';
+            echo 'Ci-dessous sont listées toutes les demandes que vous avez reçues. Vérifiez selon leur statut quelle action vous devez faire.<br/>';
+            echo 'Vous devez obligatoirement valider les demandes reçues. Si vous ne pouvez tenir votre engagement, vous devez accepter la demande et prendre contact avec l\'admissible pour lui trouver un hébergement de substitution sur le platal. Par esprit de solidarité, merci de ne pas laisser sans logement un admissible alors que vous vous étiez engagés pour cette période...';
             echo '<table border=1 cellspacing=0>';
             echo '<tr>
                       <td>Nom</td>

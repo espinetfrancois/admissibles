@@ -193,46 +193,46 @@ else {
         echo '<span style="color:red;">'.@$erreurA.'</span>';
         $filieres = $parametres->getList(Parametres::Filiere);
         $series = $parametres->getList(Parametres::Serie);
-		$serie_valide = array();
-		foreach ($series as $value) {
-			if (time() < $value['fermeture']) { // On ne considère que les séries non encore commencées
-			    $serie_valide[] = $value;
-			}
-		}
-		if (!empty($serie_valide)) { // On n'affiche le formulaire que si une série nécessite l'entrée d'une liste d'admissibilité
-		    echo '<p>Attention : l\'insertion d\'une liste d\'admissibilité marque l\'ouverture des demandes d\'hébergement pour la série considérée !</p>';
-			?>
-			<form action="/administration/gestion?action=admissibles" method="post">
-				<p class="champ"><label for="serie">Série d'admissibilité : </label><select name="serie">
-					<option value="" selected></option>
-			<?php
-			foreach ($serie_valide as $value) {
-				echo '<option value="'.$value['id'].'">'.$value['intitule'].' (du '.date('d.m.Y', $value['date_debut']).' au '.date('d.m.Y', $value['date_fin']).')</option>';
-			}
-			?>
-				</select></p>
-				<p class="champ"><label for="filiere">Filière : </label><select name="filiere">
-					<option value=""></option>
-			<?php
-			foreach ($filieres as $value) {
-				echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
-			}
-			?>
-				</select></p>
-				<p class="champ"><label for="liste">Liste des candidats reçus de la forme suivante :<br/>
-				<i>Nom (Prénom)<br/>
-				Nom (Prénom)<br/>
-				Nom (Prénom)</i></label></p>
-				<br/>
-				<textarea name="liste" rows="10" cols="45"></textarea>
-				<br/>
-				En validant ce formulaire, vous publiez cette liste d'admissibilité et ouvrez les demandes d'hébergement pour les admissibles :
-				<input type="submit" value="Valider" name="valider"/>
-			</form>
-        	<?php
+        $serie_valide = array();
+        foreach ($series as $value) {
+            if (time() < $value['fermeture']) { // On ne considère que les séries non encore commencées
+                $serie_valide[] = $value;
+            }
+        }
+        if (!empty($serie_valide)) { // On n'affiche le formulaire que si une série nécessite l'entrée d'une liste d'admissibilité
+            echo '<p>Attention : l\'insertion d\'une liste d\'admissibilité marque l\'ouverture des demandes d\'hébergement pour la série considérée !</p>';
+            ?>
+            <form action="/administration/gestion?action=admissibles" method="post">
+                <p class="champ"><label for="serie">Série d'admissibilité : </label><select name="serie">
+                    <option value="" selected></option>
+            <?php
+            foreach ($serie_valide as $value) {
+                echo '<option value="'.$value['id'].'">'.$value['intitule'].' (du '.date('d.m.Y', $value['date_debut']).' au '.date('d.m.Y', $value['date_fin']).')</option>';
+            }
+            ?>
+                </select></p>
+                <p class="champ"><label for="filiere">Filière : </label><select name="filiere">
+                    <option value=""></option>
+            <?php
+            foreach ($filieres as $value) {
+                echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
+            }
+            ?>
+                </select></p>
+                <p class="champ"><label for="liste">Liste des candidats reçus de la forme suivante :<br/>
+                <i>Nom (Prénom)<br/>
+                Nom (Prénom)<br/>
+                Nom (Prénom)</i></label></p>
+                <br/>
+                <textarea name="liste" rows="10" cols="45"></textarea>
+                <br/>
+                En validant ce formulaire, vous publiez cette liste d'admissibilité et ouvrez les demandes d'hébergement pour les admissibles :
+                <input type="submit" value="Valider" name="valider"/>
+            </form>
+            <?php
         } else {
-			echo '<p>Aucune série ne nécessite l\'entrée de listes d\'admissibilité.<br/>Reportez-vous à la page "Séries d\'admissibilité" pour déclarer une nouvelle série...</p>';
-		}
+            echo '<p>Aucune série ne nécessite l\'entrée de listes d\'admissibilité.<br/>Reportez-vous à la page "Séries d\'admissibilité" pour déclarer une nouvelle série...</p>';
+        }
     } elseif (isset($_GET['action']) && $_GET['action'] == 'RAZ') { // Interface de remise à zéro de la plate-forme
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         echo '<span id="page_id">48</span>';

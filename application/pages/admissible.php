@@ -15,7 +15,7 @@ echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux<
 
 if (isset($_SESSION['demande']) && isset($_POST['user'])) {
     $dispos = $eleveManager->getDispo($_POST['user']);
-	$demande = unserialize($_SESSION['demande']);
+    $demande = unserialize($_SESSION['demande']);
     if (!in_array($demande->serie(), $dispos)) {
         echo '<p>Désolé, l\'élève que vous avez choisi vient d\'être sollicité. Merci de reitérer votre recherche.</p>';
         Logs::logger(2, 'Demandes d\'admissibles simultannees sur l\'eleve '.$_POST['user']);
@@ -28,9 +28,9 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
         $demande->setCode(md5(sha1(time().$demande->email())));
         // envoi d'un email de validation contenant <a href="http://.../validation.php?code=$demande->code()">Valider votre demande</a> <a href="http://.../?code=$demande->code()">Annuler votre demande</a>
         $demandeManager->add($demande);
-		$eleveManager->deleteDispo($_POST['user'], $demande->serie());
+        $eleveManager->deleteDispo($_POST['user'], $demande->serie());
         Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
-		$success = 1;
+        $success = 1;
     }
 }
 
@@ -52,13 +52,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                                          'filiere' => $_POST['filiere'],
                                          'serie' => $_POST['serie']));
             $erreurD = $demande->erreurs();
-			$id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
+            $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
             if ($id == -1) {
                 $erreurD[] = Demande::Non_Admissible;
                 Logs::logger(2, 'Formulaire de demande rempli par un non-admissible');
             } else {
-				$demande->setId($id);
-			}
+                $demande->setId($id);
+            }
         }
         if (!empty($erreurD)) {
             Logs::logger(2, 'Erreur dans le remplissage du formulaire de demande de logement');
@@ -148,30 +148,30 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
     }
 } elseif (isset($success) && $success == 1) {
-	echo '<p>Pour poursuivre votre demande et afin de vérifier votre identité, merci de cliquer sur le lien qui vous a été envoyé par mail.</p>';
+    echo '<p>Pour poursuivre votre demande et afin de vérifier votre identité, merci de cliquer sur le lien qui vous a été envoyé par mail.</p>';
 } else { // Page affichée
     ?>
     <h3>Détail du fonctionnement</h3>
 <p>Vous pouvez vous inscrire dès la sortie des listes
-	d'admissibilités pour votre série et jusqu'à la veille du début des
-	épreuves orales minuit.</p>
+    d'admissibilités pour votre série et jusqu'à la veille du début des
+    épreuves orales minuit.</p>
 <p>La procédure commence dès que vous avez déposé votre demande sur
-	le site. Pour s'inscrire, une seule chose à faire : indiquer quelques
-	informations personnelles sur le formulaire d'inscription, elles
-	servent à vous proposez un élève avec qui vous pourriez avoir le plus
-	d'affinités, vous choississez dans cette liste la personne qui vous
-	convient le plus. Ensuite :</p>
+    le site. Pour s'inscrire, une seule chose à faire : indiquer quelques
+    informations personnelles sur le formulaire d'inscription, elles
+    servent à vous proposez un élève avec qui vous pourriez avoir le plus
+    d'affinités, vous choississez dans cette liste la personne qui vous
+    convient le plus. Ensuite :</p>
 <ul>
-	<li>Vous recevrez ensuite un email de confirmation. Et votre
-		demande sera transmise à l'élève que vous aurez choisit.</li>
-	<li>Vous recevrez ensuite un email lorsque l'élève polytechnicien
-		aura accepté votre demande, et vous pourrez alors contacter la
-		personne correspondante pour arranger les modalités de votre séjour.</li>
+    <li>Vous recevrez ensuite un email de confirmation. Et votre
+        demande sera transmise à l'élève que vous aurez choisit.</li>
+    <li>Vous recevrez ensuite un email lorsque l'élève polytechnicien
+        aura accepté votre demande, et vous pourrez alors contacter la
+        personne correspondante pour arranger les modalités de votre séjour.</li>
 </ul>
 <p>Vous pouvez à tout moment annuler votre demande par le biais du
-	lien fournit dans le mail : Si votre demande semble prendre trop de
-	temps pour être acceptée par l'élève que vous avez choisi, annulez
-	votre première demande et remplissez-en une autre...</p>
+    lien fournit dans le mail : Si votre demande semble prendre trop de
+    temps pour être acceptée par l'élève que vous avez choisi, annulez
+    votre première demande et remplissez-en une autre...</p>
 Pour commencer le processus, cliquez
 <a href='/admissible/inscription?action=demande'>ici</a>
 .

@@ -55,7 +55,7 @@ class DemandeManager {
                 $requete->bindValue(':filiere', $demande->filiere());
                 $requete->bindValue(':prepa', $demande->prepa());
                 $requete->execute();
-				$requete = $this->db->prepare('INSERT INTO demandes 
+                $requete = $this->db->prepare('INSERT INTO demandes 
                                                SET ID_ADMISSIBLE = :id,
                                                    USER_X = :user,
                                                    LIEN = :code,
@@ -213,8 +213,8 @@ class DemandeManager {
         if ($requete->rowCount() != 1) {
             Logs::logger(3, 'Corruption de la table "demandes". Non unicite de "LIEN" ou lien');
         } else if ($requete->rowCount() == 0) {
-		    Logs::logger(3, 'Corruption des parametres : DemandeManager::getUnique');
-		}
+            Logs::logger(3, 'Corruption des parametres : DemandeManager::getUnique');
+        }
             
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
             
