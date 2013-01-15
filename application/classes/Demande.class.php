@@ -187,7 +187,7 @@ class Demande {
 
     public  function setNom($nom)
     {
-        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#',$nom)) { // lettres seulement
+        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $nom)) { // lettres seulement
             $this->erreurs[] = self::Nom_Invalide;
         } else {
             $this->nom = $nom;
@@ -205,7 +205,7 @@ class Demande {
 
     public  function setPrenom($prenom)
     {
-        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#',$prenom)) { // lettres seulement
+        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $prenom)) { // lettres seulement
             $this->erreurs[] = self::Prenom_Invalide;
         } else {
             $this->prenom = $prenom;
@@ -223,7 +223,7 @@ class Demande {
 
     public  function setEmail($email)
     {
-        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email)) { // adresse email
+        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email)) { // adresse email
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;
