@@ -10,26 +10,24 @@
  */
 
 require_once(APPLICATION_PATH.'/inc/sql.php');
+require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 
 $eleveManager = new EleveManager($db);
 $demandeManager = new DemandeManager($db);
 $adresseManager = new AdresseManager($db);
 
 // Identification
-if (isset($_POST['user']) && isset($_POST['pass']) && !empty($_POST['user']) && !empty($_POST['pass']))
-{
-    if (true) { // identification LDAP ***
-        $_SESSION['eleve'] = $eleveManager->getUnique($_POST['user']);
-        if ($_SESSION['eleve'] == NULL) {
-            $_SESSION['new'] = 1; // Première connexion de l'élève
-            $_SESSION['eleve'] = new Eleve(array('user' => $_POST['user'], 'email' => 'LDAP@poly.edu')); //***
-        }
-        Logs::logger(1, 'Connexion de l\'eleve '.$_POST['user'].' reussie');
+if (isset($_POST['user']) && isset($_POST['pass']) && !empty($_POST['user']) && !empty($_POST['pass'])) {
+    frankiz_do_auth();
+}
+if (isset($_GET['response'])){
+    $auth = frankiz_get_response();
+    $_SESSION['eleve'] = $eleveManager->getUnique($auth['hruid']);
+    if ($_SESSION['eleve'] == NULL) {
+        $_SESSION['new'] = 1; // Première connexion de l'élève
+        $_SESSION['eleve'] = new Eleve(array('user' => $auth['hruid'], 'email' => $auth['email'])); //***
     }
-    else {
-        $erreurID = true;
-        Logs::logger(2, 'Tentative de connexion eleve echouee (user : '.$_POST['user'].')');
-    }
+    Logs::logger(1, 'Connexion de l\'eleve '.$auth['hruid'].' reussie');
 }
 //Modification des informations personnelles
 if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['promo']) && isset($_POST['section']) && isset($_POST['filiere']) && isset($_POST['prepa'])) {
