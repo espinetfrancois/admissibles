@@ -8,33 +8,36 @@
  */
 
 require_once(APPLICATION_PATH.'/inc/sql.php');
+require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 
 // Identification
-if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
-{
-    if (in_array($_POST['user'], $parametres->getAdmin()) && true) { // LDAP
-        $_SESSION['administrateur'] = true;
-        Logs::logger(1, 'Connexion a l\'interface d\'administration reussie');
-    }
-    else {
-        $erreurID = 1;
-        Logs::logger(3, 'Tentative de connexion a l\'interface d\'administration echouee'); // Alerte de sécurité de niveau 3
-    }
+if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
+    frankiz_do_auth("/administration/gestion");
 }
+// if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
+// {
+//     if (in_array($_POST['user'], $parametres->getAdmin()) && true) { // LDAP
+//         $_SESSION['administrateur'] = true;
+//         Logs::logger(1, 'Connexion a l\'interface d\'administration reussie');
+//     }
+//     else {
+//         $erreurID = 1;
+//         Logs::logger(3, 'Tentative de connexion a l\'interface d\'administration echouee'); // Alerte de sécurité de niveau 3
+//     }
+// }
 
-// Interface de connexion
 if (!isset($_SESSION['administrateur']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) {
 session_destroy();
 Logs::logger(1, 'Deconnexion administrateur');
 ?>
     <h2>Connexion</h2>
-    <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
-    <form action="/administration/gestion" method="post">
-    <p class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p>
-    <p class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p>
-    <br/>
-    <input type="submit" value="Se connecter"/>
-    </form>
+    <?php// if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
+<!--     <form action="/administration/gestion" method="post"> -->
+<!--     <p class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p> -->
+<!--     <p class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p> -->
+<!--     <br/> -->
+<!--     <input type="submit" value="Se connecter"/> -->
+<!--     </form> -->
 <?php
 }
 else {
