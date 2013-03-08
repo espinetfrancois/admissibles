@@ -76,14 +76,14 @@ class Layout {
      * @var array
      * @access protected
      */
-    protected $_libraries = array('jquery/jquery-1.8.2.min.js', 'jquery/jquery-ui-1.8.24.custom.min.js', 'jquery/jquery.visited.js');
+    protected $_libraries = array('jquery/jquery-1.9.1.js', 'jquery/jquery-ui-1.10.1.custom.min.js', 'jquery/jquery.visited.js');
 
     /**
      * Templates
      * @var array
      * @access protected
      */
-    protected $_templates = array('jquery/jquery-ui-1.8.24.custom.css');
+    protected $_templates = array('jquery/jquery-ui-1.10.1.custom.css');
 
     /**
      * Constructeur
