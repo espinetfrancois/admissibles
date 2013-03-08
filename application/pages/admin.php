@@ -31,7 +31,7 @@ session_destroy();
 Logs::logger(1, 'Deconnexion administrateur');
 ?>
     <h2>Connexion</h2>
-    <?php// if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
+    <?php // if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
 <!--     <form action="/administration/gestion" method="post"> -->
 <!--     <p class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p> -->
 <!--     <p class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p> -->

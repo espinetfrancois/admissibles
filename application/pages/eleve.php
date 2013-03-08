@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo identification LDAP
  * @todo gestion du mail d'acceptation
  * @todo correction du bug dans deconnexion (cf todo infra)
  */

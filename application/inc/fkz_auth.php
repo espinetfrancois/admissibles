@@ -34,7 +34,7 @@ function frankiz_do_auth($loc = "")
     * Fkz renverra ici à la fois les noms de la personne mais aussi ses droits dans différents groupes.
     * Il faut cependant que le site ait les droits sur les informations en question (à définir lors de son inscription).
     */
-   $request = json_encode(array('names','email', 'sport', 'rights','promo'));
+   $request = json_encode(array('names', 'email', 'sport', 'rights', 'promo'));
 
    $hash = md5($timestamp . $site . $FKZ_KEY . $request);
 
