@@ -16,28 +16,28 @@ class Config {
      * @access protected
      */
     protected $_dbhost;
-    
+
     /**
      * Login
      * @var string
      * @access protected
      */
     protected $_dblogin;
-    
+
     /**
      * Base de donnée
      * @var string
      * @access protected
      */
     protected $_dbbase;
-    
+
     /**
      * Mot de passe
      * @var string
      * @access protected
      */
     protected $_dbpass;
-    
+
     /**
      * Autres paramètres
      * @var string
@@ -45,6 +45,11 @@ class Config {
      */
     protected $_otherparam = array();
 
+    /**
+     * Paramètres de connexion à frankiz
+     * @var array
+     */
+    protected $_frankiz = array();
 
     /**
      * Constructeur de la classe
@@ -122,14 +127,14 @@ class Config {
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
         define('LIBRARY_PATH', APPLICATION_PATH.'/library');
-        
-        
+
+
         define('HTTP_PUBLIC_PATH', '');
         define('HTTP_CSS_PATH', HTTP_PUBLIC_PATH.'/css');
         define('HTTP_JS_PATH', HTTP_PUBLIC_PATH.'/js');
         define('HTTP_LIBRARY_PATH', HTTP_PUBLIC_PATH.'/library');
         define('HTTP_IMAGES_PATH', HTTP_PUBLIC_PATH.'/images');
-        
+
         //constantes d'environement
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
         define('APP_MAIL', false);
@@ -184,6 +189,8 @@ class Config {
                     /* case "libraries" :
                      $this->initLibrary($configitem);
                     break; */
+                case 'frankiz':
+                    $this->initFrankiz($configitem);
                 default:
                     array_merge($this->_otherparam,$configitem);
                     break;
@@ -207,6 +214,9 @@ class Config {
 
     }
 
+    protected function initFrankiz($aConfig) {
+        $this->_frankiz = $aConfig;
+    }
 
     /* protected function initLibrary($aConfig)
     {
@@ -226,5 +236,15 @@ class Config {
     {
 
         return $this->_otherparam;
+    }
+
+    public function get_frankiz()
+    {
+        return $this->_frankiz;
+    }
+
+    public function set_frankiz($_frankiz)
+    {
+        $this->_frankiz = $_frankiz;
     }
 }

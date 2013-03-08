@@ -8,23 +8,23 @@
  *
  */
 class Mail extends PHPMailer {
-    
+
     const Ini_File = 'mail.ini';
-    
+
     const Section_Admin_Tech = 'admin_tech';
     const Section_Admin_Fonc = 'admin_fonc';
     const Section_X = 'x';
     const Section_Admissible = 'admissible';
-    
+
     const From_Mail = 'admissible@polytechnique.edu';
     const From_Nom = 'Accueil des admissibles';
-    
+
     /**
      * talbeau contenant les textes pour les mails
      * @var array
      */
     private $mails = null;
-    
+
     /**
      * Constructeur
      * @access public
@@ -35,9 +35,9 @@ class Mail extends PHPMailer {
         parent::__construct(true);
         $this->readIni();
         $this->SetFrom(self::From_Mail, self::From_Nom);
-
+        $this->Mailer = 'sendmail';
     }
-   
+
     /**
      * Méthode proxiée qui interromp le send si la constante d'envoi des mails est fausse
      * @see parend::Send
@@ -49,9 +49,8 @@ class Mail extends PHPMailer {
             $this->IsHTML(true);
             parent::Send();
         }
-
     }
-    
+
     /**
      * Méthode de lecture du fichier de configuration
      * @author francois.espinet
@@ -59,9 +58,9 @@ class Mail extends PHPMailer {
     private function readIni()
     {
         $this->mails = parse_ini_file(CONFIG_PATH.'/'.self::Ini_File, true);
-        
+
     }
-    
+
     /**
      * @brief    Permet d'integrer des variables dans une tradution ou chaine de caractères
      *
@@ -89,5 +88,5 @@ class Mail extends PHPMailer {
         }
         return str_replace($aKeys, $aValues, $sChaine);
     }
-    
+
 }

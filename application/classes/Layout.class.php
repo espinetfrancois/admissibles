@@ -452,7 +452,7 @@ class Layout {
             $sMenu = "\n".'<div class= menu>
                            <ul class="menu_deroulant" id="menu_principal">'.
                            file_get_contents(TEMPLATE_PATH.'/'.$this->_menu);
-            if ($this->is_admin) {
+            if ($this->is_admin || $_SESSION['administrateur'] === true) {
                 ob_start();
                 include(TEMPLATE_PATH.'/'.self::Menu_Appendice_Admin);
                 $sMenu .= ob_get_clean();
