@@ -1,0 +1,5 @@
+
+syntax: regexp
+^application/configs/dev\.ini$
+^application/log\.txt$
+^application/configs/prod\.ini$
