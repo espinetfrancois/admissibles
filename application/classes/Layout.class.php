@@ -97,6 +97,8 @@ class Layout {
                 '<link href="'.HTTP_IMAGES_PATH.'/favicon.png" type="image/png" rel="icon">'."\n";
         $this->appendCss('layout.css');
         $this->appendCss('forms.css');
+        $this->appendCss('menu.css');
+        $this->appendCss('text.css');
         $this->addMenu('menu.html');
         $this->appendJs('menu.js');
         $this->appendCss('images.css');
