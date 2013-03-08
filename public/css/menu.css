@@ -7,37 +7,6 @@
 */
 
 
-ol,ul {
-	list-style: none;
-}
-
-ul,ol,li {
-	margin: 0;
-	padding: 0;
-}
-
-ol li {
-	list-style-type: decimal;
-	background: none;
-	padding-left: 0;
-}
-
-ol {
-	margin-left: 1.5em;
-}
-
-a {
-	color: #2896d5;
-	text-decoration: underline;
-}
-
-a:focus {
-	background-color: #666;
-	background-image: none;
-	color: #fff !important;
-	text-decoration: none;
-}
-
 /* Gestion du menu*/
 div.menu {
 	background: #002334;
@@ -53,6 +22,7 @@ div.menu ul {
 	background: #164d6d;
 	font-weight: 700;
 	padding-top: 10px;
+	font-size	: 1.3em;
 }
 
 div.menu a {
