@@ -59,7 +59,7 @@ class Config {
     public function __construct()
     {
         self::defineConstantes();
-        self::setErrors();
+//         self::setErrors();
         $this->loadConfig();
         self::addLibraries();
 
@@ -127,7 +127,9 @@ class Config {
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
         define('LIBRARY_PATH', APPLICATION_PATH.'/library');
-
+        //définition des logs pour les données
+        define('DATA_PATH', ROOT_PATH.'/data');
+        define('LOGS_PATH', DATA_PATH.'/logs');
 
         define('HTTP_PUBLIC_PATH', '');
         define('HTTP_CSS_PATH', HTTP_PUBLIC_PATH.'/css');
@@ -145,6 +147,7 @@ class Config {
     /**
      * Ajuste le niveau de verbosité des erreurs
      * @access public
+     * @deprecated
      * @return void
      */
     static function setErrors()
@@ -191,6 +194,10 @@ class Config {
                     break; */
                 case 'frankiz':
                     $this->initFrankiz($configitem);
+                    break;
+                case 'php':
+                    $this->initPhp($configitem);
+                    break;
                 default:
                     array_merge($this->_otherparam,$configitem);
                     break;
@@ -226,6 +233,17 @@ class Config {
 
     } */
 
+    /**
+     * Configuration de php
+     * @author francois.espinet
+     * @param array $aConfig
+     */
+    protected function initPhp($aConfig) {
+        foreach ($aConfig as $item => $value) {
+            ini_set($item, $value);
+        }
+    }
+
 
     /**
      * Lecture de paramètres facultatifs
@@ -238,6 +256,11 @@ class Config {
         return $this->_otherparam;
     }
 
+    /**
+     * renvoie le tableau de configuration de frankiz
+     * @author francois.espinet
+     * @return array
+     */
     public function get_frankiz()
     {
         return $this->_frankiz;
