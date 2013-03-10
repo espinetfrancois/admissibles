@@ -1,5 +1,4 @@
 
 syntax: regexp
 ^application/configs/dev\.ini$
-^data
 ^application/configs/prod\.ini$
