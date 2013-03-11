@@ -5,7 +5,6 @@
  * @version 1.0
  *
  * @todo gestion du mail d'acceptation
- * @todo correction du bug dans deconnexion (cf todo infra)
  */
 
 require_once(APPLICATION_PATH.'/inc/sql.php');

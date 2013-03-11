@@ -5,7 +5,6 @@
  * @version 1.0
  *
  * @todo liste des admissibles déjà entrés
- * @todo déconnexion propre
  */
 
 require_once(APPLICATION_PATH.'/inc/sql.php');

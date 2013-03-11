@@ -1,4 +1,10 @@
 <?php
+/**
+ * Page d'authentification via le site des eleves Frankiz
+ * @author Francois Espinet
+ * @version 1.0
+ *
+ */
 require_once(APPLICATION_PATH.'/inc/sql.php');
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 

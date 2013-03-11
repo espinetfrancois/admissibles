@@ -1,3 +1,11 @@
+<?php
+/**
+ * Page d'accueil
+ * @author Francois Espinet
+ * @version 1.0
+ *
+ */
+?>
 <h2 class='img_right'>Bienvenue</h2>
 <?php
 echo "<div class='img_right'>";
