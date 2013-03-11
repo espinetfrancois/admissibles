@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Lun 15 Octobre 2012 à 19:59
+-- Généré le: Lun 11 Mars 2013 à 12:41
 -- Version du serveur: 5.5.24-log
 -- Version de PHP: 5.4.3
 
@@ -33,6 +33,13 @@ CREATE TABLE IF NOT EXISTS `administration` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Contenu de la table `administration`
+--
+
+INSERT INTO `administration` (`ID`, `PARAMETRE`, `VALEUR`) VALUES
+(0, 'administrateur', 'nicolas.grorod');
+
 -- --------------------------------------------------------
 
 --
@@ -55,6 +62,13 @@ CREATE TABLE IF NOT EXISTS `admissibles` (
   KEY `series_admissibles_fk` (`SERIE`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tables contenant les admissibles ˆ l''Žcole polytechnique' AUTO_INCREMENT=2 ;
 
+--
+-- Contenu de la table `admissibles`
+--
+
+INSERT INTO `admissibles` (`ID`, `NOM`, `PRENOM`, `SEXE`, `ADRESSE_MAIL`, `SERIE`, `ID_FILIERE`, `ID_ETABLISSEMENT`) VALUES
+(1, 'espinet', 'franyiois', 'M', 'nico@ixo.com', 2, 3, 104);
+
 -- --------------------------------------------------------
 
 --
@@ -73,6 +87,13 @@ CREATE TABLE IF NOT EXISTS `annonces` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
+--
+-- Contenu de la table `annonces`
+--
+
+INSERT INTO `annonces` (`ID`, `NOM`, `TELEPHONE`, `DESCRIPTION`, `VALIDATION`, `ADRESSE_MAIL`, `ADRESSE`, `ID_CATEGORIE`) VALUES
+(6, 'HÃ´tel le Beau Regard', '06 56 87 75 65', 'Magnifique !', 1, 'nicolas@rasmotte.com', '34 rue mes glios', 7);
+
 -- --------------------------------------------------------
 
 --
@@ -89,7 +110,14 @@ CREATE TABLE IF NOT EXISTS `demandes` (
   KEY `statuts_demandes_fk` (`ID_STATUS`),
   KEY `x_demandes_fk` (`USER_X`),
   KEY `admissibles_demandes_fk` (`ID_ADMISSIBLE`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Contenu de la table `demandes`
+--
+
+INSERT INTO `demandes` (`ID`, `ID_ADMISSIBLE`, `USER_X`, `LIEN`, `ID_STATUS`) VALUES
+(1, 1, 'nicolas.grorot', 'cb998bb455e93a4dced3a820c03898a1', 0);
 
 -- --------------------------------------------------------
 
@@ -115,6 +143,13 @@ CREATE TABLE IF NOT EXISTS `ref_categories` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Référence pour les catégories d''annonces proposées' AUTO_INCREMENT=8 ;
 
+--
+-- Contenu de la table `ref_categories`
+--
+
+INSERT INTO `ref_categories` (`ID`, `NOM`) VALUES
+(7, 'HÃ´tels');
+
 -- --------------------------------------------------------
 
 --
@@ -126,7 +161,75 @@ CREATE TABLE IF NOT EXISTS `ref_etablissements` (
   `NOM` varchar(250) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
   `COMMUNE` varchar(250) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=163 ;
+
+--
+-- Contenu de la table `ref_etablissements`
+--
+
+INSERT INTO `ref_etablissements` (`ID`, `NOM`, `COMMUNE`) VALUES
+(95, 'Berthollet', 'ANNECY'),
+(96, 'Montaigne', 'BORDEAUX'),
+(97, 'Malherbe', 'CAEN'),
+(98, 'Victor Grignard', 'CHERBOURG'),
+(99, 'Carnot', 'DIJON'),
+(100, 'Champollion', 'GRENOBLE'),
+(101, 'Schweitzer', 'LE RAINCY'),
+(102, 'Faidherbe', 'LILLE'),
+(103, 'La MartiniÃ¨re Monplaisir', 'LYON'),
+(104, 'Le Parc', 'LYON'),
+(105, 'Les Lazaristes', 'LYON'),
+(106, 'Thiers', 'MARSEILLE'),
+(107, ' Fabert', 'METZ'),
+(108, 'Henri PoincarÃ©', 'NANCY'),
+(109, 'Clemenceau', 'NANTES'),
+(110, 'Pasteur', 'NEUILLY'),
+(111, 'Massena', 'NICE'),
+(112, 'Pothier', 'ORLEANS'),
+(113, 'Blaise Pascal', 'ORSAY'),
+(114, 'Chaptal', 'PARIS'),
+(115, 'Charlemagne', 'PARIS'),
+(116, 'Condorcet', 'PARIS'),
+(117, 'Fenelon', 'PARIS'),
+(118, 'Fenelon Sainte Marie', 'PARIS'),
+(119, 'Henri IV', 'PARIS'),
+(120, 'Janson de Sailly', 'PARIS'),
+(121, 'Louis le Grand', 'PARIS'),
+(122, 'Saint Louis', 'PARIS'),
+(123, 'Stanislas', 'PARIS'),
+(124, 'Louis Barthou', 'PAU'),
+(125, 'Camille Guerin', 'POITIER'),
+(126, 'Chateaubriand', 'RENNES'),
+(127, 'Corneille', 'ROUEN'),
+(128, 'Marcelin Berthelot', 'SAINT MAUR DES FOSSES'),
+(129, 'Leconte de Lisle', 'SAINTE CLOTHILDE'),
+(130, 'Jean Baptiste Corot', 'SAVIGNY SUR ORGE'),
+(131, 'Lakanal', 'SCEAUX'),
+(132, 'Valbonne', 'SOPHIA ANTIPOLIS'),
+(133, 'Kleber', 'STRASBOURG'),
+(134, 'Bellevue', 'TOULOUSE'),
+(135, 'Pierre de Fermat', 'TOULOUSE'),
+(136, 'Descartes', 'TOURS'),
+(137, 'Michelet', 'VANVES'),
+(138, 'Hoche', 'VERSAILLES'),
+(139, 'Sainte Genevieve', 'VERSAILLES'),
+(140, 'Joffre', 'MONPELLIER'),
+(141, 'UniversitÃ© de Nice', 'NICE'),
+(148, 'UniversitÃ©', 'TOULOUSE'),
+(149, 'UniversitÃ©', 'PARIS'),
+(150, 'UniversitÃ©', 'LYON'),
+(151, 'UniversitÃ©', 'MARSEILLE'),
+(152, 'UniversitÃ©', 'VERSAILLES'),
+(153, 'UniversitÃ©', 'BATH'),
+(154, 'UniversitÃ©', 'BORDEAUX'),
+(155, 'UniversitÃ©', 'MUNICH'),
+(156, 'UniversitÃ©', 'LILLE'),
+(157, 'UniversitÃ©', 'MONTREAL'),
+(158, 'UniversitÃ©', 'CERGY PONTOISE'),
+(159, 'UniversitÃ©', 'MONPELLIER'),
+(160, 'UniversitÃ©', 'AVIGNON'),
+(161, 'UniversitÃ©', 'TOULOUSE'),
+(162, 'UniversitÃ©', 'METZ');
 
 -- --------------------------------------------------------
 
@@ -138,7 +241,20 @@ CREATE TABLE IF NOT EXISTS `ref_filieres` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `NOM` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+
+--
+-- Contenu de la table `ref_filieres`
+--
+
+INSERT INTO `ref_filieres` (`ID`, `NOM`) VALUES
+(1, 'MPI'),
+(2, 'MPSI'),
+(3, 'PC'),
+(4, 'PSI'),
+(5, 'PT'),
+(6, 'TSI'),
+(7, 'Universitaire');
 
 -- --------------------------------------------------------
 
@@ -152,6 +268,14 @@ CREATE TABLE IF NOT EXISTS `ref_promotions` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
+--
+-- Contenu de la table `ref_promotions`
+--
+
+INSERT INTO `ref_promotions` (`ID`, `NOM`) VALUES
+(1, '2011'),
+(4, '2012');
+
 -- --------------------------------------------------------
 
 --
@@ -162,7 +286,28 @@ CREATE TABLE IF NOT EXISTS `ref_sections` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `NOM` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+
+--
+-- Contenu de la table `ref_sections`
+--
+
+INSERT INTO `ref_sections` (`ID`, `NOM`) VALUES
+(1, 'Escalade'),
+(2, 'Aviron'),
+(3, 'Basket'),
+(4, 'Boxe'),
+(5, 'Equitation'),
+(6, 'Escrime'),
+(7, 'Football'),
+(8, 'Handball'),
+(9, 'Judo'),
+(10, 'Natation'),
+(11, 'Raid'),
+(12, 'Rugby'),
+(13, 'Tennis'),
+(14, 'Volley'),
+(15, 'Badminton');
 
 -- --------------------------------------------------------
 
@@ -180,6 +325,13 @@ CREATE TABLE IF NOT EXISTS `series` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
+--
+-- Contenu de la table `series`
+--
+
+INSERT INTO `series` (`ID`, `INTITULE`, `DATE_DEBUT`, `DATE_FIN`, `OUVERTURE`, `FERMETURE`) VALUES
+(2, 'SÃ©rie 1', 1370995200, 1371513600, 1354263838, 1370995200);
+
 -- --------------------------------------------------------
 
 --
@@ -191,6 +343,16 @@ CREATE TABLE IF NOT EXISTS `statuts` (
   `NOM` varchar(250) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `statuts`
+--
+
+INSERT INTO `statuts` (`ID`, `NOM`) VALUES
+(0, 'En cours de validation par l''admissible'),
+(1, 'En attente d''acceptation'),
+(2, 'Validée'),
+(3, 'Annulée');
 
 -- --------------------------------------------------------
 
@@ -213,6 +375,15 @@ CREATE TABLE IF NOT EXISTS `x` (
   KEY `ref_etablissements_x_fk` (`ID_ETABLISSEMENT`),
   KEY `ref_filiaires_x_fk` (`ID_FILIERE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `x`
+--
+
+INSERT INTO `x` (`USER`, `SEXE`, `ID_SECTION`, `ADRESSE_MAIL`, `ID_FILIERE`, `ID_PROMOTION`, `ID_ETABLISSEMENT`) VALUES
+('nicolas.gro', 'M', 2, 'LDAP@poly.edu', 1, 1, 103),
+('nicolas.grorod', 'M', 1, 'LDAP@poly.edu', 1, 1, 104),
+('nicolas.grorot', 'M', 1, 'LDAP@poly.edu', 1, 1, 104);
 
 --
 -- Contraintes pour les tables exportées
