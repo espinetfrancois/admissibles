@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Lun 11 Mars 2013 à 12:41
+-- Généré le: Lun 11 Mars 2013 à 20:53
 -- Version du serveur: 5.5.24-log
 -- Version de PHP: 5.4.3
 
@@ -19,26 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données: `admissible_dsi`
 --
-
--- --------------------------------------------------------
-
---
--- Structure de la table `administration`
---
-
-CREATE TABLE IF NOT EXISTS `administration` (
-  `ID` int(11) NOT NULL,
-  `PARAMETRE` varchar(250) NOT NULL,
-  `VALEUR` varchar(250) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Contenu de la table `administration`
---
-
-INSERT INTO `administration` (`ID`, `PARAMETRE`, `VALEUR`) VALUES
-(0, 'administrateur', 'nicolas.grorod');
 
 -- --------------------------------------------------------
 
@@ -60,14 +40,14 @@ CREATE TABLE IF NOT EXISTS `admissibles` (
   KEY `ref_etablissements_admissibles_fk` (`ID_ETABLISSEMENT`),
   KEY `ref_filiaires_admissibles_fk` (`ID_FILIERE`),
   KEY `series_admissibles_fk` (`SERIE`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tables contenant les admissibles ˆ l''Žcole polytechnique' AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tables contenant les admissibles ˆ l''Žcole polytechnique' AUTO_INCREMENT=6 ;
 
 --
 -- Contenu de la table `admissibles`
 --
 
 INSERT INTO `admissibles` (`ID`, `NOM`, `PRENOM`, `SEXE`, `ADRESSE_MAIL`, `SERIE`, `ID_FILIERE`, `ID_ETABLISSEMENT`) VALUES
-(1, 'espinet', 'franyiois', 'M', 'nico@ixo.com', 2, 3, 104);
+(5, 'espinet', 'francois', 'M', 'nicolasgrorod@hotmail.com', 2, 1, 95);
 
 -- --------------------------------------------------------
 
@@ -110,14 +90,14 @@ CREATE TABLE IF NOT EXISTS `demandes` (
   KEY `statuts_demandes_fk` (`ID_STATUS`),
   KEY `x_demandes_fk` (`USER_X`),
   KEY `admissibles_demandes_fk` (`ID_ADMISSIBLE`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `demandes`
 --
 
 INSERT INTO `demandes` (`ID`, `ID_ADMISSIBLE`, `USER_X`, `LIEN`, `ID_STATUS`) VALUES
-(1, 1, 'nicolas.grorot', 'cb998bb455e93a4dced3a820c03898a1', 0);
+(2, 5, 'nicolas.grorod', '156c1c9da5122fe4bc0bb7d13c441b78', 2);
 
 -- --------------------------------------------------------
 
@@ -259,59 +239,6 @@ INSERT INTO `ref_filieres` (`ID`, `NOM`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `ref_promotions`
---
-
-CREATE TABLE IF NOT EXISTS `ref_promotions` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `NOM` varchar(10) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Contenu de la table `ref_promotions`
---
-
-INSERT INTO `ref_promotions` (`ID`, `NOM`) VALUES
-(1, '2011'),
-(4, '2012');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `ref_sections`
---
-
-CREATE TABLE IF NOT EXISTS `ref_sections` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `NOM` varchar(250) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
-
---
--- Contenu de la table `ref_sections`
---
-
-INSERT INTO `ref_sections` (`ID`, `NOM`) VALUES
-(1, 'Escalade'),
-(2, 'Aviron'),
-(3, 'Basket'),
-(4, 'Boxe'),
-(5, 'Equitation'),
-(6, 'Escrime'),
-(7, 'Football'),
-(8, 'Handball'),
-(9, 'Judo'),
-(10, 'Natation'),
-(11, 'Raid'),
-(12, 'Rugby'),
-(13, 'Tennis'),
-(14, 'Volley'),
-(15, 'Badminton');
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `series`
 --
 
@@ -330,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `series` (
 --
 
 INSERT INTO `series` (`ID`, `INTITULE`, `DATE_DEBUT`, `DATE_FIN`, `OUVERTURE`, `FERMETURE`) VALUES
-(2, 'SÃ©rie 1', 1370995200, 1371513600, 1354263838, 1370995200);
+(2, 'SÃ©rie 1', 1370995200, 1371513600, 1363034800, 1370995200);
 
 -- --------------------------------------------------------
 
@@ -363,14 +290,14 @@ INSERT INTO `statuts` (`ID`, `NOM`) VALUES
 CREATE TABLE IF NOT EXISTS `x` (
   `USER` varchar(150) NOT NULL COMMENT 'Issue du ldap',
   `SEXE` varchar(1) NOT NULL,
-  `ID_SECTION` int(11) NOT NULL,
+  `SECTION` varchar(250) NOT NULL,
   `ADRESSE_MAIL` varchar(250) NOT NULL,
   `ID_FILIERE` int(11) NOT NULL,
-  `ID_PROMOTION` int(11) NOT NULL,
+  `PROMOTION` varchar(100) NOT NULL,
   `ID_ETABLISSEMENT` int(11) NOT NULL,
   PRIMARY KEY (`USER`),
-  KEY `ref_sections_x_fk` (`ID_SECTION`),
-  KEY `ref_promotions_x_fk` (`ID_PROMOTION`),
+  KEY `ref_sections_x_fk` (`SECTION`),
+  KEY `ref_promotions_x_fk` (`PROMOTION`),
   KEY `ref_sexes_x_fk` (`SEXE`),
   KEY `ref_etablissements_x_fk` (`ID_ETABLISSEMENT`),
   KEY `ref_filiaires_x_fk` (`ID_FILIERE`)
@@ -380,10 +307,10 @@ CREATE TABLE IF NOT EXISTS `x` (
 -- Contenu de la table `x`
 --
 
-INSERT INTO `x` (`USER`, `SEXE`, `ID_SECTION`, `ADRESSE_MAIL`, `ID_FILIERE`, `ID_PROMOTION`, `ID_ETABLISSEMENT`) VALUES
-('nicolas.gro', 'M', 2, 'LDAP@poly.edu', 1, 1, 103),
-('nicolas.grorod', 'M', 1, 'LDAP@poly.edu', 1, 1, 104),
-('nicolas.grorot', 'M', 1, 'LDAP@poly.edu', 1, 1, 104);
+INSERT INTO `x` (`USER`, `SEXE`, `SECTION`, `ADRESSE_MAIL`, `ID_FILIERE`, `PROMOTION`, `ID_ETABLISSEMENT`) VALUES
+('nicolas.gro', 'M', '2', 'LDAP@poly.edu', 1, '1', 103),
+('nicolas.grorod', 'M', 'Escalade', 'nicolas.grorod@polytechnique.edu', 1, '2011', 104),
+('nicolas.grorot', 'M', '1', 'LDAP@poly.edu', 1, '1', 104);
 
 --
 -- Contraintes pour les tables exportées
@@ -415,9 +342,7 @@ ALTER TABLE `disponibilites`
 --
 ALTER TABLE `x`
   ADD CONSTRAINT `ref_etablissements_x_fk` FOREIGN KEY (`ID_ETABLISSEMENT`) REFERENCES `ref_etablissements` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `ref_filieres_x_fk` FOREIGN KEY (`ID_FILIERE`) REFERENCES `ref_filieres` (`ID`),
-  ADD CONSTRAINT `ref_promotions_x_fk` FOREIGN KEY (`ID_PROMOTION`) REFERENCES `ref_promotions` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `ref_sections_x_fk` FOREIGN KEY (`ID_SECTION`) REFERENCES `ref_sections` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `ref_filieres_x_fk` FOREIGN KEY (`ID_FILIERE`) REFERENCES `ref_filieres` (`ID`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -84,10 +84,8 @@ class DemandeManager {
 
     public  function isAdmissible($nom, $prenom, $serie)
     {
-        $nom = strtolower(strtr($nom,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
-                                     'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
-        $prenom = strtolower(strtr($prenom,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
-                                     'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
+        $nom = strtolower(Parametres::wd_remove_accents($nom));
+        $prenom = strtolower(Parametres::wd_remove_accents($prenom));
         try {
             $requete = $this->db->prepare('SELECT ID
                                            FROM admissibles
@@ -178,7 +176,7 @@ class DemandeManager {
 
 
     /**
-     * Méthode retournant un élève en particulier
+     * Méthode retournant une demande en particulier
      * @access public
      * @param string $code 
      * @return Demande

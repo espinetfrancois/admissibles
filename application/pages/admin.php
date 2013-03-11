@@ -4,7 +4,8 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo identification LDAP
+ * @todo liste des admissibles déjà entrés
+ * @todo déconnexion propre
  */
 
 require_once(APPLICATION_PATH.'/inc/sql.php');
@@ -14,21 +15,10 @@ require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
     frankiz_do_auth("/administration/gestion");
 }
-// if (isset($_POST['user']) && !empty($_POST['user']) && !empty($_POST['pass']))
-// {
-//     if (in_array($_POST['user'], $parametres->getAdmin()) && true) { // LDAP
-//         $_SESSION['administrateur'] = true;
-//         Logs::logger(1, 'Connexion a l\'interface d\'administration reussie');
-//     }
-//     else {
-//         $erreurID = 1;
-//         Logs::logger(3, 'Tentative de connexion a l\'interface d\'administration echouee'); // Alerte de sécurité de niveau 3
-//     }
-// }
 
 if (!isset($_SESSION['administrateur']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) {
 session_destroy();
-Logs::logger(1, 'Deconnexion administrateur');
+//Logs::logger(1, 'Deconnexion administrateur');
 ?>
     <h2>Connexion</h2>
     <?php // if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
@@ -45,11 +35,6 @@ else {
     if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])) { // Gestion des listes de paramètres
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         switch ($_GET['type']) {
-            case Parametres::Promo:
-                echo '<span id="page_id">42</span>';
-                echo '<h2>Promotions présentes sur le platâl</h2>';
-                $form = '<input type="text" name="nom" maxlength="50"/>';
-                break;
 
             case Parametres::Etablissement:
                 echo '<span id="page_id">43</span>';
@@ -60,12 +45,6 @@ else {
             case Parametres::Filiere:
                 echo '<span id="page_id">44</span>';
                 echo '<h2>Filières d\'entrée des élèves</h2>';
-                $form = '<input type="text" name="nom" maxlength="50"/>';
-                break;
-
-            case Parametres::Section:
-                echo '<span id="page_id">45</span>';
-                echo '<h2>Sections sportives</h2>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
@@ -147,7 +126,7 @@ else {
                 $date_debut = mktime(0, 0, 0, $expDateD[1], $expDateD[0], $expDateD[2]);
                 $date_fin = mktime(0, 0, 0, $expDateF[1], $expDateF[0], $expDateF[2]);
                 // L'ouverture des demandes sera réglée lors de l'insertion de la liste des admissibles
-                // La fermeture des demandes correspond Ã  minuit la veille du début des oraux
+                // La fermeture des demandes correspond à minuit la veille du début des oraux
                 $parametres->addToList(Parametres::Serie, array('intitule' => $_POST['intitule'], 'date_debut' => $date_debut, 'date_fin' => $date_fin, 'ouverture' => $date_debut, 'fermeture' => $date_debut));
                 Logs::logger(1, 'Administrateur : Ajout d\'une serie');
             } else {
@@ -409,10 +388,8 @@ else {
         <a href="/administration/gestion?action=deconnect">Se déconnecter</a><br/>
         <a href="/administration/gestion?action=RAZ">Remise à zéro de l'interface d'hébergement</a><br/>
         <a href="/administration/gestion?action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Promo; ?>">Modifier les promotions présentes sur le platal</a><br/>
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::Etablissement; ?>">Modifier les établissements de provenance des élèves</a><br/>
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::Filiere; ?>">Modifier les filières d'entrée des élèves</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Section; ?>">Modifier les sections sportives des élèves</a><br/>
         <a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
         <a href="/administration/gestion?action=hotel">Modifier la liste des hébergements à proximitè de l'école</a><br/>
         <span id="page_id">4</span>

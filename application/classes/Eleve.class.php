@@ -193,17 +193,13 @@ class Eleve {
     /**
      * Setter promo
      * @access public
-     * @param int $promo 
+     * @param text $promo 
      * @return void
      */
 
     public  function setPromo($promo)
     {
-        if (!is_numeric($promo)) { // id numérique
-            $this->erreurs[] = self::Promo_Invalide;
-        } else {
-            $this->promo = $promo;
-        }
+        $this->promo = $promo;
 
     }
 
@@ -211,17 +207,13 @@ class Eleve {
     /**
      * Setter section
      * @access public
-     * @param int $section 
+     * @param text $section 
      * @return void
      */
 
     public  function setSection($section)
     {
-        if (!is_numeric($section)) { // id numérique
-            $this->erreurs[] = self::Section_Invalide;
-        } else {
-            $this->section = $section;
-        }
+       $this->section = $section;
 
     }
 
@@ -317,7 +309,7 @@ class Eleve {
     /**
      * Getter promo
      * @access public
-     * @return int
+     * @return text
      */
 
     public  function promo()
@@ -330,7 +322,7 @@ class Eleve {
     /**
      * Getter section
      * @access public
-     * @return int
+     * @return text
      */
 
     public  function section()

@@ -42,10 +42,10 @@ class EleveManager {
             $requete = $this->db->prepare('INSERT INTO x 
                                            SET USER = :user,
                                                SEXE = :sexe,
-                                               ID_SECTION = :section,
+                                               SECTION = :section,
                                                ADRESSE_MAIL = :email,
                                                ID_FILIERE = :filiere,
-                                               ID_PROMOTION = :promo,
+                                               PROMOTION = :promo,
                                                ID_ETABLISSEMENT = :prepa'); 
             $requete->bindValue(':user', $eleve->user());
             $requete->bindValue(':sexe', $eleve->sexe());
@@ -75,10 +75,10 @@ class EleveManager {
             try {
                 $requete = $this->db->prepare('UPDATE x 
                                                SET SEXE = :sexe,
-                                                   ID_SECTION = :section,
+                                                   SECTION = :section,
                                                    ADRESSE_MAIL = :email,
                                                    ID_FILIERE = :filiere,
-                                                   ID_PROMOTION = :promo,
+                                                   PROMOTION = :promo,
                                                    ID_ETABLISSEMENT = :prepa
                                                WHERE USER = :user'); 
                 $requete->bindValue(':user', $eleve->user());
@@ -168,10 +168,10 @@ class EleveManager {
         try {
             $requete = $this->db->prepare('SELECT USER AS user,
                                                   SEXE AS sexe,
-                                                  ID_SECTION AS section,
+                                                  SECTION AS section,
                                                   ADRESSE_MAIL AS email,
                                                   ID_FILIERE AS filiere,
-                                                  ID_PROMOTION AS promo,
+                                                  PROMOTION AS promo,
                                                   ID_ETABLISSEMENT AS prepa
                                            FROM x
                                            WHERE USER = :user');
@@ -234,10 +234,10 @@ class EleveManager {
         try {
             $requete = $this->db->prepare('SELECT USER AS user,
                                                   SEXE AS sexe,
-                                                  ID_SECTION AS section,
+                                                  SECTION AS section,
                                                   ADRESSE_MAIL AS email,
                                                   ID_FILIERE AS filiere,
-                                                  ID_PROMOTION AS promo,
+                                                  PROMOTION AS promo,
                                                   ID_ETABLISSEMENT AS prepa,
                                            FROM x');
             $requete->execute();
@@ -270,17 +270,15 @@ class EleveManager {
         try {
             $requete = $this->db->prepare('SELECT x.USER AS user,
                                                   x.SEXE AS sexe,
-                                                  ref_sections.NOM AS section,
+                                                  x.SECTION AS section,
                                                   x.ADRESSE_MAIL AS email,
                                                   ref_filieres.NOM AS filiere,
-                                                  x.ID_PROMOTION AS promo,
+                                                  x.PROMOTION AS promo,
                                                   CONCAT(ref_etablissements.COMMUNE," - ",ref_etablissements.NOM) AS prepa,
-                                                  (3*(x.SEXE=:sexe)+(x.ID_SECTION=:section)+6*(x.ID_ETABLISSEMENT=:prepa)+2*(x.ID_FILIERE=:filiere)) AS pertinent
+                                                  (3*(x.SEXE=:sexe)+(x.SECTION=:section)+6*(x.ID_ETABLISSEMENT=:prepa)+2*(x.ID_FILIERE=:filiere)) AS pertinent
                                            FROM x
                                            INNER JOIN disponibilites
                                            ON disponibilites.ID_X = x.USER
-                                           INNER JOIN ref_sections
-                                           ON ref_sections.ID = x.ID_SECTION
                                            INNER JOIN ref_etablissements
                                            ON ref_etablissements.ID = x.ID_ETABLISSEMENT
                                            INNER JOIN ref_filieres

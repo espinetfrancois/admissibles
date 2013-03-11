@@ -19,25 +19,11 @@ $adresseManager = new AdresseManager($db);
 if (!isset($_SESSION['eleve'])) {
     frankiz_do_auth("/x/donnees-personnelles");
 }
-// if (isset($_POST['user']) && isset($_POST['pass']) && !empty($_POST['user']) && !empty($_POST['pass'])) {
-
-// }
-// if (isset($_GET['response'])) {
-//     $auth = frankiz_get_response();
-//     $_SESSION['eleve'] = $eleveManager->getUnique($auth['hruid']);
-//     if ($_SESSION['eleve'] == NULL) {
-//         $_SESSION['new'] = 1; // Première connexion de l'élève
-//         $_SESSION['eleve'] = new Eleve(array('user' => $auth['hruid'], 'email' => $auth['email'])); //***
-//     }
-//     Logs::logger(1, 'Connexion de l\'eleve '.$auth['hruid'].' reussie');
-// }
 //Modification des informations personnelles
-if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['promo']) && isset($_POST['section']) && isset($_POST['filiere']) && isset($_POST['prepa'])) {
+if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['filiere']) && isset($_POST['prepa'])) {
     $_SESSION['eleve']->setErreurs();
     $_SESSION['eleve']->setPrepa($_POST['prepa']);
     $_SESSION['eleve']->setSexe($_POST['sexe']);
-//     $_SESSION['eleve']->setPromo($_POST['promo']);
-//     $_SESSION['eleve']->setSection($_POST['section']);
     $_SESSION['eleve']->setFiliere($_POST['filiere']);
     if ($_SESSION['eleve']->isValid()) {
         if (isset($_SESSION['new']) && $_SESSION['new'] == 1) {
@@ -101,24 +87,11 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
     //Logs::logger(1, 'Deconnexion eleve (user : '.$_SESSION['eleve']->user().')');
     session_destroy();
     ?>
-    <!-- <div class="form"> -->
     <h2>Connexion</h2>
-
-<!--     <p>Connectez-vous à l'aide de vos identifiants LDAP (DSI) :</p> -->
     <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
-<!--     <form action="/x/connexion" method="post"> -->
-<!--     <p id="champ-user" class="champ" class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p> -->
-<!--     <p id="champ-pass" class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p> -->
-<!--     <br/> -->
-<!--     <input type="submit" value="Se connecter"/> -->
-<!--     <span class="clearfloat"></span> -->
-<!--     </form> -->
-    <!-- </div> -->
     <?php
 } else { // Eleve identifié
     if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve']->isValid()) { // on teste si l'élève a déjà entré ses infos personnelles
-        $promos = $parametres->getList(Parametres::Promo);
-        $sections = $parametres->getList(Parametres::Section);
         $prepas = $parametres->getList(Parametres::Etablissement);
         $filieres = $parametres->getList(Parametres::Filiere);
         ?>
@@ -137,38 +110,6 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         }?>/>
         <?php if (isset($erreurs) && in_array(Eleve::Sexe_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
         </p>
- <!--   <p id="champ-promo" class="champ"> <label for="promo">Promotion : </label><select name="promo">
-            <option value=""></option>
-        <?php
-//         foreach ($promos as $value) {
-//             if ($_SESSION['eleve']->promo() == $value['id']) {
-//                 $selected = ' selected="selected"';
-//             } else {
-//                 $selected = '';
-//             }
-//             echo '<option value="'.$value['id'].'"'.$selected.'>'.$value['nom'].'</option>';
-//         }
-        ?>
-        </select>
-        <?php //if (isset($erreurs) && in_array(Eleve::Promo_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-        </p>
-        <p id="champ-section" class="champ">
-        <label for="section">Section : </label><select name="section">
-            <option value=""></option>
-        <?php
-//         foreach ($sections as $value) {
-//             if ($_SESSION['eleve']->section() == $value['id']) {
-//                 $selected = ' selected="selected"';
-//             } else {
-//                 $selected = '';
-//             }
-//             echo '<option value="'.$value['id'].'"'.$selected.'>'.$value['nom'].'</option>';
-//         }
-        ?>
-        </select>
-        <?php //if (isset($erreurs) && in_array(Eleve::Section_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-        </p>
-         -->
         <p id="champ-prepa" class="champ">
         <label for="prepa">Etablissement d'origine : </label><select name="prepa">
             <option value=""></option>

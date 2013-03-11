@@ -137,7 +137,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             <p class="champ"><label for="section">Sport préféré : </label><select name="section">
             <?php
             foreach ($sections as $value) {
-                echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
+                echo '<option value="'.$value['section'].'">'.$value['section'].'</option>';
             }
             ?>
             </select>

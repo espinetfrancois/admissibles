@@ -66,7 +66,7 @@ class Demande {
     
     /**
      * Sport préféré
-     * @var int
+     * @var text
      * @access protected
      */
     protected  $sport;
@@ -307,17 +307,13 @@ class Demande {
     /**
      * Setter sport
      * @access public
-     * @param int $sport 
+     * @param text $sport 
      * @return void
      */
 
     public  function setSport($sport)
     {
-        if (!is_numeric($sport)) { // id numérique
-            $this->erreurs[] = self::Sport_Invalide;
-        } else {
-            $this->sport = $sport;
-        }
+        $this->sport = $sport;
 
     }
 
@@ -480,7 +476,7 @@ class Demande {
     /**
      * Getter sport
      * @access public
-     * @return int
+     * @return text
      */
 
     public  function sport()

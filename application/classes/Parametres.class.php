@@ -22,9 +22,9 @@ class Parametres {
      */
     const Etablissement = 1;
     const Filiere = 2;
-    const Promo = 3;
-    const Section = 4;
-    const Serie = 5;
+    const Serie = 3;
+	const Section = 4;
+    const Promo = 5;
 
     /**
      * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
@@ -37,37 +37,6 @@ class Parametres {
     {
         $this->db = $db;
 
-    }
-
-
-    /**
-     * Méthode retournant le nom d'utilisateur des l'administrateurs
-     * @access public
-     * @return string
-     */
-    
-    public  function getAdmin()
-    {
-        try {
-            $requete = $this->db->prepare('SELECT VALEUR AS admin
-                                           FROM administration
-                                           WHERE PARAMETRE = "administrateur"');
-            $requete->execute();
-        } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::getAdmin : '.$e->getMessage());
-        }
-        if ($requete->rowCount() != 1) {
-            Logs::logger(3, 'Corruption de la table "administration" : plusieurs administrateurs');
-        }
-        $admins = array();
-        while ($res = $requete->fetch()) {
-            if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $res['admin'])) {
-                Logs::logger(3, 'Corruption de la table "administration" : login administrateur non conforme');
-            }
-            $admins[] = $res['admin'];
-        }
-
-        return $admins;
     }
     
     
@@ -145,22 +114,22 @@ class Parametres {
             $order = 'NOM';
             break;
 
-        case self::Promo:
-            $champs = 'ID AS id, NOM AS nom';
-            $table = 'ref_promotions';
-            $order = 'NOM';
-            break;
-
-        case self::Section:
-            $champs = 'ID AS id, NOM AS nom';
-            $table = 'ref_sections';
-            $order = 'NOM';
-            break;
-
         case self::Serie:
             $champs = 'ID AS id, INTITULE AS intitule, DATE_DEBUT AS date_debut, DATE_FIN AS date_fin, OUVERTURE AS ouverture, FERMETURE AS fermeture';
             $table = 'series';
             $order = 'DATE_DEBUT';
+            break;
+			
+		case self::Section:
+            $champs = 'DISTINCT SECTION AS section';
+            $table = 'x';
+            $order = 'SECTION';
+            break;
+			
+		case self::Promo:
+            $champs = 'DISTINCT PROMOTION';
+            $table = 'x';
+            $order = 'PROMOTION';
             break;
         
         default:
@@ -205,18 +174,6 @@ class Parametres {
             $array = array('nom' => $donnees['nom']);
             break;
             
-        case  self::Promo:
-            $valeurs = 'NOM = :nom';
-            $table = 'ref_promotions';
-            $array = array('nom' => $donnees['nom']);
-            break;
-            
-        case  self::Section:
-            $valeurs = 'NOM = :nom';
-            $table = 'ref_sections';
-            $array = array('nom' => $donnees['nom']);
-            break;
-            
         case  self::Serie:
             $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
             $table = 'series';
@@ -258,14 +215,6 @@ class Parametres {
         
         case  self::Filiere:
             $table = 'ref_filieres';
-            break;
-            
-        case  self::Promo:
-            $table = 'ref_promotions';
-            break;
-            
-        case  self::Section:
-            $table = 'ref_sections';
             break;
             
         case  self::Serie:
@@ -359,42 +308,6 @@ class Parametres {
             }
             break;
             
-        case self::Promo:
-            try {
-                $requete = $this->db->prepare('SELECT *
-                                               FROM x
-                                               WHERE ID_PROMOTION = :id');
-                $requete->bindValue(':id', $id);
-                $requete->execute();
-            } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
-            }
-            
-            if ($requete->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-            break;
-            
-        case self::Section:
-            try {
-                $requete = $this->db->prepare('SELECT *
-                                               FROM x
-                                               WHERE ID_SECTION = :id');
-                $requete->bindValue(':id', $id);
-                $requete->execute();
-            } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
-            }
-            
-            if ($requete->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-            break;
-            
         case self::Serie:
             try {
                 $requete = $this->db->prepare('SELECT *
@@ -477,10 +390,8 @@ class Parametres {
             $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',$value); 
             $col = explode('///', $value);
             // traitement des donnees : minuscules et sans accents
-            $nom = strtolower(strtr($col[0],'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
-                                          'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
-            $prenom = strtolower(strtr($col[1],'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ',
-                                             'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY'));
+            $nom = strtolower(Parametres::wd_remove_accents($col[0]));
+            $prenom = strtolower(Parametres::wd_remove_accents($col[1]));
             try {
                 $requete = $this->db->prepare('INSERT INTO admissibles
                                                SET NOM = :nom,
@@ -508,6 +419,27 @@ class Parametres {
             Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
     }
+	
+	
+	/**
+     * Méthode retirant les accents
+     * @access public
+	 * @access static
+     * @param text $str 
+     * @param text $charset 
+     * @return text
+     */
+
+	public static  function wd_remove_accents($str, $charset='utf-8')
+	{
+		$str = htmlentities($str, ENT_NOQUOTES, $charset);
+		
+		$str = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+		$str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
+		$str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
+		
+		return $str;
+	}
 
 }
 ?>
