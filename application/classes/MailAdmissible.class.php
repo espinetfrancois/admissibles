@@ -11,19 +11,19 @@ class MailAdmissible extends Mail {
     const Action_Cancel = 'anndemande';
     const Action_NvDemande = 'nvdemande';
     const Action_Accepted = 'acceptdemande';
-    
+
     /**
      * Nom
      * @var string
      */
     public $nom;
-    
+
     /**
      * Prenom
      * @var string
      */
     public $prenom;
-    
+
     /**
      * Adresse email de l'admissible
      * @var string
@@ -44,7 +44,7 @@ class MailAdmissible extends Mail {
         $this->prenom = $sPrenom;
         $this->email = $sEmail;
         parent::__construct();
-        $this->SetFrom($this->email, $this->nom.' '.$this->prenom);
+        $this->AddAddress($this->email, $this->nom.' '.$this->prenom);
 
     }
 
@@ -56,23 +56,23 @@ class MailAdmissible extends Mail {
      */
     public function demandeAnnulee($sEleveX)
     {
-        $this->AltBody = $this->subsitute(self::Section_Admissible,self::Action_Cancel.'.txt',
+        $this->AltBody = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_TXT,
                                          array('HOST'         => $_SERVER['HTTP_HOST'],
                                               'ELEVE_X'      => $sEleveX));
-        
-        $this->Body = $this->subsitute(self::Section_Admissible,self::Action_Cancel.'.html',
+
+        $this->Body = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_HTML,
                                         array('HOST'         => $_SERVER['HTTP_HOST'],
                                               'ELEVE_X'      => $sEleveX));
-        
-        $this->Subject = $this->subsitute(self::Section_Admissible,self::Action_Cancel.'.objet',
+
+        $this->Subject = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_OBJET,
                                         array('NOM'    => $this->nom,
                                               'PRENOM' => $this->prenom));
-        $this->send();
-                         
+        $this->psend();
+
     }
 
     /**
-     * Envoi de l'email de demande d'hébergement
+     * Envoi de l'email de demande d'hï¿½bergement
      * @access public
      * @param string $sEleveX
      * @param string $sLinkCancel
@@ -81,23 +81,22 @@ class MailAdmissible extends Mail {
      */
     public function demandeEnvoyee($sEleveX, $sLinkCancel, $sLinkConfirm)
     {
-        $this->AltBody = $this->subsitute(self::Section_Admissible,self::Action_NvDemande.'.txt', 
+        $this->AltBody = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_TXT,
                                         array('LINK_CONFIRM' => $sLinkConfirm,
                                               'LINK_CANCEL'  => $sLinkCancel,
                                               'ELEVE_X'      => $sEleveX));
 
-        $this->Body = $this->subsitute(self::Section_Admissible,self::Action_NvDemande.'.html', 
+        $this->Body = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_HTML,
                                         array('LINK_CONFIRM' => $sLinkConfirm,
                                               'LINK_CANCEL'  => $sLinkCancel,
                                               'ELEVE_X'      => $sEleveX));
 
-        $this->Subject = $this->subsitute(self::Section_Admissible,self::Action_NvDemande.'.objet',
+        $this->Subject = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_OBJET,
                                         array('NOM'          => $this->nom,
                                               'PRENOM'       => $this->prenom));
-        $this->send();
-
+        $this->psend();
     }
-    
+
     /**
      * Envoi de l'email de confirmation de demande
      * @access public
@@ -107,19 +106,22 @@ class MailAdmissible extends Mail {
      */
     public function demandeConfirmee($sEleveX, $sXmail)
     {
-        $this->AltBody = $this->subsitute(self::Section_Admissible,self::Action_Accepted.'.txt',
+        $this->AltBody = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_TXT,
                     array('ELEVE_X'      => $sEleveX,
                           'X_MAIL'       => $sXmail));
-        
-        $this->Body = $this->subsitute(self::Section_Admissible,self::Action_Accepted.'.html',
+
+        $this->Body = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_HTML,
                 array('X_MAIL'         => $sXmail,
                         'ELEVE_X'      => $sEleveX));
-        
-        $this->Subject = $this->subsitute(self::Section_Admissible,self::Action_Accepted.'.objet',
+
+        $this->Subject = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_OBJET,
                 array('NOM'          => $this->nom,
                       'PRENOM'       => $this->prenom));
-        $this->send();
+        $this->psend();
 
     }
 
+    protected function _substitute($sAction='', $sType, $aRemplacement = array()) {
+        return parent::substitute(self::Pers_Admissible, $sAction, $sType, $aRemplacement);
+    }
 }

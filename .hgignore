@@ -4,3 +4,5 @@ syntax: regexp
 
 syntax: regexp
 \.log$
+syntax: regexp
+\.log$

@@ -59,10 +59,8 @@ class Config {
     public function __construct()
     {
         self::defineConstantes();
-//         self::setErrors();
         $this->loadConfig();
         self::addLibraries();
-
     }
 
 
@@ -126,7 +124,7 @@ class Config {
         define('PUBLIC_PATH', ROOT_PATH.'/public');
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
-        define('LIBRARY_PATH', APPLICATION_PATH.'/library');
+
         //définition des logs pour les données
         define('DATA_PATH', ROOT_PATH.'/data');
         define('LOGS_PATH', DATA_PATH.'/logs');

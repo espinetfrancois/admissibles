@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier inclut dans chaque page : fonction de chargement automatique des classes
+ * Fichier inclut dans chaque page (index.php) : fonction de chargement automatique des classes
  * @author François Espinet
  * @version 1.0
  *
@@ -20,4 +20,6 @@ function autoloader($class) {
 
 }
 
+//include des librairies
+require_once(LIBRARY_PATH.'/phpmailer/phpmailer.class.php');
 spl_autoload_register('autoloader');

@@ -12,7 +12,7 @@ class Logs {
      * Chemin d'accès au fichier log
      * @var string
      */
-    const Log_Path = '/application.txt';
+    const Log_Path = '/application.log';
 
     /**
      * Méthode de sauvegarde des fichiers log
@@ -34,6 +34,8 @@ class Logs {
         case 3:
             $niveau = 'Fatal error';
             // Envoi d'un mail a l'admin -> erreur ou tentative de piratage
+            $mail = new MailAdminTech();
+            $mail->fatalError($message);
             break;
         }
         $texte = $niveau.' ['.date('Y-m-d H:i:s', time()).'] '.$_SERVER['REMOTE_ADDR'].' - '.$message."\n";
