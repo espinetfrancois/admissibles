@@ -20,7 +20,7 @@ class MailAdminTech extends Mail {
     }
 
     protected function _substitute($sAction='', $sType, $aRemplacement = array()) {
-    	return parent::substitute(self::Pers_Admin_Tech, $sAction, $sType, $aRemplacement);
+        return parent::substitute(self::Pers_Admin_Tech, $sAction, $sType, $aRemplacement);
     }
 
     public function fatalError($sMessage = 'inconnu') {

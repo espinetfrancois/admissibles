@@ -23,7 +23,7 @@ class Parametres {
     const Etablissement = 1;
     const Filiere = 2;
     const Serie = 3;
-	const Section = 4;
+    const Section = 4;
     const Promo = 5;
 
     /**
@@ -119,14 +119,14 @@ class Parametres {
             $table = 'series';
             $order = 'DATE_DEBUT';
             break;
-			
-		case self::Section:
+            
+        case self::Section:
             $champs = 'DISTINCT SECTION AS section';
             $table = 'x';
             $order = 'SECTION';
             break;
-			
-		case self::Promo:
+            
+        case self::Promo:
             $champs = 'DISTINCT PROMOTION';
             $table = 'x';
             $order = 'PROMOTION';
@@ -419,27 +419,27 @@ class Parametres {
             Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
     }
-	
-	
-	/**
+    
+    
+    /**
      * Méthode retirant les accents
      * @access public
-	 * @access static
+     * @access static
      * @param text $str 
      * @param text $charset 
      * @return text
      */
 
-	public static  function wd_remove_accents($str, $charset='utf-8')
-	{
-		$str = htmlentities($str, ENT_NOQUOTES, $charset);
-		
-		$str = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
-		$str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
-		$str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
-		
-		return $str;
-	}
+    public static  function wd_remove_accents($str, $charset='utf-8')
+    {
+        $str = htmlentities($str, ENT_NOQUOTES, $charset);
+        
+        $str = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+        $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
+        $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
+        
+        return $str;
+    }
 
 }
 ?>

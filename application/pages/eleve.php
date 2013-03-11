@@ -81,16 +81,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
     }
 }
 
-// Interface de connexion
-if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) { // Eleve non identifié
-    //TODO: si l'élève n'est pas loggé, il n'y a pas de $_SESSION['eleve']
-    //Logs::logger(1, 'Deconnexion eleve (user : '.$_SESSION['eleve']->user().')');
-    session_destroy();
-    ?>
-    <h2>Connexion</h2>
-    <?php if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
-    <?php
-} else { // Eleve identifié
+// Interface Elève
     if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve']->isValid()) { // on teste si l'élève a déjà entré ses infos personnelles
         $prepas = $parametres->getList(Parametres::Etablissement);
         $filieres = $parametres->getList(Parametres::Filiere);
@@ -151,7 +142,7 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         ?>
         <h2>Disponibilité d'accueil</h2>
         <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
-        <a href="/x/connexion?action=deconnect">Se déconnecter</a> -- <a href="/x/connexion?&action=modify">Modifier mes informations personnelles</a>
+        <a href="/deconnexion">Se déconnecter</a> -- <a href="/x/connexion?&action=modify">Modifier mes informations personnelles</a>
         <hr/>
         <?php
         if (!empty($series)) {
@@ -279,6 +270,5 @@ if (!isset($_SESSION['eleve']) || (isset($_GET['action']) && $_GET['action'] == 
         </form>
         <?php
     }
-}
 ?>
 <span id="page_id">3</span>

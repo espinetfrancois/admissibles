@@ -14,23 +14,7 @@ require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 // Identification
 if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
     frankiz_do_auth("/administration/gestion");
-}
-
-if (!isset($_SESSION['administrateur']) || (isset($_GET['action']) && $_GET['action'] == 'deconnect')) {
-session_destroy();
-//Logs::logger(1, 'Deconnexion administrateur');
-?>
-    <h2>Connexion</h2>
-    <?php // if (isset($erreurID)) { echo '<p style="color:red;">Erreur d\'identification !</p>'; } ?>
-<!--     <form action="/administration/gestion" method="post"> -->
-<!--     <p class="champ"><label for="user">Utilisateur : </label><input type="text" name="user"/></p> -->
-<!--     <p class="champ"><label for="pass">Mot de passe : </label><input type="password" name="pass"/></p> -->
-<!--     <br/> -->
-<!--     <input type="submit" value="Se connecter"/> -->
-<!--     </form> -->
-<?php
-}
-else {
+} else {
     echo '<h2>Interface d\'administration</h2>';
     if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])) { // Gestion des listes de paramètres
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
@@ -385,7 +369,7 @@ else {
         }
     } else { // Interface de gestion courante
         ?>
-        <a href="/administration/gestion?action=deconnect">Se déconnecter</a><br/>
+        <a href="/deconnexion">Se déconnecter</a><br/>
         <a href="/administration/gestion?action=RAZ">Remise à zéro de l'interface d'hébergement</a><br/>
         <a href="/administration/gestion?action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a><br/>
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::Etablissement; ?>">Modifier les établissements de provenance des élèves</a><br/>

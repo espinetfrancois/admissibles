@@ -1,8 +1,9 @@
 <?php
-// require_once(APPLICATION_PATH.'/inc/sql.php');
-
-//TODO : logger ?
-//faire des choses ici
+if ($_SESSION["administrateur"] !== true) {
+    Logs::logger(1, 'Deconnexion administrateur (user : '.$_SESSION['eleve']->user().')');
+} else {
+    Logs::logger(1, 'Deconnexion eleve (user : '.$_SESSION['eleve']->user().')');
+}
 session_destroy();
 header('Location:'."/");
 exit();
