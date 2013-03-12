@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client: localhost
--- Généré le: Lun 15 Octobre 2012 à 21:19
+-- Généré le: Mar 12 Mars 2013 à 14:28
 -- Version du serveur: 5.5.24-log
 -- Version de PHP: 5.4.3
 
@@ -19,20 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données: `admissible_dsi`
 --
-
---
--- Contenu de la table `administration`
---
-
-INSERT INTO `administration` (`ID`, `PARAMETRE`, `VALEUR`) VALUES
-(0, 'administrateur', 'nicolas.grorod');
-
---
--- Contenu de la table `ref_categories`
---
-
-INSERT INTO `ref_categories` (`ID`, `NOM`) VALUES
-(7, 'HÃ´tels');
 
 --
 -- Contenu de la table `ref_etablissements`
@@ -100,7 +86,8 @@ INSERT INTO `ref_etablissements` (`ID`, `NOM`, `COMMUNE`) VALUES
 (159, 'UniversitÃ©', 'MONPELLIER'),
 (160, 'UniversitÃ©', 'AVIGNON'),
 (161, 'UniversitÃ©', 'TOULOUSE'),
-(162, 'UniversitÃ©', 'METZ');
+(162, 'UniversitÃ©', 'METZ'),
+(163, '- -', '- Autre -');
 
 --
 -- Contenu de la table `ref_filieres`
@@ -116,43 +103,14 @@ INSERT INTO `ref_filieres` (`ID`, `NOM`) VALUES
 (7, 'Universitaire');
 
 --
--- Contenu de la table `ref_promotions`
+-- Contenu de la table `ref_statuts`
 --
 
-INSERT INTO `ref_promotions` (`ID`, `NOM`) VALUES
-(1, '2011'),
-(4, '2012');
-
---
--- Contenu de la table `ref_sections`
---
-
-INSERT INTO `ref_sections` (`ID`, `NOM`) VALUES
-(1, 'Escalade'),
-(2, 'Aviron'),
-(3, 'Basket'),
-(4, 'Boxe'),
-(5, 'Equitation'),
-(6, 'Escrime'),
-(7, 'Football'),
-(8, 'Handball'),
-(9, 'Judo'),
-(10, 'Natation'),
-(11, 'Raid'),
-(12, 'Rugby'),
-(13, 'Tennis'),
-(14, 'Volley'),
-(15, 'Badminton');
-
---
--- Contenu de la table `statuts`
---
-
-INSERT INTO `statuts` (`ID`, `NOM`) VALUES
+INSERT INTO `ref_statuts` (`ID`, `NOM`) VALUES
 (0, 'En cours de validation par l''admissible'),
 (1, 'En attente d''acceptation'),
-(2, 'Validée'),
-(3, 'Annulée');
+(2, 'ValidÃ©e'),
+(3, 'AnnulÃ©e');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -238,7 +238,7 @@ class DemandeManager {
                                                   ref_filieres.NOM AS filiere,
                                                   series.INTITULE AS serie,
                                                   demandes.USER_X AS userEleve,
-                                                  statuts.NOM AS status,
+                                                  ref_statuts.NOM AS status,
                                                   demandes.LIEN code
                                            FROM demandes
                                            INNER JOIN admissibles
@@ -249,8 +249,8 @@ class DemandeManager {
                                            ON admissibles.ID_FILIERE = ref_filieres.ID
                                            INNER JOIN series
                                            ON admissibles.SERIE = series.ID
-                                           INNER JOIN statuts
-                                           ON demandes.ID_STATUS = statuts.ID
+                                           INNER JOIN ref_statuts
+                                           ON demandes.ID_STATUS = ref_statuts.ID
                                            ORDER BY series.DATE_DEBUT,
                                                        ref_filieres.NOM,
                                                     admissibles.NOM,

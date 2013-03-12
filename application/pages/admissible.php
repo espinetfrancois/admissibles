@@ -69,7 +69,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
             $eleves = $eleveManager->getFavorite($demande, 2);
             if (empty($eleves)) {
                 echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités).<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
-                Logs::logger(2, 'Plus aucun eleve disponible');
+                Logs::logger(3, 'Plus aucun eleve disponible');
             } else {
                 echo '<p>Voici les élèves qui te correspondent le mieux pour t\'héberger :</p>';
                 echo '<table border=1 cellspacing=0>';
@@ -106,7 +106,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                     echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['ville'].' - '.$value['nom'].'</option>';
                 }
                 ?>
-                <option value="-1">Autre</option>
             </select>
             <?php if (isset($erreurD) && in_array(Demande::Prepa_Invalide, $erreurD)) echo '<span style="color:red;">Champ invalide</span>'; ?><p/>
             <p class="champ"><label for="filiere">Filière : </label><select name="filiere">
