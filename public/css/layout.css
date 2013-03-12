@@ -141,6 +141,7 @@ ul#actions {
 
 div#pied_page ul li {
 	display: inline;
+	font-size	: 0.7em;
 }
 
 /* ul#actions a,ul#liens a {
