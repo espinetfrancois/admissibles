@@ -264,7 +264,7 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         echo '<span id="page_id">42</span>';
         echo '<h3>Demandes en cours</h3>';
-        $demandeManager = new DemandeManager($db);
+        $demandeManager = new DemandeManager(Registry::get('db'));
         $demandes = $demandeManager->getList();
         echo '<table border=1 cellspacing=0>';
         echo '<tr><td>Série</td><td>Filière</td><td>Admissible</td><td>Elève X</td><td>Statut</td></tr>';
