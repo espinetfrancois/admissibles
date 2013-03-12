@@ -24,7 +24,7 @@ body {
   *****************************************************************************************************************/
 h1 {
 	font-family: tahoma, arial, helvetica, sans-serif;
-	font-size: 1.8em;
+	font-size: 2em;
 	font-weight: 500;
 	text-transform: uppercase;
 	position: absolute;
@@ -141,6 +141,7 @@ ul#actions {
 
 div#pied_page ul li {
 	display: inline;
+	font-size	: 0.7em;
 }
 
 /* ul#actions a,ul#liens a {

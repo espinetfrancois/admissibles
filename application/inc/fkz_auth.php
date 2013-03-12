@@ -9,8 +9,7 @@
 
 function frankiz_do_auth($loc = "")
 {
-    $config = $_SESSION['config'];
-    $config = $config->get_frankiz();
+    $config = Registry::get('config')->get_frankiz();
     $FKZ_KEY = $config['key'];
    /**
     * Prendre le timestamp permet d'éviter le rejeu de la requête
@@ -49,8 +48,7 @@ function frankiz_do_auth($loc = "")
 
 function frankiz_get_response()
 {
-    $config = $_SESSION['config'];
-    $config = $config->get_frankiz();
+    $config = Registry::get('config')->get_frankiz();
     $FKZ_KEY = $config['key'];
     // Read request
     $timestamp = (isset($_GET['timestamp']) ? $_GET['timestamp'] : 0);

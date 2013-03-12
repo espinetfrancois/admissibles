@@ -1,6 +1,6 @@
 <?php
 /**
- * Page de déconnexion
+ * Page de dÃ©connexion
  * @author Nicolas GROROD
  * @version 1.0
  *

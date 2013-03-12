@@ -6,9 +6,9 @@
  *
  */
 
-require_once(APPLICATION_PATH.'/inc/sql.php');
+// require_once(APPLICATION_PATH.'/inc/sql.php');
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
-
+$parametres = Registry::get('parametres');
 // Identification
 if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
     frankiz_do_auth("/administration/gestion");

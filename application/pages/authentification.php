@@ -5,14 +5,10 @@
  * @version 1.0
  *
  */
-require_once(APPLICATION_PATH.'/inc/sql.php');
+// require_once(APPLICATION_PATH.'/inc/sql.php');
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 
-$eleveManager = new EleveManager($db);
-
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+$eleveManager = new EleveManager(Registry::get('db'));
 
 if (isset($_GET['response'])) {
     $auth = frankiz_get_response();

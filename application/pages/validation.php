@@ -6,9 +6,9 @@
  *
  * @todo envoi mail
  */
-require_once(APPLICATION_PATH.'/inc/sql.php');
+// require_once(APPLICATION_PATH.'/inc/sql.php');
 
-$demandeManager = new DemandeManager($db);
+$demandeManager = new DemandeManager(Registry::get('db'));
 
 if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
     echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>';

@@ -6,10 +6,10 @@
  *
  * @todo envoi mail
  */
-require_once(APPLICATION_PATH.'/inc/sql.php');
+// require_once(APPLICATION_PATH.'/inc/sql.php');
 
-$demandeManager = new DemandeManager($db);
-$eleveManager = new EleveManager($db);
+$demandeManager = new DemandeManager(Registry::get('db'));
+$eleveManager = new EleveManager(Registry::get('db'));
 
 if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
     $demande = $demandeManager->getUnique($_GET['code']);
