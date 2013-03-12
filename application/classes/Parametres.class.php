@@ -441,5 +441,60 @@ class Parametres {
         return $str;
     }
 
+
+    /**
+     * Méthode retournant la liste des admissibles pour une série/filière
+     * @access public
+     * @param int $serie 
+     * @param int $filiere  
+     * @return void
+     */
+
+    public  function getAdmissibles($serie, $filiere)
+    {
+        try {
+            $requete = $this->db->prepare('SELECT ID AS id,
+                                                  NOM AS nom,
+                                                  PRENOM AS prenom,
+                                                  ADRESSE_MAIL AS mail
+                                           FROM admissibles
+                                           WHERE SERIE = :serie
+                                           AND ID_FILIERE = :filiere
+                                           ORDER BY NOM, PRENOM');
+            $requete->bindValue(':serie', $serie);
+            $requete->bindValue(':filiere', $filiere);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+        }
+        
+        return $requete->fetchAll();
+    }
+    
+    
+    /**
+     * Méthode supprimant définitivement un admissible de la base de données
+     * @access public
+     * @param int $id  
+     * @return void
+     */
+
+    public  function supprAdmissible($id)
+    {
+        try {
+            $requete = $this->db->prepare('DELETE FROM demandes
+                                           WHERE ID_ADMISSIBLE = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+            
+            $requete = $this->db->prepare('DELETE FROM admissibles
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+        }
+
+    }
 }
 ?>

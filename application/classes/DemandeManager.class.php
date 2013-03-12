@@ -234,20 +234,32 @@ class DemandeManager {
                                                   admissibles.PRENOM AS prenom,
                                                   admissibles.ADRESSE_MAIL AS email,
                                                   admissibles.SEXE AS sexe,
-                                                  admissibles.ID_ETABLISSEMENT AS prepa,
-                                                  admissibles.ID_FILIERE AS filiere,
-                                                  admissibles.SERIE AS serie,
+                                                  CONCAT(ref_etablissements.COMMUNE," - ",ref_etablissements.NOM) AS prepa,
+                                                  ref_filieres.NOM AS filiere,
+                                                  series.INTITULE AS serie,
                                                   demandes.USER_X AS userEleve,
-                                                  demandes.ID_STATUS AS status,
+                                                  statuts.NOM AS status,
                                                   demandes.LIEN code
                                            FROM demandes
                                            INNER JOIN admissibles
-                                           ON demandes.ID_ADMISSIBLE = admissibles.ID');
+                                           ON demandes.ID_ADMISSIBLE = admissibles.ID
+                                           INNER JOIN ref_etablissements
+                                           ON admissibles.ID_ETABLISSEMENT = ref_etablissements.ID
+                                           INNER JOIN ref_filieres
+                                           ON admissibles.ID_FILIERE = ref_filieres.ID
+                                           INNER JOIN series
+                                           ON admissibles.SERIE = series.ID
+                                           INNER JOIN statuts
+                                           ON demandes.ID_STATUS = statuts.ID
+                                           ORDER BY series.DATE_DEBUT,
+                                                       ref_filieres.NOM,
+                                                    admissibles.NOM,
+                                                    admissibles.PRENOM');
             $requete->execute();
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL DemandeManager::getList : '.$e->getMessage());
         }
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les nom
         $listeDemandes = $requete->fetchAll();
         $requete->closeCursor();
 

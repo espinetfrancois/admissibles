@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo liste des admissibles déjà entrés
  */
 
 require_once(APPLICATION_PATH.'/inc/sql.php');
@@ -21,20 +20,20 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
 
             case Parametres::Etablissement:
                 echo '<span id="page_id">43</span>';
-                echo '<h2>Etablissements de provenance des élèves</h2><p>Les élèves gardent la possibilité d\'entrer une autre valeur que celles proposées ci-dessous.</p>';
+                echo '<h3>Etablissements de provenance des élèves</h3><p>Les élèves gardent la possibilité d\'entrer une autre valeur que celles proposées ci-dessous.</p>';
                 $form = '<input type="text" name="ville" value="VILLE" size="10" maxlength="50"/> - <input type="text" name="nom" value="Nom de l\'établissement" size="30" maxlength="50"/>';
                 break;
 
             case Parametres::Filiere:
                 echo '<span id="page_id">44</span>';
-                echo '<h2>Filières d\'entrée des élèves</h2>';
+                echo '<h3>Filières d\'entrée des élèves</h3>';
                 $form = '<input type="text" name="nom" maxlength="50"/>';
                 break;
 
             default:
                 $erreurP = 1;
                 echo '<span id="page_id">4</span>';
-                echo '<h2>Erreur de paramétrage...</h2>';
+                echo '<h3>Erreur de paramétrage...</h3>';
                 Logs::logger(2, 'Corruption des parametres admin.php::GET type');
                 break;
         }
@@ -118,7 +117,7 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
             }
         }
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
-        echo '<h2>Séries d\'admissibilité</h2>';
+        echo '<h3>Séries d\'admissibilité</h3>';
         echo '<span id="page_id">41</span>';
         $series = $parametres->getList(Parametres::Serie);
         echo '<span style="color:red;">'.@$erreurA.'</span>';
@@ -144,7 +143,7 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
     } elseif (isset($_GET['action']) && $_GET['action'] == 'admissibles') { // Modification des listes d'admissibilité
         if (isset($_POST['serie']) && isset($_POST['filiere']) && isset($_POST['liste'])) { // Traitement de la liste ajoutée
             if (is_numeric($_POST['serie']) && is_numeric($_POST['filiere']) && preg_match("#^(.+\s\(.+\)(\r)?(\n)?)+$#", $_POST['liste'])) {
-                $parametres->parseADM($_POST['serie'],$_POST['filiere'],$_POST['liste']);
+                $parametres->parseADM($_POST['serie'], $_POST['filiere'], $_POST['liste']);
                 $erreurA = 'Ajout des admissibles réussi !';
                 Logs::logger(1, 'Administrateur : Ajout d\'une liste d\'admissibilite');
             } else {
@@ -152,8 +151,16 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
                 Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'une liste d\'admissibilite');
             }
         }
+        if (isset($_GET['suppr'])) { // Suppression d'un admissible
+            if (is_numeric($_GET['suppr'])) {
+                $parametres->supprAdmissible($_GET['suppr']);
+                Logs::logger(1, 'Administrateur : Suppression d\'un admissible');
+            } else {
+                Logs::logger(2, 'Administrateur : Erreur dans la suppression d\'un admissible');
+            }
+        }
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
-        echo '<h2>Insertion d\'une liste d\'admissibilité</h2>';
+        echo '<h3>Insérer une liste d\'admissibilité</h3>';
         echo '<span id="page_id">46</span>';
         echo '<span style="color:red;">'.@$erreurA.'</span>';
         $filieres = $parametres->getList(Parametres::Filiere);
@@ -198,6 +205,44 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         } else {
             echo '<p>Aucune série ne nécessite l\'entrée de listes d\'admissibilité.<br/>Reportez-vous à la page "Séries d\'admissibilité" pour déclarer une nouvelle série...</p>';
         }
+        ?>
+        <hr/>
+        <h3>Visualiser une liste d'admissibilité</h3>
+        <form action="/administration/gestion?action=admissibles" method="post">
+            <p class="champ"><label for="serie">Série d'admissibilité : </label><select name="serie-voir">
+                <option value="" selected></option>
+        <?php
+        foreach ($serie_valide as $value) {
+            echo '<option value="'.$value['id'].'">'.$value['intitule'].' (du '.date('d.m.Y', $value['date_debut']).' au '.date('d.m.Y', $value['date_fin']).')</option>';
+        }
+        ?>
+            </select></p>
+            <p class="champ"><label for="filiere">Filière : </label><select name="filiere-voir">
+                <option value=""></option>
+        <?php
+        foreach ($filieres as $value) {
+            echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
+        }
+        ?>
+            </select></p><br/>
+            <input type="submit" value="Voir" name="valider"/>
+        </form>
+        <?php
+        if (isset($_POST['serie-voir']) && isset($_POST['filiere-voir'])) { // Affichage des admissibles
+            if (is_numeric($_POST['serie-voir']) && is_numeric($_POST['filiere-voir'])) {
+                $admissibles = $parametres->getAdmissibles($_POST['serie-voir'], $_POST['filiere-voir']);
+                echo '<table border="1" cellspacing="0" cellspadding="1">';
+                echo '<tr><td>Nom</td><td>Prénom</td><td>Mail (si inscrit)</td><td>Supprimer définitivement</td></tr>';
+                foreach ($admissibles as $admissible) {
+                    echo '<tr><td>'.$admissible['nom'].'</td><td>'.$admissible['prenom'].'</td><td>'.$admissible['mail'].'</td><td><a href="/administration/gestion?action=admissibles&suppr='.$admissible['id'].'">Supprimer</a></td></tr>';
+                }
+                echo '</table>';
+            } else {
+                Logs::logger(3, 'Administrateur : Corruption des parametres (numeric serie et filiere) admin.php');
+            }
+        }
+        ?>
+        <?php
     } elseif (isset($_GET['action']) && $_GET['action'] == 'RAZ') { // Interface de remise à zéro de la plate-forme
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
         echo '<span id="page_id">48</span>';
@@ -215,6 +260,24 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         <input type="submit" value="Effectuer la remise à zéro"/>
         </form>
         <?php
+    } elseif (isset($_GET['action']) && $_GET['action'] == 'demandes') { // Administration des demandes en cours
+        echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
+        echo '<span id="page_id">42</span>';
+        echo '<h3>Demandes en cours</h3>';
+        $demandeManager = new DemandeManager($db);
+        $demandes = $demandeManager->getList();
+        echo '<table border=1 cellspacing=0>';
+        echo '<tr><td>Série</td><td>Filière</td><td>Admissible</td><td>Elève X</td><td>Statut</td></tr>';
+        foreach ($demandes as $demande) {
+            echo '<tr>';
+            echo '<td>'.$demande->serie().'</td>';
+            echo '<td>'.$demande->filiere().'</td>';
+            echo '<td>'.$demande->nom().' '.$demande->prenom().'<br/>'.$demande->email().'</td>';
+            echo '<td>'.$demande->userEleve().'</td>';
+            echo '<td>'.$demande->status().'</td>';
+            echo '</tr>';
+        }
+        echo '</table>';
     } elseif (isset($_GET['action']) && $_GET['action'] == 'hotel') { // Interface de gestion des hébergements à proximité du campus
         $adresseManager = new AdresseManager($db);
         if (isset($_GET['suppr_cat'])) { // Suppression d'une catégorie
@@ -270,7 +333,7 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         }
         $categories = $adresseManager->getCategories();
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';
-        echo '<h2>Gestion de la liste des hébergements à proximité de l\'école</h2>';
+        echo '<h3>Gestion de la liste des hébergements à proximité de l\'école</h3>';
         if (isset($_GET['ajout']) || isset($_GET['modif']) || isset($erreurModif)) { // Interface de modification d'une adresse
             if (isset($_GET['modif'])) {
                 $adresse = $adresseManager->getUnique($_GET['modif']);
@@ -374,6 +437,7 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::Etablissement; ?>">Modifier les établissements de provenance des élèves</a><br/>
         <a href="/administration/gestion?action=param&type=<?php echo Parametres::Filiere; ?>">Modifier les filières d'entrée des élèves</a><br/>
         <a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
+        <a href="/administration/gestion?action=demandes">Voir les demandes en cours</a><br/>
         <a href="/administration/gestion?action=hotel">Modifier la liste des hébergements à proximitè de l'école</a><br/>
         <span id="page_id">4</span>
         <?php
