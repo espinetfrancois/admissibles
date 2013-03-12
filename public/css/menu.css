@@ -22,7 +22,7 @@ div.menu ul {
 	background: #164d6d;
 	font-weight: 700;
 	padding-top: 10px;
-	font-size	: 1.3em;
+	font-size	: 0.9em;
 }
 
 div.menu a {
@@ -38,7 +38,7 @@ ul#menu_principal ul {
 	list-style: none;
 	background: #ffba00;
 	border-left: 6px solid #c2960c;
-	font-size: 0.8em;
+	font-size: 0.7em;
 	font-size: 11px;
 }
 

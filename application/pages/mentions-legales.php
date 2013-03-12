@@ -1,10 +1,4 @@
-<?php
-/**
- * Mentions légales
- * TODO : changer pour mettre les bonnes infos
- */
-// require_once(APPLICATION_PATH.'/inc/sql.php');
-?>
+<!-- Page des information légales -->
 <p>Les informations recueillies sont nécessaires pour la bonne gestion de l'hébergement des admissibles.
 Elles sont destinées uniquement aux personnes chargées de l'organisation de cette journée et ne sont pas cédées ou transmises à des tiers.
 En application de la loi du 6 janvier 1978 modifiée le 6 août 2004, vous bénéficiez d'un droit d'accès et de rectification aux informations qui vous concernent.

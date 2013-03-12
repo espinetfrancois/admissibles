@@ -5,9 +5,9 @@
  * @version 1.0
  *
  */
-require_once(APPLICATION_PATH.'/inc/sql.php');
+// require_once(APPLICATION_PATH.'/inc/sql.php');
 
-$adresseManager = new AdresseManager($db);
+$adresseManager = new AdresseManager(Registry::get('db'));
 $adressesValides = $adresseManager->getListAffiche();
 $cat = '';
 foreach ($adressesValides as $adresse) {

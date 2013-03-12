@@ -6,10 +6,11 @@
  *
  * @todo gestion de l'envoi du mail de validation/annulation
  */
-require_once(APPLICATION_PATH.'/inc/sql.php');
+// require_once(APPLICATION_PATH.'/inc/sql.php');
 
-$demandeManager = new DemandeManager($db);
-$eleveManager = new EleveManager($db);
+$demandeManager = new DemandeManager(Registry::get('db'));
+$eleveManager = new EleveManager(Registry::get('db'));
+$parametres = Registry::get('parametres');
 
 echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>';
 

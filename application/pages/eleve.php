@@ -7,12 +7,13 @@
  * @todo gestion du mail d'acceptation
  */
 
-require_once(APPLICATION_PATH.'/inc/sql.php');
+// require_once(APPLICATION_PATH.'/inc/sql.php');
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 
-$eleveManager = new EleveManager($db);
-$demandeManager = new DemandeManager($db);
-$adresseManager = new AdresseManager($db);
+$eleveManager = new EleveManager(Registry::get('db'));
+$demandeManager = new DemandeManager(Registry::get('db'));
+$adresseManager = new AdresseManager(Registry::get('db'));
+$parametres = Registry::get('parametres');
 
 // Identification
 if (!isset($_SESSION['eleve'])) {
