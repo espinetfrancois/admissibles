@@ -64,8 +64,13 @@ p {
 	margin		: 0.5em 0 1em 0;
 }
 
-
-
 p>a {
 	font-size	: 1.1em;
+}
+
+#contenu ul li {
+	line-height: 1.5em;
+}
+#contenu ul li a {
+	font-size: 1em;
 }

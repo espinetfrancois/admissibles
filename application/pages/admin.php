@@ -9,6 +9,7 @@
 // require_once(APPLICATION_PATH.'/inc/sql.php');
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 $parametres = Registry::get('parametres');
+$db = Registry::get('db');
 // Identification
 if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
     frankiz_do_auth("/administration/gestion");
@@ -255,8 +256,7 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         <p style="color:red;">Attention : la remise à zéro de l'interface est irréversible.</p>
         <p>Cette action efface toutes les informations relatives aux séries, aux admissibles, aux élèves, et aux demandes d'hébergement.</p>
         <form action="/administration/gestion?action=RAZ" method="post">
-        <p class="champ" id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remise à zéro de l'interface :</label></p>
-        <br/><input type="checkbox" name="raz"/><br/>
+        <p class="champ" id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remise à zéro de l'interface :</label><input type="checkbox" name="raz"/></p>
         <input type="submit" value="Effectuer la remise à zéro"/>
         </form>
         <?php
@@ -431,14 +431,16 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         }
     } else { // Interface de gestion courante
         ?>
-        <a href="/deconnexion">Se déconnecter</a><br/>
-        <a href="/administration/gestion?action=RAZ">Remise à zéro de l'interface d'hébergement</a><br/>
-        <a href="/administration/gestion?action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Etablissement; ?>">Modifier les établissements de provenance des élèves</a><br/>
-        <a href="/administration/gestion?action=param&type=<?php echo Parametres::Filiere; ?>">Modifier les filières d'entrée des élèves</a><br/>
-        <a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a><br/>
-        <a href="/administration/gestion?action=demandes">Voir les demandes en cours</a><br/>
-        <a href="/administration/gestion?action=hotel">Modifier la liste des hébergements à proximitè de l'école</a><br/>
+        <ul>
+            <li><a href="/deconnexion">Se déconnecter</a></li>
+            <li><a href="/administration/gestion?action=RAZ">Remise à zéro de l'interface d'hébergement</a></li>
+            <li><a href="/administration/gestion?action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a></li>
+            <li><a href="/administration/gestion?action=param&type=<?php echo Parametres::Etablissement; ?>">Modifier les établissements de provenance des élèves</a></li>
+            <li><a href="/administration/gestion?action=param&type=<?php echo Parametres::Filiere; ?>">Modifier les filières d'entrée des élèves</a></li>
+            <li><a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a></li>
+            <li><a href="/administration/gestion?action=demandes">Voir les demandes en cours</a></li>
+            <li><a href="/administration/gestion?action=hotel">Modifier la liste des hébergements à proximitè de l'école</a></li>
+        </ul>
         <span id="page_id">4</span>
         <?php
     }
