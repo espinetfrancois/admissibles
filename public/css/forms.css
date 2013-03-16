@@ -7,13 +7,15 @@ form {
 	padding : 2em;
 	/* width : 35em; */
 	overflow : auto;
-	width : auto;
+	width : 70%;
+	min-width	: 500px;
+	max-width	: 1000px;
 	display : inline-block;
 }
 
 form p.champ {
 	float : left;
-	width : 30em;
+	width : 98%;
 	clear : both;
 	padding-top : 10px;
 	padding-bottom : 1em;
@@ -23,6 +25,11 @@ form p.champ {
 p.champ input, p.champ textarea, p.champ select {
 	float : right;
 	clear : right;
+}
+
+p.champ.radio label:not(:first-child) {
+	float : right;
+	margin : 0 5px;
 }
 
 p.champ label {

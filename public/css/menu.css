@@ -6,14 +6,15 @@
 	****************************************************************************************************************
 */
 
-
 /* Gestion du menu*/
 div.menu {
 	background: #002334;
+	background-color:rgba(0, 35, 52, 0.95);
 	float: left;
 	font-size: 1.35em;
 	padding: 0 0 3px 0;
 	width: 19em;
+	display : inline-block;
 	min-height: 300px;
 	z-index: 20;
 }
@@ -27,19 +28,6 @@ div.menu ul {
 
 div.menu a {
 	text-decoration: none;
-}
-
-/* div#page {
-	font-size: 1.1em;
-	margin: 0 5em;
-} */
-
-ul#menu_principal ul {
-	list-style: none;
-	background: #ffba00;
-	border-left: 6px solid #c2960c;
-	font-size: 0.6em;
-	font-size: 11px;
 }
 
 ul#menu_principal ul a {
@@ -68,16 +56,20 @@ ul#menu_principal li.active>a, ul#menu_principal li.active ul li.active>a {
 	color : #002334;
 }
 
-/*niveau 2*/
+/*
+	niveau 2
+*/
+ul#menu_principal ul {
+	list-style: none;
+	background: #ffba00;
+/* 	border-left: 6px solid #c2960c; */
+	font-size: 0.6em;
+	font-size: 11px;
+	display	: none;
+	margin	 : 0 0 0 3em;
+	padding  : 0;
+}
+
 ul#menu_principal li.active ul {
 	display : block;
 }
-
-/* gestion des sous-menus */
-div.menu ul li ul {
-	display	: none;
-}
-
-/* div#navigation ul li:hover ul {
-	display : block;
-} */

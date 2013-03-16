@@ -90,17 +90,17 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
         <h2>Modifier mes informations personnelles</h2>
         <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
         <form action="/x/connexion" method="post">
-        <p id="champ-sexe" class="champ"><label for="sexe">Sexe</label> <label>: M <input type="radio" name="sexe" value="M"
+        <p id="champ-sexe" class="champ radio"><label for="sexe">Sexe: </label> <label> Masculin <input type="radio" name="sexe" value="M"
     <?php
         if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "") {
             echo 'checked="checked"';
-        }?>/></label> <label>/ F</label><input type="radio" name="sexe" value="F"
+        }?>/></label> <label>Féminin<input type="radio" name="sexe" value="F"
         <?php
         if ($_SESSION['eleve']->sexe() == "F") {
             echo 'checked="checked"';
         }?>/>
         <?php if (isset($erreurs) && in_array(Eleve::Sexe_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
-        </p>
+        </label></p>
         <p id="champ-prepa" class="champ">
         <label for="prepa">Etablissement d'origine : </label><select name="prepa">
             <option value=""></option>
