@@ -1,21 +1,18 @@
 @CHARSET "UTF-8";
+/** Formattage du dispositif image côte à côte avec texte
+	L'image peut être à droite (.img_right) ou a gauche (.img_left)
+**/
 
 div.img_left, div.img_right {
-	max-width	: 47%;
+	width		: 47%;
+	max-width	: 500px;
 	margin		: 1%;
+/* 	min-width	: 250px; */
 }
 
 /* texte et images cote à cote*/
 div.img_left {
 	float : right;
-}
-
-div.img_right {
-	float : left;
-}
-
-img.img_left, img.img_right {
-	max-width	: 49%;
 }
 
 img.img_left {
@@ -25,6 +22,18 @@ img.img_left {
 img.img_right {
 	float : right;
 }
+
+div.img_right {
+	float : left;
+}
+
+img.img_left, img.img_right {
+	max-width	: 47%;
+/* 	min-width   : 300px; */
+	margin		: 1%;
+}
+
+
 
 img {
 	box-shadow : 0 0 5px 1px black;

@@ -21,10 +21,3 @@ echo "<img class='img_right' src='".HTTP_IMAGES_PATH."/casert_bataclan.jpg' heig
 <br />
 <span class='clearfloat'></span>
 <span id="page_id">1</span>
-<style>
-#contenu {
-    min-height: 400px;
-    display : inline-block;
-    width : 100%;
-}
-</style>

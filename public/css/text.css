@@ -1,39 +1,16 @@
-/*
-	****************************************************************************************************************
+/*  ****************************************************************************************************************
 	****************************************************************************************************************
 	*******************************************FORMATTAGE DU TEXTE**************************************************
 	****************************************************************************************************************
-	****************************************************************************************************************
-*/
-ol,ul {
-	list-style: none;
-}
+	**************************************************************************************************************** */
 
-ul,ol,li {
-	margin: 0;
-	padding: 0;
-}
-
-ol li {
-	list-style-type: decimal;
-	background: none;
-	padding-left: 0;
-}
-
-ol {
-	margin-left: 1.5em;
-}
-
-a {
-	color: #2896d5;
-	text-decoration: underline;
-}
-
-a:focus {
-	background-color: #666;
-	background-image: none;
-	color: #fff !important;
-	text-decoration: none;
+/************************		Titres		************************/
+h1 {
+	font-family: tahoma, arial, helvetica, sans-serif;
+	font-size: 2em;
+	font-weight: 500;
+	text-transform: uppercase;
+	color: white;
 }
 
 h2 {
@@ -55,22 +32,57 @@ h4 {
 	margin: 1em 0;
 }
 
-p, ul, a {
-	font-size	: 1.35em;
-	
+/************************		Listes		************************/
+:not(.contenu) ol,ul {
+	list-style: none;
 }
 
-p {
-	margin		: 0.5em 0 1em 0;
+ul,ol,li {
+	margin: 0;
+	padding: 0;
 }
 
-p>a {
-	font-size	: 1.1em;
+ol li {
+	list-style-type: decimal;
+	background: none;
+	padding-left: 0;
 }
 
-#contenu ul li {
+ol {
+	margin-left: 1.5em;
+}
+
+.contenu ul li {
 	line-height: 1.5em;
 }
-#contenu ul li a {
+
+.contenu ul li a {
 	font-size: 1em;
+}
+
+/************************		Liens		************************/
+.contenu a:link {
+	color: #2896d5;
+}
+
+/* .contenu a:focus { */
+/* 	background-color: #666; */
+/* 	background-image: none; */
+/* 	color: #fff !important; */
+/* 	text-decoration: none; */
+/* } */
+
+
+/************************		Paragraphes, texte général		************************/
+.contenu p, ul, a {
+	font-size	: 1.35em;
+}
+
+.contenu p {
+	margin			: 0.5em 0 0.9em 0;
+	letter-spacing  : 0.2px;
+}
+
+.contenu p>a {
+	font-size	: 1.1em;
 }

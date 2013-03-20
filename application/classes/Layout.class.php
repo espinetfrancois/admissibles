@@ -346,7 +346,7 @@ class Layout {
      */
     public function renderContent()
     {
-        $sContents = '<div id="page_deco">
+        $sContents = '<div id="page-wrapper">
         <div class="contenu" id="contenu">';
         if ($this->_content != null && count($this->_content)) {
             foreach ($this->_content as $sContent) {
@@ -451,8 +451,8 @@ class Layout {
     {
         $sMenu =  '';
         if ($this->_menu != null) {
-            $sMenu = "\n".'<div class= menu>
-                           <ul class="menu_deroulant" id="menu_principal">'.
+            $sMenu = "\n".'<div id="main-menu-wrapper">
+                           <ul id="main-menu" class="menu drop-down-menu">'.
                            file_get_contents(TEMPLATE_PATH.'/'.$this->_menu);
             if ($this->is_admin || (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true)) {
                 ob_start();
