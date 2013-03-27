@@ -14,7 +14,6 @@ $layout = new Layout();
 $router = new Router($_SERVER['REQUEST_URI'], $layout);
 
 Registry::getInstance()->set('layout', $layout);
-
 try {
     $layout->addPage($router->file);
 } catch (RuntimeException $e) {

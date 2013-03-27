@@ -6,3 +6,4 @@ syntax: regexp
 \.log$
 syntax: regexp
 \.log$
+\.komodoproject$

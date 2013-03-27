@@ -1,46 +1,95 @@
 @CHARSET "UTF-8";
 
 /* Décoration des formulaires*/
-form {
+.contenu form {
 	border-radius : 1em;
 	background-color : rgba(255, 186, 0, 0.8);/* rgba(0, 35, 52, 0.8); */
 	padding : 2em;
 	/* width : 35em; */
 	overflow : auto;
-	width : 70%;
+	/*width : 70%;*/
 	min-width	: 500px;
-	max-width	: 1000px;
+	max-width	: 90%;
 	display : inline-block;
 }
 
-form p.champ {
+/* Décoration des Champs (paragraphes entourant chaque input+label) */
+.contenu form p.champ {
 	float : left;
 	width : 98%;
 	clear : both;
-	padding-top : 10px;
-	padding-bottom : 1em;
+	padding : 5px;
 	margin : 0;
+	margin-bottom : 0.8em;
+	border-radius : 4px;
+	background : rgba(240,240,240, 0.3);
 }
 
-p.champ input, p.champ textarea, p.champ select {
+/* Placement des inputs*/
+.contenu form p.champ input, p.champ textarea, p.champ select {
 	float : right;
 	clear : right;
 }
 
-p.champ.radio label:not(:first-child) {
+/* Placement des labels */
+.contenu form p.champ label {
+	float : left;
+}
+
+.contenu form p.champ.radio label:not(:first-child) {
 	float : right;
 	margin : 0 5px;
 }
 
-p.champ label {
-	float : left;
-}
-
-form input[type=text], form input[type=password], form textarea {
+/* Décoration des inputs */
+.contenu form input[type=text], .contenu form input[type=password], .contenu form textarea {
 	border-radius : 4px;
+	padding 	  : 2px 5px;
+	border		  : 1px solid #002334;
+	
+	transition			: all 200ms;
+	-moz-transition		: all 200ms;
+	-webkit-transition	: all 200ms;
+	-o-transition		: all 200ms;
 }
 
-form > input[type=submit] {
+.contenu form input[type=text]:hover, .contenu form input[type=password]:hover, .contenu form textarea:hover {
+	background-color	: rgb(22, 77, 109);
+	background			: white -moz-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white -webkit-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white -o-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white -ms-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	color	   			: white;
+}
+
+/* Augmentation de la taille pour les email */
+.contenu form input[name=email] {
+	width	: 20em;
+}
+
+/* Augmentation de la taille des textarea */
+.contenu form textarea {
+	min-width	: 20em;
+	min-height	: 8em;
+}
+
+/* Décoration du bouton submit */
+.contenu form > input[type=submit] {
 	float : right;
 	margin-top : 5px;
+	font-size  : 1.3em;
+	cursor		: pointer;
+	border		: 1px solid #002334;
+	border-radius	: 5px;
+}
+
+.contenu form > input[type=submit]:hover {
+	background-color	: rgb(22, 77, 109);
+	background			: white -moz-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white -webkit-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white -o-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white -ms-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	background			: white linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
+	color	   			: white;
 }

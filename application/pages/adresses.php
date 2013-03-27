@@ -15,13 +15,14 @@ foreach ($adressesValides as $adresse) {
         echo '<h3 class="categorie">'.$adresse->categorie().'</h3>';
         $cat = $adresse->categorie();
     }
-    echo '<div class="bonne_adresse">';
-    echo '<span class="nom">'.$adresse->nom().'</span><br/>'.
-         '<span class="adresse">'.$adresse->adresse().'</span><br/>'.
-         '<span class="telephone">'.'Tél : '.$adresse->tel().'</span><br/>'.
-         '<span class="email">Mail : <a href="mailto:'.$adresse->email().'">'.$adresse->email().'</a></span><br/>'.
-         '<span class="description">'.nl2br($adresse->description()).'</span><br/>';
+    echo '<div class="bonne-adresse">';
+    echo '<div class="nom">'.$adresse->nom().'</div>'.
+         '<div class="adresse">'.$adresse->adresse().'</div>'.
+         '<div class="telephone">'.'Tél : '.$adresse->tel().'</div>'.
+         '<div class="email">Mail : <a href="mailto:'.$adresse->email().'">'.$adresse->email().'</a></div>'.
+         '<div class="description">'.nl2br($adresse->description()).'</div>';
     echo '</div>';
 }
+Registry::get('layout')->appendCss('bonnes-adresses.css');
 ?>
 <span id="page_id">2</span>
