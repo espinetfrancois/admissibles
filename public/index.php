@@ -14,13 +14,14 @@ $layout = new Layout();
 $router = new Router($_SERVER['REQUEST_URI'], $layout);
 
 Registry::getInstance()->set('layout', $layout);
+
 try {
     $layout->addPage($router->file);
 } catch (RuntimeException $e) {
     $layout->addContent(TEMPLATE_PATH.'/probleme.html');
     if (APP_ENV != 'production') {
-        $layout->addContent($e->getMessage());
-        $layout->addContent($e->getTraceAsString());
+        $layout->addMessage($e->getMessage(), MSG_LEVEL_ERROR);
+        $layout->addMessage($e->getTraceAsString(), MSG_LEVEL_ERROR);
     }
 }
 echo $layout;

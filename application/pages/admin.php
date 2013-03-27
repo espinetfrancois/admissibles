@@ -14,6 +14,8 @@ $db = Registry::get('db');
 if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
     frankiz_do_auth("/administration/gestion");
 } else {
+    //ajout du menu d'administration
+    Registry::get('layout')->addMenu('admin.php');
     echo '<h2>Interface d\'administration</h2>';
     if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])) { // Gestion des listes de paramètres
         echo '<a href="/administration/gestion">Retour à l\'accueil</a>';

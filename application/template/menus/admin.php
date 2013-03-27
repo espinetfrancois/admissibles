@@ -1,3 +1,4 @@
+<ul id="admin-menu" class="menu drop-down-menu">
 <li id="4"><a href="/administration/gestion">Administration</a>
     <ul>
         <li id="41"><a href="/administration/gestion?action=series">Séries d'admissibilités (dates d'ouverture du site)</a>
@@ -20,3 +21,4 @@
         </li>
     </ul>
 </li>
+</ul>

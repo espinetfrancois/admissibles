@@ -124,6 +124,7 @@ class Config {
         define('PUBLIC_PATH', ROOT_PATH.'/public');
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
+        define('MENUS_PATH', TEMPLATE_PATH.'/menus');
 
         //définition des logs pour les données
         define('DATA_PATH', ROOT_PATH.'/data');
@@ -139,6 +140,10 @@ class Config {
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
         define('APP_MAIL', false);
 
+        //définition des niveaux de messages
+        define('MSG_LEVEL_ERROR', 'error');
+        define('MSG_LEVEL_OK', 'ok');
+        define('MSG_LEVEL_WARNING', 'warning');
     }
 
 

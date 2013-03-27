@@ -75,7 +75,7 @@ class Router
         //si la requete est invalide
         if ($this->requete->is_invalide) {
             //on retourne l'accueil et page non trouvée
-            $this->layout->not_found = true;
+            $this->layout->page404 = true;
             $this->setAccueil();
             return;
         }
@@ -129,7 +129,7 @@ class Router
         if ($this->requete->prefixe != null) {
             $prefix = $this->__traitementPrefixe();
             //si le prefix existe
-            if (! $this->layout->not_found) {
+            if (! $this->layout->page404) {
                 //on traite le suffixe avec le prefixe fournit
                 $this->__traitementSuffixe($prefix);
             }
@@ -138,7 +138,7 @@ class Router
             $this->__traitementSuffixe();
         }
         //si la page n'est pas trouvée, on met l'accueil
-        if ($this->layout->not_found) {
+        if ($this->layout->page404) {
             $this->setAccueil();
         }
 
@@ -156,7 +156,7 @@ class Router
             return $this->requete->prefixe;
         } else {
             //on signale au layout que la page est non-trouvée
-            $this->layout->not_found = true;
+            $this->layout->page404 = true;
             return null;
         }
 
@@ -182,7 +182,7 @@ class Router
             }
         } else {
             //sinon, on signale que la page est inconnue
-            $this->layout->not_found = true;
+            $this->layout->page404 = true;
         }
     }
 
