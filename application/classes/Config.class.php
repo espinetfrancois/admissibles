@@ -2,18 +2,24 @@
 /**
  * Classe de configuration du projet
  * Définit les constantes de l'application
+ * Cette classe à tout à fait sa place dans le registre
  * @author francois
  * @version 1.0
- *
  */
-
 
 class Config {
 
     /**
-     * Host
+     * Tableau de configuration de la base de donnée
+     * @var array
+     */
+    protected $_dbconf = null;
+
+    /**
+     * Host de la base de donnée
      * @var string
      * @access protected
+     * @deprecated
      */
     protected $_dbhost;
 
@@ -21,6 +27,7 @@ class Config {
      * Login
      * @var string
      * @access protected
+     * @deprecated
      */
     protected $_dblogin;
 
@@ -28,12 +35,14 @@ class Config {
      * Base de donnée
      * @var string
      * @access protected
+     * @deprecated
      */
     protected $_dbbase;
 
     /**
      * Mot de passe
      * @var string
+     * @deprecated
      * @access protected
      */
     protected $_dbpass;
@@ -58,71 +67,26 @@ class Config {
      */
     public function __construct()
     {
+        //attention à ce que cette fonction (defineConstantes) soit appelée en premier
         self::defineConstantes();
-        $this->loadConfig();
         self::addLibraries();
+        $this->loadConfig();
     }
 
-
     /**
-     * Getter host
-     * @access public
-     * @return string
-     */
-    public function get_dbhost()
-    {
-
-        return $this->_dbhost;
-    }
-
-
-    /**
-     * Getter login
-     * @access public
-     * @return string
-     */
-    public function get_dblogin()
-    {
-
-        return $this->_dblogin;
-    }
-
-
-    /**
-     * Getter base
-     * @access public
-     * @return string
-     */
-    public function get_dbbase()
-    {
-
-        return $this->_dbbase;
-    }
-
-
-    /**
-     * Getter pass
-     * @access public
-     * @return string
-     */
-    public function get_dbpass()
-    {
-
-        return $this->_dbpass;
-    }
-
-
-    /**
-     * Définition des constantes de l'application
-     * @access public
+     * Définition des constantes de l'application.
+     * La visibilité évite les doubles définitions
+     * @access protected
      * @return void
      */
-    static function defineConstantes()
+    static protected function defineConstantes()
     {
         //define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
         define('CONFIG_PATH', APPLICATION_PATH.'/configs');
         define('PUBLIC_PATH', ROOT_PATH.'/public');
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
+
+        //définition des template
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
         define('MENUS_PATH', TEMPLATE_PATH.'/menus');
 
@@ -146,35 +110,18 @@ class Config {
         define('MSG_LEVEL_WARNING', 'warning');
     }
 
-
     /**
-     * Ajuste le niveau de verbosité des erreurs
-     * @access public
-     * @deprecated
-     * @return void
-     */
-    static function setErrors()
-    {
-        if (APP_ENV != 'production') {
-            ini_set('error_reporting', E_ALL);
-            ini_set('display_errors', 1);
-        }
-
-    }
-
-    /**
-     * Include des libraries
+     * Include des libraries tierces
      * @access public
      * @return void
      */
     static function addLibraries()
     {
         require_once(LIBRARY_PATH.'/phpmailer/phpmailer.class.php');
-
     }
 
     /**
-     * Chargement du fichier de configuration
+     * Chargement du fichier de configuration (.ini)
      * @access protected
      * @return void
      */
@@ -185,16 +132,12 @@ class Config {
         } else {
             $file = CONFIG_PATH.'/prod.ini';
         }
-
         $config = parse_ini_file($file, true);
         foreach ($config as $item=>$configitem) {
             switch ($item) {
                 case 'bdd':
                     $this->initBdd($configitem);
                     break;
-                    /* case "libraries" :
-                     $this->initLibrary($configitem);
-                    break; */
                 case 'frankiz':
                     $this->initFrankiz($configitem);
                     break;
@@ -206,35 +149,33 @@ class Config {
                     break;
             }
         }
-
     }
 
 
     /**
-     * Hydratation
+     * Ajout et vérification de la configuration de la base de données
      * @access protected
      * @return void
      */
     protected function initBdd($aConfig)
     {
-        $this->_dbhost = $aConfig['host'];
-        $this->_dblogin = $aConfig['login'];
-        $this->_dbbase = $aConfig['base'];
-        $this->_dbpass = $aConfig['password'];
-
+        $this->_dbconf = $aConfig;
+        if (count($aConfig) < 4) {
+            throw new Exception('Le fichier de configuration de la base de données est erroné.');
+        }
     }
 
+    /**
+     * Initialisation de Frankiz
+     * @author francois.espinet
+     * @param unknown $aConfig
+     */
     protected function initFrankiz($aConfig) {
         $this->_frankiz = $aConfig;
-    }
-
-    /* protected function initLibrary($aConfig)
-    {
-        foreach ($aConfig as $key => $value) {
-            $aKeys = explode('.', $key);
+        if (count($aConfig) < 3) {
+        	throw new Exception('Le fichier de configuration de Frankiz est erroné.');
         }
-
-    } */
+    }
 
     /**
      * Configuration de php
@@ -255,16 +196,15 @@ class Config {
      */
     public function get_otherparam()
     {
-
         return $this->_otherparam;
     }
 
     /**
-     * renvoie le tableau de configuration de frankiz
+     * Renvoie le tableau de configuration de frankiz
      * @author francois.espinet
      * @return array
      */
-    public function get_frankiz()
+    public function getFrankiz()
     {
         return $this->_frankiz;
     }
@@ -272,5 +212,48 @@ class Config {
     public function set_frankiz($_frankiz)
     {
         $this->_frankiz = $_frankiz;
+    }
+
+    /**
+     * Renvoie l'host de la base de données
+     * @access public
+     * @return string
+     */
+    public function getDbhost()
+    {
+    	return $this->_dbconf['host'];
+    }
+
+
+    /**
+     * Renvoie le login de la base de données
+     * @access public
+     * @return string
+     */
+    public function getDblogin()
+    {
+    	return $this->_dbconf['login'];
+    }
+
+
+    /**
+     * Renvoie la base de donnée de la base de donnée
+     * @access public
+     * @return string
+     */
+    public function getDbbase()
+    {
+    	return $this->_dbconf['base'];
+    }
+
+
+    /**
+     * Renvoie le mot de passe de la base de donnée
+     * @access public
+     * @return string
+     */
+    public function getDbpass()
+    {
+    	return $this->_dbconf['password'];
     }
 }

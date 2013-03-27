@@ -55,7 +55,6 @@ class Mail extends PHPMailer {
             parent::Send();
         } else {
             $this->PreSend();
-            die ("head</br/>".$this->MIMEHeader."<br/>body<br/>".$this->MIMEBody);
         }
     }
 

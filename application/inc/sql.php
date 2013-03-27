@@ -10,7 +10,7 @@
 $config = Registry::get('config');
 
 try {
-    $db     = new PDO('mysql:host='.$config->get_dbhost().';dbname='.$config->get_dbbase(),$config->get_dblogin(),$config->get_dbpass());
+    $db     = new PDO('mysql:host='.$config->getDbhost().';dbname='.$config->getDbbase(),$config->getDblogin(),$config->getDbpass());
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     Registry::set('db', $db);
 } catch (Exception $e) {

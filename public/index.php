@@ -17,7 +17,7 @@ Registry::getInstance()->set('layout', $layout);
 
 try {
     $layout->addPage($router->file);
-} catch (RuntimeException $e) {
+} catch (Exception $e) {
     $layout->addContent(TEMPLATE_PATH.'/probleme.html');
     if (APP_ENV != 'production') {
         $layout->addMessage($e->getMessage(), MSG_LEVEL_ERROR);
