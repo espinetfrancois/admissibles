@@ -5,6 +5,7 @@
  * L'utilisation de mod_rewrite d'apache permet une flexibilité qui s'éxprime ici!
  * @author francois.espinet
  * @version 1.0
+ * @todo caching request
  */
 class Router {
 

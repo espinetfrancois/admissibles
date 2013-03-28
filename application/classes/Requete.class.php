@@ -57,22 +57,24 @@ class Requete
         $aAllRequestParts= parse_url($request);
         //séparation de la requête en éléments
         $aRequeteParts = explode('/', $aAllRequestParts['path']);
+        //on enlève le premier membre qui est toujours ""
+        array_shift($aRequeteParts);
         //gère le cas ou l'url finit par / (ex: /x/admissibles/)
         if (end($aRequeteParts) == "") {
             array_pop($aRequeteParts);
         }
-        //le +1 se justifie par le fait que le premier élément est toujours ""
-        if (count($aRequeteParts) > self::Profondeur_Max_Requete+1) {
+        //on test si la requètre fait la bonne longueur
+        if (count($aRequeteParts) > self::Profondeur_Max_Requete) {
             //si la requette est trop longue, elle est invalide
             $this->is_invalide = true;
-        } elseif(count($aRequeteParts) == self::Profondeur_Max_Requete+1) {
-            //si elle est tout juste de la bonne taille, on remplit le prefix et le suffixe
-            $this->prefixe = $aRequeteParts[1];
-            $this->suffixe = $aRequeteParts[2];
         } elseif(count($aRequeteParts) == self::Profondeur_Max_Requete) {
+            //si elle est tout juste de la bonne taille, on remplit le prefix et le suffixe
+            $this->prefixe = $aRequeteParts[0];
+            $this->suffixe = $aRequeteParts[1];
+        } elseif(count($aRequeteParts) == 1) {
             //demande de qqch différent de l'accueil
-            if ($aRequeteParts[1] != '') {
-                $this->suffixe = $aRequeteParts[1];
+            if ($aRequeteParts[0] != '') {
+                $this->suffixe = $aRequeteParts[0];
             }
         }
 

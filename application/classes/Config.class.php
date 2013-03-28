@@ -1,10 +1,12 @@
 <?php
 /**
  * Classe de configuration du projet
- * Définit les constantes de l'application
+ * Définit les constantes de l'application ainsi que les paramètres dans les différents fichiers ini.
+ * Elle est appelée à chaque requète (dans le fichier index.php) et est necessaire au bon fonctionnement de l'application.
  * Cette classe à tout à fait sa place dans le registre
- * @author francois
+ * @author francois.espinet
  * @version 1.0
+ * @todo : caching
  */
 
 class Config {
@@ -14,38 +16,6 @@ class Config {
      * @var array
      */
     protected $_dbconf = null;
-
-    /**
-     * Host de la base de donnée
-     * @var string
-     * @access protected
-     * @deprecated
-     */
-    protected $_dbhost;
-
-    /**
-     * Login
-     * @var string
-     * @access protected
-     * @deprecated
-     */
-    protected $_dblogin;
-
-    /**
-     * Base de donnée
-     * @var string
-     * @access protected
-     * @deprecated
-     */
-    protected $_dbbase;
-
-    /**
-     * Mot de passe
-     * @var string
-     * @deprecated
-     * @access protected
-     */
-    protected $_dbpass;
 
     /**
      * Autres paramètres
@@ -103,6 +73,7 @@ class Config {
         //constantes d'environement
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
         define('APP_MAIL', false);
+        define('APP_CACHE', false);
 
         //définition des niveaux de messages
         define('MSG_LEVEL_ERROR', 'error');
