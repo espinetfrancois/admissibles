@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1138.51">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    span.Apple-tab-span {white-space:pre}
+  </style>
+</head>
+<body>
+<p class="p1">Solution envisagée router :<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">définir des sections</p>
+<p class="p2"><br></p>
+<p class="p1">chaque section est un niveau de la requête, les valeurs de sections peuvent être d'autres sections :<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">exemple:<span class="Apple-converted-space"> </span></p>
+<p class="p1">[root]</p>
+<p class="p1">coucou = "coucou.php"</p>
+<p class="p1">eleves-polytechniciens = "x"</p>
+<p class="p2"><br></p>
+<p class="p1">[x]</p>
+<p class="p1">inscriptions = 'inscription'</p>
+<p class="p1">test = "test.php"</p>
+<p class="p2"><br></p>
+<p class="p1">[inscription]</p>
+<p class="p1">enregistrement = "enregistrement.php" etc…</p>
+<p class="p2"><br></p>
+<p class="p1">Le routeur utilise le cache dans lequel il place un tableau de type :<span class="Apple-converted-space"> </span></p>
+<p class="p1">array(</p>
+<p class="p1"><span class="Apple-tab-span">	</span>'url' =&gt; 'ficher à lire.php"</p>
+<p class="p1">)</p>
+<p class="p2"><br></p>
+<p class="p1">par exemple : array('x/connexion' =&gt; 'eleve.php');</p>
+<p class="p1">Ce tableau est créé dans le cache s'il n'existe pas (ou si le cache n'est pas un vrai cache). De fait les choses vont plus vite et l'ini n'est lu qu'en cas de besoin.</p>
+</body>
+</html>
