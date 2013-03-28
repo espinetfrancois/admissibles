@@ -25,4 +25,3 @@ try {
     }
 }
 echo $layout;
-
