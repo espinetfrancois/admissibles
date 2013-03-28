@@ -6,7 +6,7 @@
  *
  */
 
-class MailAdminTech extends Mail {
+class Mail_AdminTech extends Mail {
 
     const Admin_Level_Warning = 'warning';
     const Admin_Level_Error = 'error';

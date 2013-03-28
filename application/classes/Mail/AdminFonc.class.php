@@ -5,7 +5,7 @@
  * @version 1.0
  *
  */
-class MailAdminFonc extends Mail {
+class Mail_AdminFonc extends Mail {
     
     const X_Action_Canceled = 'anndemande';
     const X_Action_NvDemande = 'nvdemande';

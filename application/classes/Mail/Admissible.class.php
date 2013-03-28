@@ -6,7 +6,7 @@
  *
  */
 
-class MailAdmissible extends Mail {
+class Mail_Admissible extends Mail {
 
     const Action_Cancel = 'anndemande';
     const Action_NvDemande = 'nvdemande';

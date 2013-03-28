@@ -34,7 +34,7 @@ class Logs {
         case 3:
             $niveau = 'Fatal error';
             // Envoi d'un mail a l'admin -> erreur ou tentative de piratage
-            $mail = new MailAdminTech();
+            $mail = new Mail_AdminTech();
             $mail->fatalError($message);
             break;
         }

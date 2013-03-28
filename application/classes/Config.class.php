@@ -55,6 +55,7 @@ class Config {
         define('CONFIG_PATH', APPLICATION_PATH.'/configs');
         define('PUBLIC_PATH', ROOT_PATH.'/public');
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
+        define('CLASS_PATH', APPLICATION_PATH.'/classes');
 
         //définition des template
         define('TEMPLATE_PATH', APPLICATION_PATH.'/template');

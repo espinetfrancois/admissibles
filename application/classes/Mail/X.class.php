@@ -6,9 +6,8 @@
  * @version 1.0
  *
  */
-class MailX extends Mail
+class Mail_X extends Mail
 {
-
     const Action_Canceled = 'anndemande';
     const Action_NvDemande = "nvdemande";
 
