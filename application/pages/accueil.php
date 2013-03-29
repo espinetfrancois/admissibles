@@ -5,7 +5,6 @@
  * @version 1.0
  *
  */
-throw new Exception("cassé");
 ?>
 <div class='img_right'>
 <h2>Bienvenue</h2>

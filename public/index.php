@@ -17,6 +17,9 @@ try {
 	//gestion des erreurs dans les pages
 	try {
 		$layout->addPage($router->file);
+	} catch (Exception_Error $e) {
+	    //todo logger ici cette erreur mineure
+	    throw $e;
 	} catch (Exception $e) {
 		$layout->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
 		if (APP_ENV != 'production') {
@@ -37,5 +40,3 @@ try {
 } catch (Exception $e) {
 	echo $layout;
 }
-
-$_SESSION['administrateur'] = true;

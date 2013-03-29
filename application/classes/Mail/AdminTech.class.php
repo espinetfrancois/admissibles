@@ -11,10 +11,9 @@ class Mail_AdminTech extends Mail {
     const Admin_Level_Warning = 'warning';
     const Admin_Level_Error = 'error';
     const Admin_Level_Notice = 'notice';
-
+    const Admin_level_Exception = 'exception';
 
     public function psend() {
-
         $this->AddAddress($this->adminMail);
         parent::psend();
     }
@@ -34,6 +33,16 @@ class Mail_AdminTech extends Mail {
                                                                                               'APP_LOG' => file_get_contents(LOGS_PATH.'/application.log'),
                                                                                               'PHP_LOG' => file_get_contents(LOGS_PATH.'/php.log')));
         $this->Subject = $this->_substitute(self::Admin_Level_Error, self::CONTENT_TYPE_OBJET);
+
+        $this->psend();
+    }
+
+    public function exception($sException) {
+        $this->AltBody = $this->_substitute(self::Admin_Level_Exception, self::CONTENT_TYPE_TXT, array('EXCEPTION' => $sException));
+
+        $this->Body = $this->_substitute(self::Admin_Level_Exception,self::CONTENT_TYPE_HTML, array('EXCEPTION' => $sException));
+
+        $this->Subject = $this->_substitute(self::Admin_Level_Exception, self::CONTENT_TYPE_OBJET);
 
         $this->psend();
     }

@@ -18,12 +18,20 @@ try {
     	if (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true) {
     	    $layout->addContent("<h2>Cher administrateur, voici des informations supplémentaires.</h2>");
     	    $layout->addContent($e);
+    	} else {
+    	    if (APP_MAIL) {
+    	        $mail = new Mail_AdminTech();
+    	        $mail->exception($e);
+    	    }
     	}
     	//éventuellement ajouter un formulaire de contact
     	$layout->prependContent(file_get_contents(TEMPLATE_PATH.'/erreur.html'));
     	$layout->appendCss('erreurs.css');
-    	echo $layout;
+    } else {
+        //l'utilisateur est arrivé par ici par hasard
+        $layout->addContent("<h2>L'application ne se trouve pas ici.</h2><p>Pour acceder à l'application, c'est <a href='/'>ici</a></p>");
     }
+    echo $layout;
 } catch (Exception $ex) {
     echo "oooops";
 }
