@@ -1,9 +1,5 @@
 syntax: regexp
 ^application/configs/dev\.ini$
 ^application/configs/prod\.ini$
-
-syntax: regexp
-\.log$
-syntax: regexp
 \.log$
 \.komodoproject$
