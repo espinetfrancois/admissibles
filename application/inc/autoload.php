@@ -22,8 +22,7 @@ function autoloader($class) {
 					. str_replace('_', '/', $class) . ".class.php");
 		}
 	} catch (Exception $e) {
-		throw new Exception(
-				"Erreur lors du chargement de la classe : " . $class, null, $e);
+		throw new Exception("Erreur lors du chargement de la classe : " . $class, null, $e);
 	}
 }
 
