@@ -1,11 +1,10 @@
 <?php
 /**
- * Class pour l'envoi de mail techniques
+ * Class pour l'envoi de mail aux administrateurs techniques
  * @author francois.espinet
  * @version 1.0
  *
  */
-
 class Mail_AdminTech extends Mail {
 
     const Admin_Level_Warning = 'warning';
@@ -22,6 +21,12 @@ class Mail_AdminTech extends Mail {
         return parent::substitute(self::Pers_Admin_Tech, $sAction, $sType, $aRemplacement);
     }
 
+    /**
+     * Notifie l'administrateur technique (celui qui gère le code) d'une erreur fatale.
+     * Cette fonction adjoint les logs au mail
+     * @author francois.espinet
+     * @param string $sMessage     le message d'erreur à communiquer à l'administrateur
+     */
     public function fatalError($sMessage = 'inconnu') {
         $this->AltBody = $this->_substitute(self::Admin_Level_Error, self::CONTENT_TYPE_TXT, array('MESSAGE' => $sMessage,
                                                                                               'HOST' => $_SERVER['HTTP_HOST'],
@@ -37,6 +42,12 @@ class Mail_AdminTech extends Mail {
         $this->psend();
     }
 
+    /**
+     * Informe l'administrateur technique qu'une erreur grave a été affichée à l'utilisateur (sur la page errors.php)
+     * Le texte est l'exception elle-même, avec sa trace.
+     * @author francois.espinet
+     * @param string $sException l'exception qui est remontée
+     */
     public function exception($sException) {
         $this->AltBody = $this->_substitute(self::Admin_Level_Exception, self::CONTENT_TYPE_TXT, array('EXCEPTION' => $sException));
 
@@ -45,5 +56,13 @@ class Mail_AdminTech extends Mail {
         $this->Subject = $this->_substitute(self::Admin_Level_Exception, self::CONTENT_TYPE_OBJET);
 
         $this->psend();
+    }
+
+    protected function psend() {
+        try {
+            parent::psend();
+        } catch (Exception_Mail $e) {
+            throw new Exception_Mail("Impossible d'envoyer un mail à l'administateur technique.", Exception_Mail::Send_Echec_Admin, $e);
+        }
     }
 }

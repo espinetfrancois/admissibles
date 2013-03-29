@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Class pour l'envoi de mail aux admissibles
  * @author francois.espinet
  * @version 1.0
  *
  */
-
 class Mail_Admissible extends Mail {
 
     const Action_Cancel = 'anndemande';
@@ -13,13 +13,13 @@ class Mail_Admissible extends Mail {
     const Action_Accepted = 'acceptdemande';
 
     /**
-     * Nom
+     * Nom de l'admissible
      * @var string
      */
     public $nom;
 
     /**
-     * Prenom
+     * Prenom de l'admissible
      * @var string
      */
     public $prenom;
@@ -44,14 +44,16 @@ class Mail_Admissible extends Mail {
         $this->prenom = $sPrenom;
         $this->email = $sEmail;
         parent::__construct();
+        //ajout du destinataire (l'admissible)
         $this->AddAddress($this->email, $this->nom.' '.$this->prenom);
 
     }
 
     /**
      * Envoi de l'email d'annulation d'une demande
+     * Executée dans le cas ou l'admissible annule sa demande auprès d'un X
      * @access public
-     * @param string $sEleveX
+     * @param string $sEleveX le nom de l'élève X auprès de qui la demande à été annulée
      * @return void
      */
     public function demandeAnnulee($sEleveX)
@@ -72,11 +74,12 @@ class Mail_Admissible extends Mail {
     }
 
     /**
-     * Envoi de l'email de demande d'h�bergement
+     * Envoi de l'email de confirmation de demande d'hébergement
+     * Ce mail lui permet d'annuler sa demande et de la confirmer, il vérifie aussi que l'admissible est bien l'auteur de la demande
      * @access public
-     * @param string $sEleveX
-     * @param string $sLinkCancel
-     * @param string $sLinkConfirm
+     * @param string $sEleveX        l'élève X dont la demande est l'objet
+     * @param string $sLinkCancel    le lien d'annulation de la demande
+     * @param string $sLinkConfirm   le lien de confirmation de la demande
      * @return void
      */
     public function demandeEnvoyee($sEleveX, $sLinkCancel, $sLinkConfirm)
@@ -99,9 +102,11 @@ class Mail_Admissible extends Mail {
 
     /**
      * Envoi de l'email de confirmation de demande
+     * Informe l'admissible que sa demande a été confirmée par un X (il peut donc loger chez lui)
+     * Ce mail lui permet de prendre contact avec l'élève
      * @access public
-     * @param string $sEleveX
-     * @param string $sXmail
+     * @param string $sEleveX   l'élève à qui la demande à été envoyée
+     * @param string $sXmail    l'email de l'élève pour que l'admissible puisse prendre contact avec lui
      * @return void
      */
     public function demandeConfirmee($sEleveX, $sXmail)
@@ -121,7 +126,28 @@ class Mail_Admissible extends Mail {
 
     }
 
+    /**
+     * Fonction outil pour les substitutions de texte.
+     * @see Mail::subsitute()
+     * @author francois.espinet
+     * @param string $sAction
+     * @param unknown $sType
+     * @param unknown $aRemplacement
+     * @return Ambigous <string, mixed>
+     */
     protected function _substitute($sAction='', $sType, $aRemplacement = array()) {
         return parent::substitute(self::Pers_Admissible, $sAction, $sType, $aRemplacement);
+    }
+
+    protected function psend() {
+        try {
+            parent::psend();
+        } catch (Exception_Mail $e) {
+            /**
+             * Ici l'erreur est plus grave!!
+             * En effet, l'admissible n'a aucun recours s'il ne reçoit pas de mail
+             */
+            throw new Exception_Mail("Un mail n'a pas pu être envoyé à un admissible", Exception_Mail::Send_Echec_Admissible, $e);
+        }
     }
 }
