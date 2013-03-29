@@ -14,7 +14,7 @@ class Cache_Registry extends Registry implements Cache_Interface
     }
 
     public function load($id) {
-        if (! $this->offsetExists($id)) {
+        if (! self::isRegistered($id)) {
             return false;
         }
         return $this->get($id);
@@ -29,7 +29,7 @@ class Cache_Registry extends Registry implements Cache_Interface
         $this->offsetUnset($id);
     }
 
-    public function save($id, $data) {
+    public function save($data, $id , $tags = array(), $specificLifetime = false) {
         $this->set($id, $data);
     }
 }

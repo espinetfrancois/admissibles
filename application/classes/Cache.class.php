@@ -32,17 +32,19 @@ class Cache
     protected static function setInstance() {
         if (self::$_cache === null) {
             try {
-                if (extension_loaded('apc')) {
-                    self::$_cache = new Cache_Apc();
-                    return;
-                }
-                if (extension_loaded('xcache')) {
-                    self::$_cache = new Cache_Xcache();
-                    return;
-                }
-                if (extension_loaded('memcache')) {
-                    self::$_cache = new Cache_Memcached();
-                    return;
+                if (APP_CACHE) {
+                    if (extension_loaded('apc')) {
+                        self::$_cache = new Cache_Apc();
+                        return;
+                    }
+                    if (extension_loaded('xcache')) {
+                        self::$_cache = new Cache_Xcache();
+                        return;
+                    }
+                    if (extension_loaded('memcache')) {
+                        self::$_cache = new Cache_Memcached();
+                        return;
+                    }
                 }
 
                 //implémentation par défaut

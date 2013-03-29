@@ -9,17 +9,19 @@
  */
 class Router {
 
-    /**
-     * Tableau des url d'administration
-     * @var array d'url
-     */
-    protected $urls = array();
+    protected $routes = array();
+
+    protected $depth = 0;
+
+    const Root_Keyword = 'root';
+
+    const Cache_All    = false;
 
     /**
-     * Tableau des préfixes
-     * @var array d'url
+     * Le fichier php contenant les routes.
+     * @var string
      */
-    protected $prefixes = array();
+    const Routes_File = 'router.php';
 
     /**
      * Le filename du fichier à charger
@@ -34,28 +36,12 @@ class Router {
     protected $requete = null;
 
     /**
-     * Section spéciale pour les routes sans préfixes
-     * @var string
-     */
-
-    /**
-     * Le fichier ini contenant les routes.
-     * @var string
-     */
-    const Ini_File = 'router.ini';
-
-    /**
-     * Root
-     * @var string
-     */
-    const Section_Root = 'root';
-
-    /**
      * le layout de l'application
      * @var Layout
      */
     protected $layout = null;
 
+    const Cache_Index_Routes = 'routes';
     /**
      * Constructeur, prend en argument l'url demandée ($_SERVER['REQUEST_URI'])
      * @author francois.espinet
@@ -65,42 +51,38 @@ class Router {
     public function __construct($request, $layout)
     {
         $this->layout = $layout;
-        //chargement du fichier ini, initialisation des tableaux
-        $this->_loadIni(CONFIG_PATH.'/'.self::Ini_File);
-        //initialisation de l'objet requete
+        $this->file = PAGES_PATH.'/';
         $this->requete = new Requete($request);
 
-        //si la requete est invalide
-        if ($this->requete->is_invalide) {
-            //on retourne l'accueil et page non trouvée
-            $this->layout->page404 = true;
-            $this->setAccueil();
-            return;
+        //on regarde si le cache des routes existe
+        if (Cache::test(self::Cache_Index_Routes)) {
+            //cache des routes visites
+            $vroutes = Cache::load(self::Cache_Index_Routes);
+            //si la route est en cache on la renvoie
+            if (array_key_exists($this->requete->compact(), $vroutes)) {
+            	$this->file = $vroutes[$this->requete->compact()];
+            	return;
+            }
         }
 
-        //si la requete est valide, on met en marche le mécanisme de routage.
+        // si les routes ne sont pas en cache
+        $this->_loadRoutes(CONFIG_PATH.'/'.self::Routes_File);
         $this->_setFileFromUrl();
-
+        //on ne cache que les routes valides
+        if (self::Cache_All || !$this->layout->page404) {
+            $vroutes[$this->requete->compact()] = $this->file;
+            Cache::save($vroutes, self::Cache_Index_Routes);
+        }
     }
 
     /**
      * Chargement du fichier contenant les routes
      * @author francois.espinet
+     * @todo   gestion des erreurs
      */
-    private function _loadIni($IniFile)
+    private function _loadRoutes($RoutesFile)
     {
-        if ( ($urls = parse_ini_file($IniFile, true)) ) {
-            //tableau des prefixes de l'application , correspond aux sections du fichier ini
-            $this->prefixes = $urls['prefixes'];
-            //tableau des url, contient suffixe de la route => fichier à charger
-            $this->urls = array(self::Section_Root => $urls[self::Section_Root]);
-            foreach ($this->prefixes as $keypref => $prefixe ) {
-                $this->urls[$prefixe] = $urls[$keypref];
-            }
-        } else {
-            throw new Exception('Impossible de charger le fichier de configuration du routeur');
-        }
-
+        $this->routes = require_once($RoutesFile);
     }
 
     /**
@@ -109,9 +91,7 @@ class Router {
      */
     private function setAccueil()
     {
-        $this->file = PAGES_PATH.'/'.$this->urls[self::Section_Root]['accueil'];
-
-        return;
+        $this->file = PAGES_PATH.'/'.$this->routes['accueil'];
     }
 
     /**
@@ -121,67 +101,31 @@ class Router {
      */
     private function _setFileFromUrl()
     {
-        //on commence par mettre le chemin vers les pages
-        $this->file = PAGES_PATH.'/';
-        //si le prefix n'est pas null (url de la forme /prefix/suffixe)
-        if ($this->requete->prefixe != null) {
-            $prefix = $this->__traitementPrefixe();
-            //si le prefix existe
-            if (! $this->layout->page404) {
-                //on traite le suffixe avec le prefixe fournit
-                $this->__traitementSuffixe($prefix);
-            }
-        } else {
-            //on traite directement le suffixe
-            $this->__traitementSuffixe();
-        }
-        //si la page n'est pas trouvée, on met l'accueil
-        if ($this->layout->page404) {
+        $a = $this->routes;
+        if ($this->requete->depth == 0) {
             $this->setAccueil();
+            return;
         }
-
-    }
-
-    /**
-     * Traitement du préfixe de la requete
-     * @author francois.espinet
-     * @return prefixe de la requete ou null si le prefix n'existe pas dans la base
-     */
-    private function __traitementPrefixe()
-    {
-        if (array_key_exists($this->requete->prefixe, $this->urls)) {
-            //on retourne le prefix s'il existe
-            return $this->requete->prefixe;
-        } else {
-            //on signale au layout que la page est non-trouvée
-            $this->layout->page404 = true;
-            return null;
-        }
-
-    }
-
-    /**
-     * Traitement de la partie suffixe de la requête
-     * @author francois.espinet
-     * @param string $prefix les prefixe précédement calculé (peut-être nul!)
-     */
-    private function __traitementSuffixe($prefix = self::Section_Root)
-    {
-        if ($this->requete->suffixe == null) {
-            // si le suffixe est nul, on renvoie l'accueil
-            $this->setAccueil();
-        } elseif (array_key_exists($this->requete->suffixe, $this->urls[$prefix]) ) {
-            //on ajout le fichier signifié dans l'ini au fichier à charger
-            $this->file .= $this->urls[$prefix][$this->requete->suffixe];
-            //si on est dans l'administration
-            if ($this->requete->prefixe == 'administration') {
-                //on ajoute le menu d'administration
-                $this->layout->is_admin = true;
+        //tant qu'on est pas arrivé au bout, on continue la descente
+        while (is_array($a) && $this->requete->depth > $this->depth) {
+            if (array_key_exists($this->requete->aParts[$this->depth], $a)) {
+                $a = $a[$this->requete->aParts[$this->depth]];
+            } elseif (array_key_exists(self::Root_Keyword, $a) && $this->depth == $this->requete->depth) {
+                $a = $a[self::Root_Keyword];
+            } else {
+                $this->layout->page404 = true;
+                $this->setAccueil();
+                return;
             }
-        } else {
-            //sinon, on signale que la page est inconnue
-            $this->layout->page404 = true;
+            $this->depth++;
         }
-    }
 
+        //si les profondeurs ne sont pas les mêmes, la route n'a pas été trouvée
+        if ($this->depth != $this->requete->depth) {
+            $this->layout->page404 = true;
+            $this->layout->addMessage("Cette page est la plus proche de celle que vous avez demandée.", MSG_LEVEL_WARNING);
+        }
+
+        $this->file .= $a;
+    }
 }

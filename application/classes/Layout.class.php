@@ -118,6 +118,7 @@ class Layout {
 		$this->addMenu('main.html');
 		//ajout des js de base
 		$this->appendJs('menu.js');
+		$_SESSION['messages'] = array();
 	}
 
 	/* ********************************************************************************************************************* *
@@ -293,14 +294,20 @@ class Layout {
 	}
 
 	/**
-	 * Ajoute un message dans l'application
+	 * Ajoute un message dans l'application à la fin des messages
 	 * @author francois.espinet
 	 * @param string $sMessage
 	 * @param string $sLevel
 	 */
-	public function addMessage($sMessage, $sLevel) {
+	public function addMessage($sMessage, $sLevel = '') {
 	    $_SESSION['messages'][] = '<div class="message '.$sLevel.'">'.htmlentities($sMessage) .'</div>';
 	}
+
+	public function prependMessage($sMessage, $sLevel = '') {
+	    array_unshift($_SESSION['messages'], '<div class="message '.$sLevel.'">' . $sMessage .'</div>');
+
+	}
+
 
 	/* ********************************************************************************************************************* *
 
@@ -470,7 +477,7 @@ class Layout {
 	 */
 	public function render() {
 	    if ($this->page404) {
-	        $this->addMessage('La page que vous avez demandé n\'a pas été trouvée', MSG_LEVEL_ERROR);
+	        $this->prependMessage('La page que vous avez demandé n\'a pas été trouvée. <a href="/">Retourner à l\'accueil</a>', MSG_LEVEL_ERROR);
 	    }
 		return self::doctype . "\n"
 		        . '<html>' . "\n" . $this->renderHead() . "\n"
