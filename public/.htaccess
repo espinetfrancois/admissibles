@@ -1,4 +1,12 @@
 SetEnv APP_ENV dev
 
+#<ifModule mod_headers.c>
+#	Header set 
+#</ifModule>
+
+AddType image/x-icon .ico
+
 RewriteEngine on
+RewriteRule ^errors errors.php [L]
+RewriteRule ^favicon.ico images/favicon.ico [NC,L]
 RewriteRule !\.(js|ico|gif|jpg|png|css|swf)$ index.php

@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+
+.error {
+	padding			: 1em;
+	border-radius	: 5px;
+	background		: rgba(254, 180, 171, 1);
+	background		: rgba(254, 180, 171, 0.8);
+	font-size		: 1.2em;
+	border			: 1px solid rgba(237, 84, 29, 1);
+}
+
+.exception {
+	background		: rgba(200, 50, 30, 1);
+	background		: rgba(210, 10, 20, 0.8);
+}
+
+.exception .trace, .exception .previous {
+	font-size		: 0.8em;
+}
+
+.exception .trace .pre, .exception .previous .pre {
+	display		: none;
+}
+
+.exception .trace:hover .pre, .exception .previous:hover .pre {
+	display : block;
+}
+
