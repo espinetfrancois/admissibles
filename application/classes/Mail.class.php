@@ -51,8 +51,12 @@ class Mail extends PHPMailer {
     protected function psend()
     {
         if (APP_MAIL) {
-            $this->IsHTML(true);
-            parent::Send();
+            try {
+                $this->IsHTML(true);
+                parent::Send();
+            } catch (Exception $e) {
+                throw new Exception_Mail("Un problème est survenu lors de l'envoi du mail", null, $e);
+            }
         } else {
             $this->PreSend();
         }

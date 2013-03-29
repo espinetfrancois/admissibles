@@ -5,7 +5,7 @@
  * @author francois.espinet
  *
  */
-class Exception_Cache extends Exception
+class Exception_Cache extends Exception_Projet
 {
 
 }

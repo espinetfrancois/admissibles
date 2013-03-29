@@ -42,9 +42,9 @@ class Layout {
 
 	/**
 	 * Contenu de la page
-	 * @var string
+	 * @var array
 	 */
-	protected $_content = null;
+	protected $_content = array();
 
 	/**
 	 * Contient les messages pouvant être affichés sur l'application
@@ -157,7 +157,7 @@ class Layout {
 	 * @return void
 	 */
 	public function addContent($sContent) {
-		$this->content[] = $sContent;
+		$this->_content[] = $sContent;
 	}
 
 	/**
@@ -299,8 +299,8 @@ class Layout {
 	 * @param string $sMessage
 	 * @param string $sLevel
 	 */
-	public function addMessage($sMessage, $sLevel = '') {
-	    $_SESSION['messages'][] = '<div class="message '.$sLevel.'">'.htmlentities($sMessage) .'</div>';
+	public function addMessage($sMessage, $sLevel) {
+	    $_SESSION['messages'][] = '<div class="message '.$sLevel.'">'.$sMessage .'</div>';
 	}
 
 	public function prependMessage($sMessage, $sLevel = '') {
@@ -414,8 +414,10 @@ class Layout {
 	 */
 	public function renderContent()
 	{
-		$sContents = '<div id="page-wrapper">'. $this->renderMessages() . '<div class="contenu" id="contenu">';
-		if ($this->_content !== null && count($this->_content)) {
+		$sContents = '<div id="page-wrapper">'. "\n"
+		            . $this->renderMessages() . "\n"
+		            . '<div class="contenu" id="contenu">' ."\n";
+		if ($this->_content !== array() && count($this->_content)) {
 			foreach ($this->_content as $sContent) {
 				$sContents .= $sContent . "\n";
 			}
