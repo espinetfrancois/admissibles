@@ -107,7 +107,7 @@ class Router {
             return;
         }
         //tant qu'on est pas arrivé au bout, on continue la descente
-        while (is_array($a) && $this->requete->depth > $this->depth) {
+        while (is_array($a) && $this->requete->depth >= $this->depth) {
             if (array_key_exists($this->requete->aParts[$this->depth], $a)) {
                 $a = $a[$this->requete->aParts[$this->depth]];
             } elseif (array_key_exists(self::Root_Keyword, $a) && $this->depth == $this->requete->depth) {

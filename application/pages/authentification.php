@@ -21,6 +21,7 @@ if (isset($_GET['response'])) {
     Logs::logger(1, 'Connexion de l\'eleve ' . $auth['hruid'] . ' reussie');
     if (in_array('admin',$auth['rights']['admissibles'])) {
         $_SESSION['administrateur'] = true;
+        Registry::get('layout')->addMenu('admin.php');
         Logs::logger(1, 'Connexion a l\'interface d\'administration reussie');
     }
     header("Location:" .$auth['location'], true);

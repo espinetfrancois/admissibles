@@ -66,6 +66,7 @@ function projet_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 	} else {
 		//si c'est vraiment grave, on revient à l'ancien (php)
 		restore_error_handler();
+		return false;
 	}
 }
 

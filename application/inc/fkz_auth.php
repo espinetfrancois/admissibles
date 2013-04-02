@@ -66,7 +66,6 @@ function frankiz_get_response()
 
     $response = json_decode($response, true);
     $response['location'] = $location;
-
     // Set empty fields
     $fields = array('hruid',
       'firstname', 'lastname', 'nickname',

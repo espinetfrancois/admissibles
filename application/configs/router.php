@@ -20,8 +20,6 @@ return array(
                                    ),
        'administration'   => array(
                                    'root'    => 'admin.php',
-                                   array(
-                                           'gestion'                => 'admin.php',
-                                       ),
+                                   'gestion'                => 'admin.php',
                                   )
 );
