@@ -12,11 +12,6 @@ class Mail_AdminTech extends Mail {
     const Admin_Level_Notice = 'notice';
     const Admin_level_Exception = 'exception';
 
-    public function psend() {
-        $this->AddAddress($this->adminMail);
-        parent::psend();
-    }
-
     protected function _substitute($sAction='', $sType, $aRemplacement = array()) {
         return parent::substitute(self::Pers_Admin_Tech, $sAction, $sType, $aRemplacement);
     }
@@ -60,6 +55,7 @@ class Mail_AdminTech extends Mail {
 
     protected function psend() {
         try {
+            $this->AddAddress($this->adminMail);
             parent::psend();
         } catch (Exception_Mail $e) {
             throw new Exception_Mail("Impossible d'envoyer un mail à l'administateur technique.", Exception_Mail::Send_Echec_Admin, $e);

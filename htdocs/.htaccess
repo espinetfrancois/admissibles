@@ -4,7 +4,7 @@ SetEnv APP_ENV dev
 #	Header set 
 #</ifModule>
 
-AddType image/x-icon .ico
+#AddType image/x-icon .ico
 
 RewriteEngine on
 RewriteRule ^errors$ errors.php [L]

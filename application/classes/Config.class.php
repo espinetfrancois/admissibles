@@ -53,7 +53,7 @@ class Config {
     {
         //define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
         define('CONFIG_PATH', APPLICATION_PATH.'/configs');
-        define('PUBLIC_PATH', ROOT_PATH.'/public');
+        define('PUBLIC_PATH', ROOT_PATH.'/htdocs');
         define('PAGES_PATH', APPLICATION_PATH.'/pages');
         define('CLASS_PATH', APPLICATION_PATH.'/classes');
 
