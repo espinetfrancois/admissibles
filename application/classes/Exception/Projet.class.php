@@ -13,6 +13,8 @@
 class Exception_Projet extends Exception
 {
 
+    const Log_Path = '/exceptions.log';
+
     public function url()
     {
         return urlencode($this->render());
@@ -40,5 +42,14 @@ class Exception_Projet extends Exception
 
     public function handleException() {
         header("Location: /errors?exception=".$this->url());
+    }
+
+    /**
+     * Permet de logger une exception
+     * @author francois.espinet
+     */
+    public function log() {
+        $texte = '['.date('Y-m-d H:i:s', time()).'] '.$_SERVER['REMOTE_ADDR'].' - Message : '.$this->getMessage(). ' - Fichier : ' . $this->getFile() . 'L : ' . $this->getLine() . "\n";
+        error_log($texte, 3, LOGS_PATH.self::Log_Path);
     }
 }
