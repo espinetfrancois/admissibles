@@ -43,8 +43,6 @@ try {
 }
 
 
-
-
 try {
     if (isset($_POST['commande'])) {
     	$command = $_POST['commande'];
@@ -53,7 +51,7 @@ try {
 } catch (GitRuntimeException $e) {
     echo "Une erreur est survenue lors de l'execution de la commande : ".$command."<br/>".$e->getMessage().'<br/>';
 }
-echo $repo->git('log --oneline');
+echo "<pre>".$repo->git('log --oneline')."</pre>";
 ?>
 <form action='#' method='POST'>
 	<p class="champ"><label for='commande'>Commande git : </label><input type='text' name="commande"/></p>
