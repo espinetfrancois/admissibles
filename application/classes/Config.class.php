@@ -51,6 +51,7 @@ class Config {
      */
     static protected function defineConstantes()
     {
+        define('CONSTS', true);
         //define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
         define('CONFIG_PATH', APPLICATION_PATH.'/configs');
         define('PUBLIC_PATH', ROOT_PATH.'/htdocs');
@@ -80,6 +81,10 @@ class Config {
         define('MSG_LEVEL_ERROR', 'error');
         define('MSG_LEVEL_OK', 'ok');
         define('MSG_LEVEL_WARNING', 'warning');
+    }
+
+    public static function constantes() {
+        defined('CONSTS') || self::defineConstantes();
     }
 
     /**

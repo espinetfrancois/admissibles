@@ -3,3 +3,5 @@ syntax: regexp
 ^application/configs/prod\.ini$
 \.log$
 \.komodoproject$
+
+^updates/PHPGit
