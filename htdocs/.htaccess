@@ -9,5 +9,9 @@ SetEnv APP_ENV dev
 RewriteEngine on
 RewriteRule ^errors$ errors.php [L]
 RewriteRule ^errors.php$ - [L]
+
+RewriteRule ^updates$ updates.php [L]
+RewriteRule ^updates.php$ - [L]
+
 RewriteRule ^favicon.ico images/favicon.ico [NC,L]
 RewriteRule !\.(js|ico|gif|jpg|png|css|swf)$ index.php
