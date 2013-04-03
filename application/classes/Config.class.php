@@ -74,8 +74,8 @@ class Config {
 
         //constantes d'environement
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
-        define('APP_MAIL', false);
-        define('APP_CACHE', false);
+        define('APP_MAIL', true);
+        define('APP_CACHE', true);
 
         //définition des niveaux de messages
         define('MSG_LEVEL_ERROR', 'error');
