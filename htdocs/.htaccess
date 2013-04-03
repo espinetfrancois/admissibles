@@ -1,4 +1,4 @@
-SetEnv APP_ENV dev
+#SetEnv APP_ENV dev
 
 #<ifModule mod_headers.c>
 #	Header set 
