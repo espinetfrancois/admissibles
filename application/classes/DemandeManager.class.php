@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Classe de gestion BDD de la classe Demande
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
  */
-
 class DemandeManager {
 
     /**
@@ -15,35 +15,31 @@ class DemandeManager {
      */
     protected  $db;
 
-
     /**
      * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
      * @access public
-     * @param PDO $db 
+     * @param PDO $db
      * @return void
      */
-
     public  function __construct(PDO $db)
     {
         $this->db = $db;
-
     }
 
 
     /**
      * Méthode permettant d'ajouter une demande
      * @access public
-     * @param Demande $demande 
+     * @param Demande $demande
      * @return void
      */
-
     public  function add(Demande $demande)
     {
         if (!$demande->isValid()) {
             Logs::logger(3, 'Corruption des parametres. DemandeManager::add');
         } else {
             try {
-                $requete = $this->db->prepare('UPDATE admissibles 
+                $requete = $this->db->prepare('UPDATE admissibles
                                                SET SEXE = :sexe,
                                                    ADRESSE_MAIL = :email,
                                                    ID_FILIERE = :filiere,
@@ -55,7 +51,7 @@ class DemandeManager {
                 $requete->bindValue(':filiere', $demande->filiere());
                 $requete->bindValue(':prepa', $demande->prepa());
                 $requete->execute();
-                $requete = $this->db->prepare('INSERT INTO demandes 
+                $requete = $this->db->prepare('INSERT INTO demandes
                                                SET ID_ADMISSIBLE = :id,
                                                    USER_X = :user,
                                                    LIEN = :code,
@@ -69,7 +65,6 @@ class DemandeManager {
                 Logs::logger(3, 'Erreur SQL DemandeManager::add : '.$e->getMessage());
             }
         }
-
     }
 
 
@@ -81,7 +76,6 @@ class DemandeManager {
      * @param int $serie
      * @return int
      */
-
     public  function isAdmissible($nom, $prenom, $serie)
     {
         $nom = strtolower(Parametres::wd_remove_accents($nom));
@@ -111,17 +105,15 @@ class DemandeManager {
             $requete->closeCursor();
             return $result['ID'];
         }
-
     }
 
 
     /**
      * Méthode renvoyant false si l'admissible a déjà une demande en cours
      * @access public
-     * @param Demande $demande 
+     * @param Demande $demande
      * @return bool
      */
-
     public  function autorisation($demande)
     {
         try {
@@ -147,7 +139,7 @@ class DemandeManager {
 
         return ($requete->rowCount() == 0);
     }
-    
+
 
     /**
      * Méthode permettant de mettre à jour le status d'une demande
@@ -155,7 +147,6 @@ class DemandeManager {
      * @param string $code
      * @return void
      */
-
     public  function updateStatus($code, $status)
     {
         if (!is_numeric($status) || !preg_match('#^[a-f0-9]{32}$#', $code)) {
@@ -164,7 +155,7 @@ class DemandeManager {
         try {
             $requete = $this->db->prepare('UPDATE demandes
                                            SET ID_STATUS = :status
-                                           WHERE LIEN = :code'); 
+                                           WHERE LIEN = :code');
             $requete->bindValue(':status', $status);
             $requete->bindValue(':code', $code);
             $requete->execute();
@@ -178,10 +169,9 @@ class DemandeManager {
     /**
      * Méthode retournant une demande en particulier
      * @access public
-     * @param string $code 
+     * @param string $code
      * @return Demande
      */
-
     public  function getUnique($code)
     {
         if (!preg_match('#^[0-9a-f]{32}$#', $code)) {
@@ -213,9 +203,9 @@ class DemandeManager {
         } else if ($requete->rowCount() == 0) {
             Logs::logger(3, 'Corruption des parametres : DemandeManager::getUnique');
         }
-            
+
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
-            
+
         return $requete->fetch();
     }
 
@@ -225,7 +215,6 @@ class DemandeManager {
      * @access public
      * @return array(Demande)
      */
-
     public  function getList()
     {
         try {
@@ -265,7 +254,7 @@ class DemandeManager {
 
         return $listeDemandes;
     }
-    
+
 
     /**
      * Méthode retournant la liste des demandes d'un X en particulier
@@ -273,7 +262,6 @@ class DemandeManager {
      * @param string $user
      * @return array
      */
-
     public  function getDemandes($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
@@ -305,8 +293,8 @@ class DemandeManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL DemandeManager::getDemandes : '.$e->getMessage());
         }
-        
-        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs 
+
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
 
         return $requete->fetchAll();
     }

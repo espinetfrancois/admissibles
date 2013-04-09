@@ -2,20 +2,42 @@
 
 /**
  * Classe de routage de l'url.
- * L'utilisation de mod_rewrite d'apache permet une flexibilité qui s'éxprime ici!
+ * L'utilisation de mod_rewrite d'apache permet une flexibilité qui s'exprime ici!
  * @author francois.espinet
  * @version 1.0
- * @todo caching request
  */
 class Router {
 
+    /**
+     * L'objet requête de l'utilisateur
+     * @var Requete
+     */
+    protected $requete = null;
+
+    /**
+     * le layout de l'application
+     * @var Layout
+     */
+    protected $layout = null;
+
+    /**
+     * Tableau des routes de l'application
+     * Ces routes sont définies dans configs/router.php
+     * @var array
+     */
     protected $routes = array();
 
+    /**
+     * La profondeur courante que traite le routeur
+     * @var int
+     */
     protected $depth = 0;
 
+    /**
+     * Le mot clé qui défini le mot utiliser pour la racine du niveau courant dans router.php
+     * @var string
+     */
     const Root_Keyword = 'root';
-
-    const Cache_All    = false;
 
     /**
      * Le fichier php contenant les routes.
@@ -30,18 +52,18 @@ class Router {
     public $file = null;
 
     /**
-     *
-     * @var Requete
+     * Index des routes dans le cache
+     * @var unknown
      */
-    protected $requete = null;
+    const Cache_Index_Routes = 'routes';
 
     /**
-     * le layout de l'application
-     * @var Layout
+     * Définit si l'on met en cache toutes les routes ou seulement les valides
+     * @var boolean
      */
-    protected $layout = null;
+    const Cache_All    = false;
 
-    const Cache_Index_Routes = 'routes';
+
     /**
      * Constructeur, prend en argument l'url demandée ($_SERVER['REQUEST_URI'])
      * @author francois.espinet

@@ -5,7 +5,6 @@
  * @version 1.0
  *
  */
-
 class Eleve {
 
     /**
@@ -81,13 +80,11 @@ class Eleve {
      * @param array $valeurs Les valeurs à assigner
      * @return void
      */
-
     public  function __construct($valeurs = array())
     {
         if (!empty($valeurs)) { // Si on a spécifié des valeurs, alors on hydrate l'objet
             $this->hydrate($valeurs);
         }
-
     }
 
 
@@ -97,7 +94,6 @@ class Eleve {
      * @param array $donnees Les données à assigner
      * @return void
      */
-
     public  function hydrate($donnees)
     {
         foreach ($donnees as $attribut => $valeur) {
@@ -106,7 +102,6 @@ class Eleve {
                 $this->$methode($valeur);
             }
         }
-
     }
 
 
@@ -115,10 +110,8 @@ class Eleve {
      * @access public
      * @return bool
      */
-
     public  function isNew()
     {
-
         return empty($this->user);
     }
 
@@ -128,10 +121,8 @@ class Eleve {
      * @access public
      * @return bool
      */
-
     public final  function isValid()
     {
-
         return !(empty($this->user) || empty($this->sexe) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
     }
 
@@ -139,10 +130,9 @@ class Eleve {
     /**
      * Setter user
      * @access public
-     * @param string $user 
+     * @param string $user
      * @return void
      */
-
     public  function setUser($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom
@@ -150,17 +140,15 @@ class Eleve {
         } else {
             $this->user = $user;
         }
-
     }
 
 
     /**
      * Setter sexe
      * @access public
-     * @param string $sexe 
+     * @param string $sexe
      * @return void
      */
-
     public  function setSexe($sexe)
     {
         if ($sexe != 'M' && $sexe != 'F') { // de la forme M ou F
@@ -168,17 +156,15 @@ class Eleve {
         } else {
             $this->sexe = $sexe;
         }
-
     }
 
 
     /**
      * Setter email
      * @access public
-     * @param string $email 
+     * @param string $email
      * @return void
      */
-
     public  function setEmail($email)
     {
         if (!preg_match('#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\.[a-z]{2,4}$#',$email)) { // adresse email
@@ -186,45 +172,39 @@ class Eleve {
         } else {
             $this->email = $email;
         }
-
     }
 
 
     /**
      * Setter promo
      * @access public
-     * @param text $promo 
+     * @param text $promo
      * @return void
      */
-
     public  function setPromo($promo)
     {
         $this->promo = $promo;
-
     }
 
 
     /**
      * Setter section
      * @access public
-     * @param text $section 
+     * @param text $section
      * @return void
      */
-
     public  function setSection($section)
     {
        $this->section = $section;
-
     }
 
 
     /**
      * Setter prepa
      * @access public
-     * @param int $prepa 
+     * @param int $prepa
      * @return void
      */
-
     public  function setPrepa($prepa)
     {
         if (!is_numeric($prepa)) { // id numérique
@@ -232,17 +212,15 @@ class Eleve {
         } else {
             $this->prepa = $prepa;
         }
-
     }
 
 
     /**
      * Setter filiere
      * @access public
-     * @param int $filiere 
+     * @param int $filiere
      * @return void
      */
-
     public  function setFiliere($filiere)
     {
         if (!is_numeric($filiere)) { // id numérique
@@ -250,20 +228,17 @@ class Eleve {
         } else {
             $this->filiere = $filiere;
         }
-
     }
-    
-    
+
+
     /**
      * Setter erreurs null
      * @access public
      * @return void
      */
-
     public  function setErreurs()
     {
         $this->erreurs = array();
-
     }
 
 
@@ -272,10 +247,8 @@ class Eleve {
      * @access public
      * @return string
      */
-
     public  function user()
     {
-
         return $this->user;
     }
 
@@ -285,10 +258,8 @@ class Eleve {
      * @access public
      * @return string
      */
-
     public  function sexe()
     {
-
         return $this->sexe;
     }
 
@@ -298,10 +269,8 @@ class Eleve {
      * @access public
      * @return string
      */
-
     public  function email()
     {
-
         return $this->email;
     }
 
@@ -311,10 +280,8 @@ class Eleve {
      * @access public
      * @return text
      */
-
     public  function promo()
     {
-
         return $this->promo;
     }
 
@@ -324,10 +291,8 @@ class Eleve {
      * @access public
      * @return text
      */
-
     public  function section()
     {
-
         return $this->section;
     }
 
@@ -337,10 +302,8 @@ class Eleve {
      * @access public
      * @return int
      */
-
     public  function prepa()
     {
-
         return $this->prepa;
     }
 
@@ -350,10 +313,8 @@ class Eleve {
      * @access public
      * @return int
      */
-
     public  function filiere()
     {
-
         return $this->filiere;
     }
 
@@ -363,12 +324,9 @@ class Eleve {
      * @access public
      * @return array
      */
-
     public  function erreurs()
     {
-
         return $this->erreurs;
     }
 
 }
-?>

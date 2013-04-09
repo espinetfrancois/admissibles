@@ -9,25 +9,6 @@
 class Requete
 {
 
-//     /**
-//      * Profondeur maximale de la requete
-//      * la profondeur de /qqqche/qqche/qqche est 3
-//      * @var int
-//      */
-//     const Profondeur_Max_Requete = 2;
-
-//     /**
-//      * Le préfixe de la requête, peut être nul
-//      * @var string
-//      */
-//     public $prefixe = null;
-
-//     /**
-//      * Le suffixe de la requête
-//      * Peut être nul dans le cas de la demande de l'url /
-//      * @var string
-//      */
-//     public $suffixe = null;
     /**
      * Les parties de la requète
      * @var array
@@ -40,6 +21,10 @@ class Requete
      */
     public $is_invalide = false;
 
+    /**
+     * La profondeur de la requête de l'utilisateur
+     * @var int
+     */
     public $depth = 0;
 
     /**
@@ -72,25 +57,14 @@ class Requete
         }
         $this->depth = count($aRequeteParts);
         $this->aParts = $aRequeteParts;
-//         //on test si la requètre fait la bonne longueur
-//         if (count($aRequeteParts) > self::Profondeur_Max_Requete) {
-//             //si la requette est trop longue, elle est invalide
-//             $this->is_invalide = true;
-//         } elseif(count($aRequeteParts) == self::Profondeur_Max_Requete) {
-//             //si elle est tout juste de la bonne taille, on remplit le prefix et le suffixe
-//             $this->prefixe = $aRequeteParts[0];
-//             $this->suffixe = $aRequeteParts[1];
-//         } elseif(count($aRequeteParts) == 1) {
-//             //demande de qqch différent de l'accueil
-//             if ($aRequeteParts[0] != '') {
-//                 $this->suffixe = $aRequeteParts[0];
-//             }
-//         }
-
     }
 
+    /**
+     * Retourne une formulation compacte de l'url demandée
+     * @author francois.espinet
+     * @return string
+     */
     public function compact() {
         return urlencode(implode('/', $this->aParts));
     }
-
 }

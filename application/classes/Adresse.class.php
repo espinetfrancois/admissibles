@@ -5,7 +5,6 @@
  * @version 1.0
  *
  */
-
 class Adresse {
 
     /**
@@ -16,35 +15,35 @@ class Adresse {
     protected  $id;
 
     /**
-     * 
+     *
      * @var string
      * @access protected
      */
     protected  $nom;
 
     /**
-     * 
+     *
      * @var string
      * @access protected
      */
     protected  $adresse;
 
     /**
-     * 
+     *
      * @var string
      * @access protected
      */
     protected  $tel;
 
     /**
-     * 
+     *
      * @var string
      * @access protected
      */
     protected  $email;
 
     /**
-     * 
+     *
      * @var string
      * @access protected
      */
@@ -89,13 +88,11 @@ class Adresse {
      * @param array $valeurs Les valeurs à assigner
      * @return void
      */
-
     public  function __construct($valeurs = array())
     {
         if (!empty($valeurs)) { // Si on a spécifié des valeurs, alors on hydrate l'objet
             $this->hydrate($valeurs);
         }
-
     }
 
 
@@ -114,7 +111,6 @@ class Adresse {
                 $this->$methode($valeur);
             }
         }
-
     }
 
 
@@ -123,10 +119,8 @@ class Adresse {
      * @access public
      * @return bool
      */
-
     public  function isNew()
     {
-
         return empty($this->id);
     }
 
@@ -136,10 +130,8 @@ class Adresse {
      * @access public
      * @return bool
      */
-
     public final  function isValid()
     {
-
         return !(empty($this->nom) || empty($this->adresse) || empty($this->description) || empty($this->categorie));
     }
 
@@ -147,24 +139,21 @@ class Adresse {
     /**
      * Setter id
      * @access public
-     * @param string $id 
+     * @param string $id
      * @return void
      */
-
     public  function setId($id)
     {
         $this->id = (int) $id;
-
     }
 
 
     /**
      * Setter nom
      * @access public
-     * @param string $nom 
+     * @param string $nom
      * @return void
      */
-
     public  function setNom($nom)
     {
         if (empty($nom) || strlen($nom) >= 200) {
@@ -179,10 +168,9 @@ class Adresse {
     /**
      * Setter adresse
      * @access public
-     * @param string $adresse 
+     * @param string $adresse
      * @return void
      */
-
     public  function setAdresse($adresse)
     {
         if (empty($adresse) || strlen($adresse) >= 250) {
@@ -190,17 +178,15 @@ class Adresse {
         } else {
             $this->adresse = $adresse;
         }
-
     }
 
 
     /**
      * Setter tel
      * @access public
-     * @param string $tel 
+     * @param string $tel
      * @return void
      */
-
     public  function setTel($tel)
     {
         if (!preg_match('#^0[1-8]([-. ]?[0-9]{2}){4}$#',$tel) && !empty($tel)) { // n° de téléphone avec ou sans séparateur si non vide
@@ -208,20 +194,18 @@ class Adresse {
         } else {
             $this->tel = $tel;
         }
-
     }
 
 
     /**
      * Setter email
      * @access public
-     * @param string $email 
+     * @param string $email
      * @return void
      */
-
     public  function setEmail($email)
     {
-        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email) && !empty($email)) { // adresse email si non vide 
+        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email) && !empty($email)) { // adresse email si non vide
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;
@@ -233,10 +217,9 @@ class Adresse {
     /**
      * Setter description
      * @access public
-     * @param string $description 
+     * @param string $description
      * @return void
      */
-
     public  function setDescription($description)
     {
         if (empty($description) || strlen($description) >= 250) {
@@ -251,10 +234,9 @@ class Adresse {
     /**
      * Setter categorie
      * @access public
-     * @param string $categorie 
+     * @param string $categorie
      * @return void
      */
-
     public  function setCategorie($categorie)
     {
         if (!is_numeric($categorie)) { // id numérique
@@ -262,17 +244,15 @@ class Adresse {
         } else {
             $this->categorie = $categorie;
         }
-
     }
 
 
     /**
      * Setter valide
      * @access public
-     * @param int $valide 
+     * @param int $valide
      * @return void
      */
-
     public  function setValide($valide)
     {
         if ($valide != 0 && $valide != 1) { // O ou 1
@@ -280,20 +260,17 @@ class Adresse {
         } else {
             $this->valide = $valide;
         }
-
     }
 
 
-    /*
+    /**
      * Setter erreurs null
      * @access public
      * @return void
      */
-
     public  function setErreurs()
     {
         $this->erreurs = array();
-
     }
 
     /**
@@ -301,10 +278,8 @@ class Adresse {
      * @access public
      * @return int
      */
-
     public  function id()
     {
-
         return $this->id;
     }
 
@@ -314,10 +289,8 @@ class Adresse {
      * @access public
      * @return string
      */
-
     public  function nom()
     {
-
         return $this->nom;
     }
 
@@ -327,10 +300,8 @@ class Adresse {
      * @access public
      * @return string
      */
-
     public  function adresse()
     {
-
         return $this->adresse;
     }
 
@@ -340,10 +311,8 @@ class Adresse {
      * @access public
      * @return string
      */
-
     public  function tel()
     {
-
         return $this->tel;
     }
 
@@ -353,10 +322,8 @@ class Adresse {
      * @access public
      * @return string
      */
-
     public  function email()
     {
-
         return $this->email;
     }
 
@@ -366,10 +333,8 @@ class Adresse {
      * @access public
      * @return string
      */
-
     public  function description()
     {
-
         return $this->description;
     }
 
@@ -379,10 +344,8 @@ class Adresse {
      * @access public
      * @return int
      */
-
     public  function valide()
     {
-
         return $this->valide;
     }
 
@@ -392,10 +355,8 @@ class Adresse {
      * @access public
      * @return string
      */
-
     public  function categorie()
     {
-
         return $this->categorie;
     }
 
@@ -405,12 +366,8 @@ class Adresse {
      * @access public
      * @return array
      */
-
     public  function erreurs()
     {
-
         return $this->erreurs;
     }
-
 }
-?>

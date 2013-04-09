@@ -5,7 +5,6 @@
  * @version 1.0
  *
  */
-
 class Demande {
 
     /**
@@ -16,14 +15,14 @@ class Demande {
     protected  $id;
 
     /**
-     * 
+     *
      * @var string
      * @access protected
      */
     protected  $nom;
 
     /**
-     * 
+     *
      * @var string
      * @access protected
      */
@@ -63,7 +62,7 @@ class Demande {
      * @access protected
      */
     protected  $serie;
-    
+
     /**
      * Sport préféré
      * @var text
@@ -122,13 +121,11 @@ class Demande {
      * @param array $valeurs Les valeurs à assigner
      * @return void
      */
-
     public  function __construct($valeurs = array())
     {
         if (!empty($valeurs)) { // Si on a spécifié des valeurs, alors on hydrate l'objet
             $this->hydrate($valeurs);
         }
-
     }
 
 
@@ -138,7 +135,6 @@ class Demande {
      * @param array $donnees Les données à assigner
      * @return void
      */
-
     public  function hydrate($donnees)
     {
         foreach ($donnees as $attribut => $valeur) {
@@ -147,7 +143,6 @@ class Demande {
                 $this->$methode($valeur);
             }
         }
-
     }
 
 
@@ -156,35 +151,30 @@ class Demande {
      * @access public
      * @return bool
      */
-
     public final  function isValid()
     {
-
         return !(empty($this->nom) || empty($this->prenom) || empty($this->email) || empty($this->sexe) || empty($this->prepa) || empty($this->filiere) || empty($this->sport));
     }
-    
-    
+
+
     /**
      * Setter id
      * @access public
-     * @param string $id 
+     * @param string $id
      * @return void
      */
-
     public  function setId($id)
     {
         $this->id = (int) $id;
-
     }
-    
+
 
     /**
      * Setter nom
      * @access public
-     * @param string $nom 
+     * @param string $nom
      * @return void
      */
-
     public  function setNom($nom)
     {
         if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $nom)) { // lettres seulement
@@ -192,17 +182,15 @@ class Demande {
         } else {
             $this->nom = $nom;
         }
-
     }
 
 
     /**
      * Setter prenom
      * @access public
-     * @param string $prenom 
+     * @param string $prenom
      * @return void
      */
-
     public  function setPrenom($prenom)
     {
         if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $prenom)) { // lettres seulement
@@ -210,17 +198,15 @@ class Demande {
         } else {
             $this->prenom = $prenom;
         }
-
     }
 
 
     /**
      * Setter email
      * @access public
-     * @param string $email 
+     * @param string $email
      * @return void
      */
-
     public  function setEmail($email)
     {
         if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email)) { // adresse email
@@ -228,17 +214,15 @@ class Demande {
         } else {
             $this->email = $email;
         }
-
     }
 
 
     /**
      * Setter sexe
      * @access public
-     * @param string $sexe 
+     * @param string $sexe
      * @return void
      */
-
     public  function setSexe($sexe)
     {
         if ($sexe != 'M' && $sexe != 'F') { // de la forme M ou F
@@ -246,17 +230,15 @@ class Demande {
         } else {
             $this->sexe = $sexe;
         }
-
     }
 
 
     /**
      * Setter prepa
      * @access public
-     * @param int $prepa 
+     * @param int $prepa
      * @return void
      */
-
     public  function setPrepa($prepa)
     {
         if (!is_numeric($prepa)) { // id numérique
@@ -264,17 +246,15 @@ class Demande {
         } else {
             $this->prepa = $prepa;
         }
-
     }
 
 
     /**
      * Setter filiere
      * @access public
-     * @param int $filiere 
+     * @param int $filiere
      * @return void
      */
-
     public  function setFiliere($filiere)
     {
         if (!is_numeric($filiere)) { // id numérique
@@ -282,17 +262,15 @@ class Demande {
         } else {
             $this->filiere = $filiere;
         }
-
     }
 
 
     /**
      * Setter serie
      * @access public
-     * @param int $serie 
+     * @param int $serie
      * @return void
      */
-
     public  function setSerie($serie)
     {
         if (!is_numeric($serie)) {
@@ -300,30 +278,27 @@ class Demande {
         } else {
             $this->serie = $serie;
         }
-
     }
 
 
     /**
      * Setter sport
      * @access public
-     * @param text $sport 
+     * @param text $sport
      * @return void
      */
-
     public  function setSport($sport)
     {
         $this->sport = $sport;
-
     }
+
 
     /**
      * Setter userEleve
      * @access public
-     * @param string $user 
+     * @param string $user
      * @return void
      */
-
     public  function setUserEleve($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom
@@ -331,17 +306,15 @@ class Demande {
         } else {
             $this->userEleve = $user;
         }
-
     }
 
 
-    /* 
+    /**
      * Setter status
      * @access public
-     * @param int $status 
+     * @param int $status
      * @return void
      */
-
     public  function setStatus($status)
     {
         if (!is_numeric($status)) { // id numérique
@@ -349,16 +322,15 @@ class Demande {
         } else {
             $this->status = $status;
         }
-
     }
 
-    /* 
+
+    /**
      * Setter code
      * @access public
      * @param string $code
      * @return void
      */
-
     public  function setCode($code)
     {
         if (strlen($code) != 32) { // id numérique
@@ -375,10 +347,8 @@ class Demande {
      * @access public
      * @return int
      */
-
     public  function id()
     {
-
         return $this->id;
     }
 
@@ -388,10 +358,8 @@ class Demande {
      * @access public
      * @return string
      */
-
     public  function nom()
     {
-
         return $this->nom;
     }
 
@@ -401,10 +369,8 @@ class Demande {
      * @access public
      * @return string
      */
-
     public  function prenom()
     {
-
         return $this->prenom;
     }
 
@@ -414,10 +380,8 @@ class Demande {
      * @access public
      * @return string
      */
-
     public  function email()
     {
-
         return $this->email;
     }
 
@@ -427,10 +391,8 @@ class Demande {
      * @access public
      * @return string
      */
-
     public  function sexe()
     {
-
         return $this->sexe;
     }
 
@@ -440,10 +402,8 @@ class Demande {
      * @access public
      * @return int
      */
-
     public  function prepa()
     {
-
         return $this->prepa;
     }
 
@@ -453,10 +413,8 @@ class Demande {
      * @access public
      * @return int
      */
-
     public  function filiere()
     {
-
         return $this->filiere;
     }
 
@@ -466,22 +424,19 @@ class Demande {
      * @access public
      * @return int
      */
-
     public  function serie()
     {
-
         return $this->serie;
     }
-    
+
+
     /**
      * Getter sport
      * @access public
      * @return text
      */
-
     public  function sport()
     {
-
         return $this->sport;
     }
 
@@ -491,10 +446,8 @@ class Demande {
      * @access public
      * @return string
      */
-
     public  function userEleve()
     {
-
         return $this->userEleve;
     }
 
@@ -504,10 +457,8 @@ class Demande {
      * @access public
      * @return int
      */
-
     public  function status()
     {
-
         return $this->status;
     }
 
@@ -517,10 +468,8 @@ class Demande {
      * @access public
      * @return string
      */
-
     public  function code()
     {
-
         return $this->code;
     }
 
@@ -530,12 +479,9 @@ class Demande {
      * @access public
      * @return array
      */
-
     public  function erreurs()
     {
-
         return $this->erreurs;
     }
 
 }
-?>

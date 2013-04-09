@@ -5,7 +5,6 @@
  * @version 1.0
  *
  */
-
 class AdresseManager {
 
     /**
@@ -16,39 +15,35 @@ class AdresseManager {
     protected  $db;
 
 
- /**
+    /**
      * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
      * @access public
-     * @param PDO $db 
+     * @param PDO $db
      * @return void
      */
-
     public  function __construct(PDO $db)
     {
         $this->db = $db;
-
     }
-
 
 
     /**
      * Méthode permettant d'ajouter une adresse
      * @access protected
-     * @param Adresse $adresse 
+     * @param Adresse $adresse
      * @return void
      */
-
     protected  function add(Adresse $adresse)
     {
         try {
-            $requete = $this->db->prepare('INSERT INTO annonces 
+            $requete = $this->db->prepare('INSERT INTO annonces
                                            SET NOM = :nom,
                                                TELEPHONE = :tel,
                                                DESCRIPTION = :description,
                                                VALIDATION = :valid,
                                                ADRESSE_MAIL = :email,
                                                ADRESSE = :adresse,
-                                               ID_CATEGORIE = :categorie'); 
+                                               ID_CATEGORIE = :categorie');
             $requete->bindValue(':nom', $adresse->nom());
             $requete->bindValue(':tel', $adresse->tel());
             $requete->bindValue(':description', $adresse->description());
@@ -60,21 +55,19 @@ class AdresseManager {
         } catch (Exception $e) {
                 Logs::logger(3, 'Erreur SQL AdresseManager::add : '.$e->getMessage());
         }
-
     }
 
 
     /**
      * Méthode permettant de modifier une adresse
      * @access protected
-     * @param Adresse $adresse 
+     * @param Adresse $adresse
      * @return void
      */
-
     protected  function update(Adresse $adresse)
     {
         try {
-            $requete = $this->db->prepare('UPDATE annonces 
+            $requete = $this->db->prepare('UPDATE annonces
                                            SET NOM = :nom,
                                                TELEPHONE = :tel,
                                                DESCRIPTION = :description,
@@ -95,14 +88,13 @@ class AdresseManager {
         } catch (Exception $e) {
                 Logs::logger(3, 'Erreur SQL AdresseManager::update : '.$e->getMessage());
         }
-
     }
 
 
     /**
      * Méthode permettant d'enregistrer une adresse valide
      * @access public
-     * @param Adresse $adresse 
+     * @param Adresse $adresse
      * @return void
      */
 
@@ -113,17 +105,15 @@ class AdresseManager {
         } else {
             Logs::logger(3, 'Corruption des parametres : AdresseManager::save');
         }
-
     }
-    
-    
+
+
     /**
      * Méthode permettant de supprimer une adresse
      * @access public
      * @param int $id
      * @return void
      */
-
     public final  function delete($id)
     {
         if (is_numeric($id)) {
@@ -138,17 +128,15 @@ class AdresseManager {
         } else {
             Logs::logger(3, 'Corruption des parametres : AdresseManager::delete');
         }
-
     }
 
 
     /**
      * Méthode retournant une adresse en particulier
      * @access public
-     * @param int $id 
+     * @param int $id
      * @return Adresse
      */
-
     public  function getUnique($id)
     {
         if (!is_numeric($id)) {
@@ -173,9 +161,9 @@ class AdresseManager {
         if ($requete->rowCount() != 1) {
             Logs::logger(3, 'Corruption de la table "annonces". ID non unique');
         }
-            
+
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse');
-            
+
         return $requete->fetch();
     }
 
@@ -185,7 +173,6 @@ class AdresseManager {
      * @access public
      * @return array
      */
-
     public  function getListAffiche($valid = 1)
     {
         try {
@@ -207,7 +194,7 @@ class AdresseManager {
             Logs::logger(3, 'Erreur SQL AdresseManager::getListAffiche : '.$e->getMessage());
         }
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse'); // les champs références contiennent maintenant la valeur
-            
+
         $listeAdresse = $requete->fetchAll();
         $requete->closeCursor();
 
@@ -220,7 +207,6 @@ class AdresseManager {
      * @access public
      * @return array
      */
-
     public  function getCategories()
     {
         try {
@@ -242,7 +228,6 @@ class AdresseManager {
      * @param string $nom
      * @return void
      */
-
     public  function addCategorie($nom)
     {
         try {
@@ -253,17 +238,15 @@ class AdresseManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL AdresseManager::addCategorie : '.$e->getMessage());
         }
-
     }
-    
-    
+
+
     /**
      * Méthode suppriment une categorie
      * @access public
      * @param int $id
      * @return void
      */
-
     public  function deleteCategorie($id)
     {
         try {
@@ -275,17 +258,15 @@ class AdresseManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL AdresseManager::deleteCategorie : '.$e->getMessage());
         }
-
     }
-    
-    
+
+
     /**
      * Méthode vérifiant s'il y a des adresses dans une catégorie donnée
      * @access public
      * @param int $id
      * @return boolean
      */
-
     public  function isUsedCat($id)
     {
         try {
@@ -302,8 +283,6 @@ class AdresseManager {
         } else {
             return false;
         }
-
     }
 
 }
-?>

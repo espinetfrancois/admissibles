@@ -19,7 +19,8 @@ class Cache
      * Initialisation de l'instance du cache
      * @author francois.espinet
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->setInstance();
     }
 
@@ -29,7 +30,8 @@ class Cache
      * @author francois.espinet
      * @throws Exception_Cache
      */
-    protected static function setInstance() {
+    protected static function setInstance()
+    {
         if (self::$_cache === null) {
             try {
                 if (APP_CACHE) {
@@ -62,7 +64,8 @@ class Cache
      * @author francois.espinet
      * @return Cache_Interface
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$_cache === null) {
             self::setInstance();
         }
