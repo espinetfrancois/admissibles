@@ -46,7 +46,6 @@ class Mail_Admissible extends Mail {
         parent::__construct();
         //ajout du destinataire (l'admissible)
         $this->AddAddress($this->email, $this->nom.' '.$this->prenom);
-
     }
 
     /**
@@ -58,19 +57,22 @@ class Mail_Admissible extends Mail {
      */
     public function demandeAnnulee($sEleveX)
     {
-        $this->AltBody = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_TXT,
-                                         array('HOST'         => $this->appRootUrl,
-                                              'ELEVE_X'      => $sEleveX));
+        try {
+            $this->AltBody = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_TXT,
+                                             array('HOST'         => $this->appRootUrl,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Body = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_HTML,
-                                        array('HOST'         => $this->appRootUrl,
-                                              'ELEVE_X'      => $sEleveX));
+            $this->Body = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_HTML,
+                                            array('HOST'         => $this->appRootUrl,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Subject = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_OBJET,
-                                        array('NOM'    => $this->nom,
-                                              'PRENOM' => $this->prenom));
-        $this->psend();
-
+            $this->Subject = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_OBJET,
+                                            array('NOM'    => $this->nom,
+                                                  'PRENOM' => $this->prenom));
+            $this->psend();
+        } catch (Exception_Mail $e) {
+        	throw new Exception_Mail("Impossible d'envoyer le mail de notification d'annulation d'une demande.", Exception_Mail::Send_Echec_Admissible_DemandeAnnulee, $e);
+        }
     }
 
     /**
@@ -84,20 +86,24 @@ class Mail_Admissible extends Mail {
      */
     public function demandeEnvoyee($sEleveX, $sLinkCancel, $sLinkConfirm)
     {
-        $this->AltBody = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_TXT,
-                                        array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
-                                              'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
-                                              'ELEVE_X'      => $sEleveX));
+        try {
+            $this->AltBody = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_TXT,
+                                            array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
+                                                  'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Body = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_HTML,
-                                        array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
-                                              'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
-                                              'ELEVE_X'      => $sEleveX));
+            $this->Body = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_HTML,
+                                            array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
+                                                  'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Subject = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_OBJET,
-                                        array('NOM'          => $this->nom,
-                                              'PRENOM'       => $this->prenom));
-        $this->psend();
+            $this->Subject = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_OBJET,
+                                            array('NOM'          => $this->nom,
+                                                  'PRENOM'       => $this->prenom));
+            $this->psend();
+        } catch (Exception_Mail $e) {
+        	throw new Exception_Mail("Impossible d'envoyer le mail de notification de demande envoyée.", Exception_Mail::Send_Echec_Admissible_DemandeEnvoyee, $e);
+        }
     }
 
     /**
@@ -111,19 +117,22 @@ class Mail_Admissible extends Mail {
      */
     public function demandeConfirmee($sXmail, $sEleveX)
     {
-        $this->AltBody = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_TXT,
-                    array('ELEVE_X'      => $sEleveX,
-                          'X_MAIL'       => $sXmail));
+        try {
+            $this->AltBody = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_TXT,
+                        array('ELEVE_X'      => $sEleveX,
+                              'X_MAIL'       => $sXmail));
 
-        $this->Body = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_HTML,
-                array('X_MAIL'         => $sXmail,
-                        'ELEVE_X'      => $sEleveX));
+            $this->Body = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_HTML,
+                    array('X_MAIL'         => $sXmail,
+                            'ELEVE_X'      => $sEleveX));
 
-        $this->Subject = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_OBJET,
-                array('NOM'          => $this->nom,
-                      'PRENOM'       => $this->prenom));
-        $this->psend();
-
+            $this->Subject = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_OBJET,
+                    array('NOM'          => $this->nom,
+                          'PRENOM'       => $this->prenom));
+            $this->psend();
+        } catch (Exception_Mail $e) {
+        	throw new Exception_Mail("Impossible d'envoyer le mail de notification de confirmation de demande", Exception_Mail::Send_Echec_Admissible_DemandeConfirmee, $e);
+        }
     }
 
     /**
