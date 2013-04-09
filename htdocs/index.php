@@ -9,19 +9,21 @@ session_start();
 
 try {
 	$config = new Config();
-	Registry::getInstance()->set('config', $config);
-	require_once(APPLICATION_PATH . '/inc/sql.php');
 	$layout = new Layout();
+
 	$router = new Router($_SERVER['REQUEST_URI'], $layout);
+
+	//enregistrement dans le registre (accès à travers l'application)
+	Registry::getInstance()->set('config', $config);
 	Registry::getInstance()->set('layout', $layout);
+	//après le layout
+	require_once(APPLICATION_PATH . '/inc/sql.php');
 
 	//gestion des erreurs dans les pages
 	try {
 		$layout->addPage($router->file);
-	} catch (Exception_Error $e) {
-	    //todo logger ici cette erreur mineure
-	    throw $e;
 	} catch (Exception $e) {
+	    $layout->clearContent();
 		$layout->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
 		if (APP_ENV != 'production') {
 			$layout->addMessage($e->getMessage() .' : <br/>'. $e->getTraceAsString(), MSG_LEVEL_ERROR);
@@ -32,12 +34,24 @@ try {
 		}
 	}
 	echo $layout;
-
-} catch (Exception_Error $e) {
-	//erreur pas grave, on s'arrète
-	if ($e->get_errno() & E_ERROR) {
-		echo $layout;
-	}
+} catch (Exception_Layout $e) {
+    //pas de layout, on fait à la main
+    echo "Problème lors du chargement du layout de l'application";
+} catch (Exception_Config $e) {
+    //pas de layout, on fait à la main
+    echo "Problème lors du chargement de la configuration de l'application";
+} catch (Exception_Bdd $e) {
+    $layout->addMessage("Un problème est survenu avec la base de données du site.", MSG_LEVEL_ERROR);
+    echo $layout;
 } catch (Exception $e) {
-	echo $layout;
+	//erreur grave, on fait ce qu'on peut
+	echo "Un problème grave est survenu.<br/>";
+	try {
+	    $exep = new Exception_Projet("Une erreur grave est survenue", null, $e);
+	    $mail = new Mail_AdminTech();
+	    $mail->exception($exep->render());
+	    echo "Les administrateurs du site ont été prévenus.<br/>";
+	} catch (Exception $e) {
+	    //rien?
+	}
 }

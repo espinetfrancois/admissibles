@@ -45,7 +45,8 @@ function projet_exception_handler(Exception $exception)
 }
 
 /**
- * Gère les erreurs générales de php et les transforme en exceptions (mais pas les erreurs fatales)
+ * Gère les erreurs générales de php.
+ * Plus particulièrement leur affichage à l'écran
  * @author francois.espinet
  * @param unknown $errno
  * @param unknown $errstr
@@ -55,41 +56,20 @@ function projet_exception_handler(Exception $exception)
  */
 function projet_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
 {
-	if (!(error_reporting() & $errno)) {
-		// Ce code d'erreur n'est pas inclus dans error_reporting()
-		return;
-	}
-	if (class_exists('Exception_Error', true)) {
-		throw new Exception_Error($errno, $errstr, $errfile, $errline);
-		//return false; //continue l'execution?
-		return true;
-	} else {
-		//si c'est vraiment grave, on revient à l'ancien (php)
-		restore_error_handler();
-		return false;
-	}
+    //si la classe layout est chargé, on améliore le rendu des erreurs
+    if (Registry::isRegistered('layout') && ini_get('display_errors')) {
+        Registry::get('layout')->addMessage('PHP : '.$errstr.' in '.$errfile.' line : '.$errline, MSG_LEVEL_ERROR);
+        //on désactive l'affichage des erreurs puisqu'elle est déjà affichée (mais elle peut encore être loggée)
+        ini_set('display_errors', false);
+        //on continue le process de l'erreur par le handler php
+        return false;
+    } else {
+        restore_error_handler();
+        return false;
+    }
 }
 
-/**
- * Gestion des erreurs fatales
- * @author francois.espinet
- */
-// function projet_shutdown()
-// {
-// 	$error = error_get_last();
-// 	if ($error) {
-// 		switch ($error['type']) {
-// 		case E_ERROR:
-// 		case E_CORE_ERROR:
-// 		case E_COMPILE_ERROR:
-// 			$e = new Exception_Projet("Erreur Fatale", null,new Exception_Error($error['type'], $error['message'], $error['file'], $error['line'], "Erreur fatale"));
-// 			$e->handleException();
-// 			break;
-// 		}
-// 	}
-// }
-
 spl_autoload_register('autoloader');
+//gestion personnalisée des erreurs
 set_exception_handler('projet_exception_handler');
 set_error_handler('projet_error_handler', E_ALL);
-// register_shutdown_function('projet_shutdown');
