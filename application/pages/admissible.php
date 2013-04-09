@@ -4,9 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo gestion de l'envoi du mail de validation/annulation
  */
-// require_once(APPLICATION_PATH.'/inc/sql.php');
 
 $demandeManager = new DemandeManager(Registry::get('db'));
 $eleveManager = new EleveManager(Registry::get('db'));
@@ -27,7 +25,8 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
         $demande->setUserEleve($_POST['user']);
         $demande->setStatus('0');
         $demande->setCode(md5(sha1(time().$demande->email())));
-        // envoi d'un email de validation contenant <a href="http://.../validation.php?code=$demande->code()">Valider votre demande</a> <a href="http://.../?code=$demande->code()">Annuler votre demande</a>
+        $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
+        $mail->demandeEnvoyee("", '/admissible/annulation-demande?code='.$demande->code(), '/admissible/validation-demande?code='.$demande->code());
         $demandeManager->add($demande);
         $eleveManager->deleteDispo($_POST['user'], $demande->serie());
         Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
@@ -38,9 +37,7 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
 if (isset($_GET['action']) && $_GET['action'] == 'demande') {
     $series = $parametres->getCurrentSeries();
     if (empty($series)) { // Interface fermée aux demandes
-        ?>
-        <p>Les demandes ne sont pas encore ouvertes pour la prochaine série...</p>
-        <?php
+        echo '<p>Les demandes ne sont pas encore ouvertes pour la prochaine série...</p>';
     } else {
         if (isset($_POST['nom'])) {
             unset($erreurD);

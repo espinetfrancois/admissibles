@@ -33,9 +33,9 @@ class Mail_Admissible extends Mail {
     /**
      * Constructeur
      * @access public
-     * @param string $sNom
-     * @param string $sPrenom
-     * @param string $sEmail
+     * @param string $sNom      nom de l'admissible
+     * @param string $sPrenom   prénom de l'admissible
+     * @param string $sEmail    email de l'admissible
      * @return void
      */
     public function __construct($sNom, $sPrenom, $sEmail)
@@ -59,11 +59,11 @@ class Mail_Admissible extends Mail {
     public function demandeAnnulee($sEleveX)
     {
         $this->AltBody = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_TXT,
-                                         array('HOST'         => $_SERVER['HTTP_HOST'],
+                                         array('HOST'         => $this->appRootUrl,
                                               'ELEVE_X'      => $sEleveX));
 
         $this->Body = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_HTML,
-                                        array('HOST'         => $_SERVER['HTTP_HOST'],
+                                        array('HOST'         => $this->appRootUrl,
                                               'ELEVE_X'      => $sEleveX));
 
         $this->Subject = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_OBJET,
@@ -78,20 +78,20 @@ class Mail_Admissible extends Mail {
      * Ce mail lui permet d'annuler sa demande et de la confirmer, il vérifie aussi que l'admissible est bien l'auteur de la demande
      * @access public
      * @param string $sEleveX        l'élève X dont la demande est l'objet
-     * @param string $sLinkCancel    le lien d'annulation de la demande
-     * @param string $sLinkConfirm   le lien de confirmation de la demande
+     * @param string $sLinkCancel    le suffixe (sans la partie http://) du lien d'annulation de la demande
+     * @param string $sLinkConfirm   le suffixe (sans la partie http://) du lien de confirmation de la demande
      * @return void
      */
     public function demandeEnvoyee($sEleveX, $sLinkCancel, $sLinkConfirm)
     {
         $this->AltBody = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_TXT,
-                                        array('LINK_CONFIRM' => $sLinkConfirm,
-                                              'LINK_CANCEL'  => $sLinkCancel,
+                                        array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
+                                              'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
                                               'ELEVE_X'      => $sEleveX));
 
         $this->Body = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_HTML,
-                                        array('LINK_CONFIRM' => $sLinkConfirm,
-                                              'LINK_CANCEL'  => $sLinkCancel,
+                                        array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
+                                              'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
                                               'ELEVE_X'      => $sEleveX));
 
         $this->Subject = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_OBJET,
@@ -109,7 +109,7 @@ class Mail_Admissible extends Mail {
      * @param string $sXmail    l'email de l'élève pour que l'admissible puisse prendre contact avec lui
      * @return void
      */
-    public function demandeConfirmee($sEleveX, $sXmail)
+    public function demandeConfirmee($sXmail, $sEleveX)
     {
         $this->AltBody = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_TXT,
                     array('ELEVE_X'      => $sEleveX,

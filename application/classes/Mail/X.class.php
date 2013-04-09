@@ -36,13 +36,17 @@ class Mail_X extends Mail
      * @param string $prenom le prénom de l'élève
      * @param string $XEmail l'email de l'élève
      */
-    public function __construct($nom, $prenom, $XEmail)
+    public function __construct($XEmail, $nom = null, $prenom = null)
     {
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->XEmail = $XEmail;
         parent::__construct();
-        $this->AddAddress($this->XEmail, $this->nom.' '.$this->prenom);
+        if ($nom == null || $prenom == null) {
+            $this->AddAddress($this->XEmail);
+        } else {
+            $this->AddAddress($this->XEmail, $this->nom.' '.$this->prenom);
+        }
 
     }
 
@@ -71,9 +75,9 @@ class Mail_X extends Mail
      */
     public function nouvelleDemande()
     {
-        $this->AltBody = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_TXT, array('HOST' => $_SERVER['HTTP_HOST']));
+        $this->AltBody = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_TXT, array('HOST' => $this->appRootUrl.'x/espace-personnel'));
 
-        $this->Body = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_HTML, array('HOST' => $_SERVER['HTTP_HOST']));
+        $this->Body = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_HTML, array('HOST' =>  $this->appRootUrl.'x/espace-personnel'));
 
         $this->Subject = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_OBJET);
         $this->psend();

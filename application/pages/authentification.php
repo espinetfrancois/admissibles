@@ -15,13 +15,12 @@ if (isset($_GET['response'])) {
     $_SESSION['eleve'] = $eleveManager->getUnique($auth['hruid']);
     if ($_SESSION['eleve'] == NULL) {
         $_SESSION['new'] = 1; // Première connexion de l'élève
-        $_SESSION['eleve'] = $eleve = new Eleve(
+        $_SESSION['eleve'] = new Eleve(
                 array('user' => $auth['hruid'], 'email' => $auth['email'], 'promo' => $auth['promo'], 'section' => $auth['sport'])); //***
     }
     Logs::logger(1, 'Connexion de l\'eleve ' . $auth['hruid'] . ' reussie');
     if (in_array('admin',$auth['rights']['admissibles'])) {
         $_SESSION['administrateur'] = true;
-        Registry::get('layout')->addMenu('admin.php');
         Logs::logger(1, 'Connexion a l\'interface d\'administration reussie');
     }
     header("Location:" .$auth['location'], true);
