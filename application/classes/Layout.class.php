@@ -119,6 +119,10 @@ class Layout {
 		//ajout des js de base
 		$this->appendJs('menu.js');
 		$_SESSION['messages'] = array();
+		//ajout du menu admin le cas échéant
+		if (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true) {
+			$this->addMenu('admin.php');
+		}
 	}
 
 	/* ********************************************************************************************************************* *
