@@ -134,8 +134,8 @@ if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
         }
         echo '<tr>';
         echo '<td><input type="text" name="intitule"/></td>';
-        echo '<td><input type="text" name="date_debut" value="00/00/0000"/></td>';
-        echo '<td><input type="text" name="date_fin" value="00/00/0000"/></td>';
+        echo '<td><input type="text" class="champ_date" name="date_debut" value="'.date('d/m/Y').'"/></td>';
+        echo '<td><input type="text" class="champ_date" name="date_fin" value="'.date('d/m/Y').'"/></td>';
         echo '<td><input type="submit" value="Ajouter"/></td>';
         echo '</tr>';
         echo '</table>';
