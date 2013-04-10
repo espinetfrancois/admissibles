@@ -16,10 +16,12 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
         //préparation de l'envoi du mail : récupération des informations de l'X
         $elevem = new EleveManager(Registry::get('config'));
         $eleve = $elevem->getUnique($demande->userEleve());
+
         $mail = new Mail_X($eleve->email());
         //envoi du mail d'avertissement à l'X
         $mail->nouvelleDemande();
 
+        //eventuellement envoyer un mail de confirmation à l'admissible
            echo '<p>Votre adresse email a bien été <strong>validée</strong>.<br/>';
            echo 'Vous recevrez un email de confirmation lorsque l\'élève que vous avez contacté acceptera votre demande.<br/><br/>';
         echo 'Si l\'élève semble ne pas répondre dans le temps imparti, merci d\'annuler votre demande (lien l\'email précedemment reçu) afin d\'en faire une nouvelle...</p>';

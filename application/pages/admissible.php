@@ -26,7 +26,8 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
         $demande->setStatus('0');
         $demande->setCode(md5(sha1(time().$demande->email())));
         $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
-        $mail->demandeEnvoyee("", '/admissible/annulation-demande?code='.$demande->code(), '/admissible/validation-demande?code='.$demande->code());
+
+        $mail->demandeEnvoyee($demande->userEleve(), '/admissible/annulation-demande?code='.$demande->code(), '/admissible/validation-demande?code='.$demande->code());
         $demandeManager->add($demande);
         $eleveManager->deleteDispo($_POST['user'], $demande->serie());
         Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
