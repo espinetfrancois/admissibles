@@ -43,6 +43,7 @@ class Config {
         $this->loadConfig();
     }
 
+
     /**
      * Définition des constantes de l'application.
      * La visibilité évite les doubles définitions
@@ -83,9 +84,16 @@ class Config {
         define('MSG_LEVEL_WARNING', 'warning');
     }
 
+
+    /**
+     * Fonction statique pour pouvoir charger les constantes à l'extérieur de la classe
+     * S'assure que les constantes n'ont pas été chargées avant
+     * @author francois.espinet
+     */
     public static function constantes() {
         defined('CONSTS') || self::defineConstantes();
     }
+
 
     /**
      * Include des libraries tierces
@@ -96,6 +104,7 @@ class Config {
     {
         require_once(LIBRARY_PATH.'/phpmailer/phpmailer.class.php');
     }
+
 
     /**
      * Chargement du fichier de configuration (.ini)
@@ -142,6 +151,7 @@ class Config {
         }
     }
 
+
     /**
      * Initialisation de Frankiz
      * @author francois.espinet
@@ -153,6 +163,7 @@ class Config {
         	throw new Exception('Le fichier de configuration de Frankiz est erroné.');
         }
     }
+
 
     /**
      * Configuration de php
@@ -176,6 +187,7 @@ class Config {
         return $this->_otherparam;
     }
 
+
     /**
      * Renvoie le tableau de configuration de frankiz
      * @author francois.espinet
@@ -186,10 +198,17 @@ class Config {
         return $this->_frankiz;
     }
 
+
+    /**
+     * Remplit la configuration de Frankiz
+     * @author francois.espinet
+     * @param array $_frankiz
+     */
     public function set_frankiz($_frankiz)
     {
         $this->_frankiz = $_frankiz;
     }
+
 
     /**
      * Renvoie l'host de la base de données

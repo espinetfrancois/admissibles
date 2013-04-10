@@ -1,7 +1,14 @@
 <?php
 
+/**
+ * Classe de registre pour l'application
+ * Permet de définir un équivalent de variable globales
+ * @author francois.espinet
+ *
+ */
 class Registry extends ArrayObject
 {
+
     /**
      * Class name of the singleton registry object.
      * @var string
@@ -103,4 +110,3 @@ class Registry extends ArrayObject
     }
 
 }
-

@@ -13,10 +13,13 @@ return array(
        'x'                => array(
                                    'connexion'               => 'eleve.php',
                                    'donnees-personnelles'    => 'eleve.php',
+                                   'espace-personnel'        => 'eleve.php'
                                    ),
        'admissible'       => array(
                                    'inscription'            => 'admissible.php',
                                    'adresses'               => 'adresses.php',
+                                   'annulation-demande'     => 'annulation.php',
+                                   'validation-demande'     => 'validation.php'
                                    ),
        'administration'   => array(
                                    'root'    => 'admin.php',

@@ -36,13 +36,17 @@ class Mail_X extends Mail
      * @param string $prenom le prénom de l'élève
      * @param string $XEmail l'email de l'élève
      */
-    public function __construct($nom, $prenom, $XEmail)
+    public function __construct($XEmail, $nom = null, $prenom = null)
     {
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->XEmail = $XEmail;
         parent::__construct();
-        $this->AddAddress($this->XEmail, $this->nom.' '.$this->prenom);
+        if ($nom == null || $prenom == null) {
+            $this->AddAddress($this->XEmail);
+        } else {
+            $this->AddAddress($this->XEmail, $this->nom.' '.$this->prenom);
+        }
 
     }
 
@@ -54,29 +58,35 @@ class Mail_X extends Mail
      */
     public function demandeAnnulee()
     {
-        $this->AltBody = $this->_substitute(self::Action_Canceled, self::CONTENT_TYPE_TXT);
+        try {
+            $this->AltBody = $this->_substitute(self::Action_Canceled, self::CONTENT_TYPE_TXT);
 
-        $this->Body = $this->_substitute(self::Action_Canceled,self::CONTENT_TYPE_HTML);
+            $this->Body = $this->_substitute(self::Action_Canceled,self::CONTENT_TYPE_HTML);
 
-        $this->Subject = $this->_substitute(self::Action_Canceled, self::CONTENT_TYPE_OBJET);
-        $this->psend();
-
+            $this->Subject = $this->_substitute(self::Action_Canceled, self::CONTENT_TYPE_OBJET);
+            $this->psend();
+        } catch (Exception_Mail $e) {
+        	throw new Exception_Mail("Impossible d'envoyer le mail de notification d'annulation d'une demande.", Exception_Mail::Send_Echec_X_DemandeAnnulee, $e);
+        }
     }
 
     /**
      * Génération et envoi d'un mail lors d'une nouvelle demande d'un admissible
      * Préviens l'X qu'un admissible a demandé à loger chez lui.
-     * Par ce mail, l'X peut confirmer la demande de l'admissible.
      * @author francois.espinet
      */
     public function nouvelleDemande()
     {
-        $this->AltBody = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_TXT, array('HOST' => $_SERVER['HTTP_HOST']));
+        try {
+            $this->AltBody = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_TXT, array('HOST' => $this->appRootUrl.'x/espace-personnel'));
 
-        $this->Body = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_HTML, array('HOST' => $_SERVER['HTTP_HOST']));
+            $this->Body = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_HTML, array('HOST' =>  $this->appRootUrl.'x/espace-personnel'));
 
-        $this->Subject = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_OBJET);
-        $this->psend();
+            $this->Subject = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_OBJET);
+            $this->psend();
+        } catch (Exception_Mail $e) {
+            throw new Exception_Mail("Impossible d'envoyer le mail de notification de nouvelle demande.", Exception_Mail::Send_Echec_X_NouvelleDemande, $e);
+        }
     }
 
     /**

@@ -4,9 +4,7 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo envoi mail
  */
-// require_once(APPLICATION_PATH.'/inc/sql.php');
 
 $demandeManager = new DemandeManager(Registry::get('db'));
 $eleveManager = new EleveManager(Registry::get('db'));
@@ -16,10 +14,19 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
     if ($demande->status() != 3) {
         $demandeManager->updateStatus($_GET['code'], '3');
         $eleveManager->addDispo($demande->userEleve(), $demande->serie());
-        // Envoi d'un mail à l'X lui indiquant l'annulation de la demande
+        //demande confirmée par l'admissible au moins
+        if ($demande->status() != 0) {
+            //préparation de l'envoi du mail : récupération des informations de l'X
+            $elevem = new EleveManager(Registry::get('config'));
+            $eleve = $elevem->getUnique($demande->userEleve());
+
+            $mail = new Mail_X($eleve->email());
+            // Envoi d'un mail à l'X lui indiquant l'annulation de la demande
+            $mail->demandeAnnulee();
+        }
         echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>';
-        echo '<p>Votre demande a bien été <strong>annulée</strong>.<br/>';
-        echo 'Vous pouvez désormais créer une nouvelle demande sur la page <a href=\'demande\'>suivante</a></p>';
+        echo '<p>Votre demande a bien été <span class="emph">annulée</span>.<br/>';
+        echo 'Vous pouvez désormais créer une nouvelle demande sur <a href=\'/demande\'>la page suivante</a></p>';
         Logs::logger(1, 'Annulation d\'une demande de logement (id : '.$demande->id().')');
     } else {
         echo 'Cette demande a déjà été annulée';

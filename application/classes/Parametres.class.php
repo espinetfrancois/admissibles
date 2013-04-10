@@ -5,8 +5,6 @@
  * @version 1.0
  *
  */
-
-
 class Parametres {
 
     /**
@@ -15,7 +13,6 @@ class Parametres {
      * @access protected
      */
     protected  $db;
-
 
     /**
      * Constantes relatives aux types de données
@@ -29,23 +26,21 @@ class Parametres {
     /**
      * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
      * @access public
-     * @param PDO $db 
+     * @param PDO $db
      * @return void
      */
-
     public  function __construct(PDO $db)
     {
         $this->db = $db;
 
     }
-    
-    
+
+
     /**
      * Méthode de remise à zéro de l'interface
      * @access public
      * @return void
      */
-    
     public  function remiseAZero()
     {
         try {
@@ -57,7 +52,6 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::remiseAZero : '.$e->getMessage());
         }
-
     }
 
 
@@ -66,7 +60,6 @@ class Parametres {
      * @access public
      * @return array(int)
      */
-
     public  function getCurrentSeries()
     {
         try {
@@ -88,17 +81,15 @@ class Parametres {
         } else {
             return $requete->fetchAll();
         }
-
     }
 
 
     /**
      * Méthode retournant les valeurs prédéfinies des listes de formulaires
      * @access public
-     * @param int $type 
+     * @param int $type
      * @return array
      */
-
     public  function getList($type)
     {
         switch ($type) {
@@ -119,19 +110,19 @@ class Parametres {
             $table = 'series';
             $order = 'DATE_DEBUT';
             break;
-            
+
         case self::Section:
             $champs = 'DISTINCT SECTION AS section';
             $table = 'x';
             $order = 'SECTION';
             break;
-            
+
         case self::Promo:
             $champs = 'DISTINCT PROMOTION';
             $table = 'x';
             $order = 'PROMOTION';
             break;
-        
+
         default:
             Logs::logger(3, 'Corruption des parametres. Parametres::getList');
             break;
@@ -149,16 +140,15 @@ class Parametres {
 
         return $liste;
     }
-    
+
 
     /**
      * Méthode ajoutant un élément à une liste
      * @access public
-     * @param int $type 
-     * @param array $donnees 
+     * @param int $type
+     * @param array $donnees
      * @return void
      */
-
     public  function addToList($type, $donnees)
     {
         switch ($type) {
@@ -167,19 +157,19 @@ class Parametres {
             $table = 'ref_etablissements';
             $array = array('nom' => $donnees['nom'], 'commune' => $donnees['commune']);
             break;
-        
+
         case  self::Filiere:
             $valeurs = 'NOM = :nom';
             $table = 'ref_filieres';
             $array = array('nom' => $donnees['nom']);
             break;
-            
+
         case  self::Serie:
             $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
             $table = 'series';
             $array = array('intitule' => $donnees['intitule'], 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
             break;
-        
+
         default:
             Logs::logger(3, 'Corruption des parametres. Parametres::addToList');
             break;
@@ -194,33 +184,31 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::addToList : '.$e->getMessage());
         }
-
     }
-    
-    
+
+
     /**
      * Méthode retirant un élément à une liste
      * @access public
-     * @param int $type 
-     * @param array $id 
+     * @param int $type
+     * @param array $id
      * @return void
      */
-
     public  function deleteFromList($type, $id)
     {
         switch ($type) {
         case self::Etablissement:
             $table = 'ref_etablissements';
             break;
-        
+
         case  self::Filiere:
             $table = 'ref_filieres';
             break;
-            
+
         case  self::Serie:
             $table = 'series';
             break;
-        
+
         default:
             Logs::logger(3, 'Corruption des parametres. Parametres::deleteFromList');
             break;
@@ -234,7 +222,7 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::deleteFromList : '.$e->getMessage());
         }
-        
+
         if ($requete->rowCount() != 1) {
             Logs::logger(3, 'Corruption de la table '.$table.'. Tentative de suppression d\'un element inexistant');
         }
@@ -247,18 +235,16 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::deleteFromList : '.$e->getMessage());
         }
-
     }
-    
-    
+
+
     /**
      * Méthode vérifiant l'utilisation d'un paramètre
      * @access public
-     * @param int $type 
-     * @param array $id 
+     * @param int $type
+     * @param array $id
      * @return bool
      */
-
     public  function isUsedList($type, $id)
     {
         switch ($type) {
@@ -277,14 +263,14 @@ class Parametres {
             } catch (Exception $e) {
                 Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
-            
+
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
                 return true;
             } else {
                 return false;
             }
             break;
-        
+
         case self::Filiere:
             try {
                 $requete = $this->db->prepare('SELECT *
@@ -300,14 +286,14 @@ class Parametres {
             } catch (Exception $e) {
                 Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
-            
+
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
                 return true;
             } else {
                 return false;
             }
             break;
-            
+
         case self::Serie:
             try {
                 $requete = $this->db->prepare('SELECT *
@@ -323,31 +309,30 @@ class Parametres {
             } catch (Exception $e) {
                 Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
             }
-            
+
             if ($requete->rowCount() + $requete2->rowCount() > 0) {
                 return true;
             } else {
                 return false;
             }
             break;
-        
+
         default:
             Logs::logger(3, 'Corruption des parametres. Parametres::isUsedList');
             break;
         }
 
     }
-    
-    
+
+
     /**
      * Méthode insérant les listes d'admissibilité en BDD
      * @access public
-     * @param int $serie 
-     * @param int $filiere 
-     * @param string $donnees 
+     * @param int $serie
+     * @param int $filiere
+     * @param string $donnees
      * @return void
      */
-
     public  function parseADM($serie, $filiere, $donnees)
     {
         // vérification du paramètre $serie
@@ -361,12 +346,12 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
-        
+
         if ($requete->rowCount() != 1) {
             Logs::logger(3, 'Corruption du parametre "serie". Parametres::parseADM');
         }
         $requete->closeCursor();
-        
+
         // vérification du paramètre $filiere
         try {
             $requete = $this->db->prepare('SELECT ID
@@ -377,17 +362,17 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
-        
+
         if ($requete->rowCount() != 1) {
             Logs::logger(3, 'Corruption du parametre "filiere". Parametres::parseADM');
         }
         $requete->closeCursor();
-        
+
         // parsage du paramètre $donnees
         $ligne = explode(PHP_EOL, $donnees);
         foreach ($ligne as $value) {
             // Séparation des noms de la forme : 'Nom (Prénom)'
-            $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',$value); 
+            $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',$value);
             $col = explode('///', $value);
             // traitement des donnees : minuscules et sans accents
             $nom = strtolower(Parametres::wd_remove_accents($col[0]));
@@ -407,7 +392,7 @@ class Parametres {
                 Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
             }
         }
-        
+
         // Ouverture des demandes d'hébergement pour la série considérée
         try {
             $requete = $this->db->prepare('UPDATE series
@@ -419,25 +404,24 @@ class Parametres {
             Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
     }
-    
-    
+
+
     /**
      * Méthode retirant les accents
      * @access public
      * @access static
-     * @param text $str 
-     * @param text $charset 
+     * @param text $str
+     * @param text $charset
      * @return text
      */
-
     public static  function wd_remove_accents($str, $charset='utf-8')
     {
         $str = htmlentities($str, ENT_NOQUOTES, $charset);
-        
+
         $str = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
         $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
         $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
-        
+
         return $str;
     }
 
@@ -445,11 +429,10 @@ class Parametres {
     /**
      * Méthode retournant la liste des admissibles pour une série/filière
      * @access public
-     * @param int $serie 
-     * @param int $filiere  
+     * @param int $serie
+     * @param int $filiere
      * @return void
      */
-
     public  function getAdmissibles($serie, $filiere)
     {
         try {
@@ -467,18 +450,17 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
-        
+
         return $requete->fetchAll();
     }
-    
-    
+
+
     /**
      * Méthode supprimant définitivement un admissible de la base de données
      * @access public
-     * @param int $id  
+     * @param int $id
      * @return void
      */
-
     public  function supprAdmissible($id)
     {
         try {
@@ -486,7 +468,7 @@ class Parametres {
                                            WHERE ID_ADMISSIBLE = :id');
             $requete->bindValue(':id', $id);
             $requete->execute();
-            
+
             $requete = $this->db->prepare('DELETE FROM admissibles
                                            WHERE ID = :id');
             $requete->bindValue(':id', $id);
@@ -494,7 +476,5 @@ class Parametres {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
         }
-
     }
 }
-?>

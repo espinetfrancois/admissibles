@@ -24,6 +24,11 @@ class Mail extends PHPMailer {
     const CONTENT_TYPE_OBJET = "objet";
 
     /**
+     * L'url racine de l'application (de type http://application) sans / !
+     * @var string
+     */
+    protected $appRootUrl = "";
+    /**
      * talbeau contenant les textes pour les mails
      * @var array
      */
@@ -41,6 +46,7 @@ class Mail extends PHPMailer {
         parent::__construct(true);
         $this->readIni();
         $this->Mailer = 'sendmail';
+        $this->appRootUrl = 'http://'.$_SERVER['HTTP_HOST'];
     }
 
     /**

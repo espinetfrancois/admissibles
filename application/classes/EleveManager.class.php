@@ -5,7 +5,6 @@
  * @version 1.0
  *
  */
-
 class EleveManager {
 
     /**
@@ -18,35 +17,32 @@ class EleveManager {
     /**
      * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
      * @access public
-     * @param PDO $db 
+     * @param PDO $db
      * @return void
      */
-
     public  function __construct(PDO $db)
     {
         $this->db = $db;
-
     }
 
 
     /**
      * Méthode permettant d'ajouter un élève
      * @access public
-     * @param Eleve $eleve 
+     * @param Eleve $eleve
      * @return void
      */
-
     public  function add(Eleve $eleve)
     {
         try {
-            $requete = $this->db->prepare('INSERT INTO x 
+            $requete = $this->db->prepare('INSERT INTO x
                                            SET USER = :user,
                                                SEXE = :sexe,
                                                SECTION = :section,
                                                ADRESSE_MAIL = :email,
                                                ID_FILIERE = :filiere,
                                                PROMOTION = :promo,
-                                               ID_ETABLISSEMENT = :prepa'); 
+                                               ID_ETABLISSEMENT = :prepa');
             $requete->bindValue(':user', $eleve->user());
             $requete->bindValue(':sexe', $eleve->sexe());
             $requete->bindValue(':section', $eleve->section());
@@ -58,29 +54,27 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::add : '.$e->getMessage());
         }
-
     }
 
 
     /**
      * Méthode permettant de modifier un élève
      * @access public
-     * @param Eleve $eleve 
+     * @param Eleve $eleve
      * @return void
      */
-
     public  function update(Eleve $eleve)
     {
         if ($eleve->isValid()) {
             try {
-                $requete = $this->db->prepare('UPDATE x 
+                $requete = $this->db->prepare('UPDATE x
                                                SET SEXE = :sexe,
                                                    SECTION = :section,
                                                    ADRESSE_MAIL = :email,
                                                    ID_FILIERE = :filiere,
                                                    PROMOTION = :promo,
                                                    ID_ETABLISSEMENT = :prepa
-                                               WHERE USER = :user'); 
+                                               WHERE USER = :user');
                 $requete->bindValue(':user', $eleve->user());
                 $requete->bindValue(':sexe', $eleve->sexe());
                 $requete->bindValue(':section', $eleve->section());
@@ -95,7 +89,6 @@ class EleveManager {
         } else {
             Logs::logger(3, 'Corruption des parametres : EleveManager::update');
         }
-
     }
 
 
@@ -107,7 +100,6 @@ class EleveManager {
      * @param int $serie
      * @return void
      */
-
     public  function addDispo($user, $serie)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
@@ -123,10 +115,9 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::addDispo : '.$e->getMessage());
         }
-
     }
-    
-    
+
+
     /**
      * Méthode supprimant la disponibilité d'un élève pour une série
      * @access public
@@ -134,7 +125,6 @@ class EleveManager {
      * @param int $serie
      * @return void
      */
-
     public  function deleteDispo($user, $serie)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
@@ -150,16 +140,14 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::deleteDispo : '.$e->getMessage());
         }
-
     }
-    
-    /**    
+
+    /**
      * Méthode retournant un élève en particulier
      * @access public
-     * @param string $user 
+     * @param string $user
      * @return Eleve
      */
-
     public  function getUnique($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
@@ -183,19 +171,18 @@ class EleveManager {
         if ($requete->rowCount() > 1) {
             throw new RuntimeException('Plusieurs utilisateurs possèdent le même nom'); // Ne se produit jamais en exécution courante
         }
-            
+
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
-            
+
         return $requete->fetch();
     }
-    
+
     /**
      * Méthode retournant les disponibilités d'un élève en particulier
      * @access public
-     * @param string $user 
+     * @param string $user
      * @return array
      */
-
     public  function getDispo($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
@@ -212,7 +199,7 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::getDispo : '.$e->getMessage());
         }
-        
+
         $listeDispo = array();
         while ($res = $requete->fetch()) {
             $listeDispo[] = $res['serie'];
@@ -228,7 +215,6 @@ class EleveManager {
      * @access public
      * @return array
      */
-
     public  function getList()
     {
         try {
@@ -244,9 +230,9 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::getList : '.$e->getMessage());
         }
-        
+
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
-            
+
         $listeX = $requete->fetchAll();
         $requete->closeCursor();
 
@@ -257,11 +243,10 @@ class EleveManager {
     /**
      * Méthode  retournant l'élève disponible compatible avec la demande
      * @access public
-     * @param Demande $demande 
-     * @param $limit 
+     * @param Demande $demande
+     * @param $limit
      * @return array(Eleve)
      */
-
     public  function getFavorite(Demande $demande, $limit)
     {
         if (!$demande->isValid() || !is_numeric($limit)) {
@@ -295,9 +280,9 @@ class EleveManager {
         } catch (Exception $e) {
             Logs::logger(3, 'Erreur SQL EleveManager::getFavorite : '.$e->getMessage());
         }
-        
+
         $requete->setFetchMode(PDO::FETCH_CLASS, 'Eleve'); // Attention : les champs référencées contiennent les valeurs affichables
-        
+
         return $requete->fetchAll();
     }
 

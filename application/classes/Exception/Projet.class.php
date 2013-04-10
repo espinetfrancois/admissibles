@@ -49,7 +49,7 @@ class Exception_Projet extends Exception
      * @author francois.espinet
      */
     public function log() {
-        $texte = '['.date('Y-m-d H:i:s', time()).'] '.$_SERVER['REMOTE_ADDR'].' - Message : '.$this->getMessage(). ' - Fichier : ' . $this->getFile() . 'L : ' . $this->getLine() . "\n";
+        $texte = '['.date('Y-m-d H:i:s', time()).'] '.$_SERVER['REMOTE_ADDR'].' - Type d\'exeption : '.get_class($this).' - Message : '.$this->getMessage(). ' - Fichier : ' . $this->getFile() . ' - L : ' . $this->getLine() . "\n";
         error_log($texte, 3, LOGS_PATH.self::Log_Path);
     }
 }

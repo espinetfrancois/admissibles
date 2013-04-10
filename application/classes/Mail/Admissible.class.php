@@ -33,9 +33,9 @@ class Mail_Admissible extends Mail {
     /**
      * Constructeur
      * @access public
-     * @param string $sNom
-     * @param string $sPrenom
-     * @param string $sEmail
+     * @param string $sNom      nom de l'admissible
+     * @param string $sPrenom   prénom de l'admissible
+     * @param string $sEmail    email de l'admissible
      * @return void
      */
     public function __construct($sNom, $sPrenom, $sEmail)
@@ -46,7 +46,6 @@ class Mail_Admissible extends Mail {
         parent::__construct();
         //ajout du destinataire (l'admissible)
         $this->AddAddress($this->email, $this->nom.' '.$this->prenom);
-
     }
 
     /**
@@ -58,46 +57,56 @@ class Mail_Admissible extends Mail {
      */
     public function demandeAnnulee($sEleveX)
     {
-        $this->AltBody = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_TXT,
-                                         array('HOST'         => $_SERVER['HTTP_HOST'],
-                                              'ELEVE_X'      => $sEleveX));
+        $sEleveX = $this->getNameFromUid($sEleveX);
+        try {
+            $this->AltBody = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_TXT,
+                                             array('HOST'         => $this->appRootUrl,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Body = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_HTML,
-                                        array('HOST'         => $_SERVER['HTTP_HOST'],
-                                              'ELEVE_X'      => $sEleveX));
+            $this->Body = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_HTML,
+                                            array('HOST'         => $this->appRootUrl,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Subject = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_OBJET,
-                                        array('NOM'    => $this->nom,
-                                              'PRENOM' => $this->prenom));
-        $this->psend();
-
+            $this->Subject = $this->_substitute(self::Action_Cancel,self::CONTENT_TYPE_OBJET,
+                                            array('NOM'    => $this->nom,
+                                                  'PRENOM' => $this->prenom));
+            $this->psend();
+        } catch (Exception_Mail $e) {
+        	throw new Exception_Mail("Impossible d'envoyer le mail de notification d'annulation d'une demande.", Exception_Mail::Send_Echec_Admissible_DemandeAnnulee, $e);
+        }
     }
 
     /**
      * Envoi de l'email de confirmation de demande d'hébergement
-     * Ce mail lui permet d'annuler sa demande et de la confirmer, il vérifie aussi que l'admissible est bien l'auteur de la demande
+     * Ce mail lui permet d'annuler sa demande et de la confirmer.
+     * Il vérifie aussi que l'admissible est bien l'auteur de la demande.
      * @access public
      * @param string $sEleveX        l'élève X dont la demande est l'objet
-     * @param string $sLinkCancel    le lien d'annulation de la demande
-     * @param string $sLinkConfirm   le lien de confirmation de la demande
+     * @param string $sLinkCancel    le suffixe (sans la partie http://) du lien d'annulation de la demande
+     * @param string $sLinkConfirm   le suffixe (sans la partie http://) du lien de confirmation de la demande
      * @return void
      */
     public function demandeEnvoyee($sEleveX, $sLinkCancel, $sLinkConfirm)
     {
-        $this->AltBody = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_TXT,
-                                        array('LINK_CONFIRM' => $sLinkConfirm,
-                                              'LINK_CANCEL'  => $sLinkCancel,
-                                              'ELEVE_X'      => $sEleveX));
+        $sEleveX = $this->getNameFromUid($sEleveX);
+        try {
+            $this->AltBody = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_TXT,
+                                            array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
+                                                  'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Body = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_HTML,
-                                        array('LINK_CONFIRM' => $sLinkConfirm,
-                                              'LINK_CANCEL'  => $sLinkCancel,
-                                              'ELEVE_X'      => $sEleveX));
+            $this->Body = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_HTML,
+                                            array('LINK_CONFIRM' => $this->appRootUrl.$sLinkConfirm,
+                                                  'LINK_CANCEL'  => $this->appRootUrl.$sLinkCancel,
+                                                  'ELEVE_X'      => $sEleveX));
 
-        $this->Subject = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_OBJET,
-                                        array('NOM'          => $this->nom,
-                                              'PRENOM'       => $this->prenom));
-        $this->psend();
+            $this->Subject = $this->_substitute(self::Action_NvDemande,self::CONTENT_TYPE_OBJET,
+                                            array('NOM'          => $this->nom,
+                                                  'PRENOM'       => $this->prenom));
+            $this->psend();
+        } catch (Exception_Mail $e) {
+        	throw new Exception_Mail("Impossible d'envoyer le mail de notification de demande envoyée.", Exception_Mail::Send_Echec_Admissible_DemandeEnvoyee, $e);
+        }
     }
 
     /**
@@ -109,21 +118,27 @@ class Mail_Admissible extends Mail {
      * @param string $sXmail    l'email de l'élève pour que l'admissible puisse prendre contact avec lui
      * @return void
      */
-    public function demandeConfirmee($sEleveX, $sXmail)
+    public function demandeConfirmee($sXmail, $sLinkCancel, $sEleveX)
     {
-        $this->AltBody = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_TXT,
-                    array('ELEVE_X'      => $sEleveX,
-                          'X_MAIL'       => $sXmail));
+        $sEleveX = $this->getNameFromUid($sEleveX);
+        try {
+            $this->AltBody = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_TXT,
+                        array('ELEVE_X'      => $sEleveX,
+                              'X_MAIL'       => $sXmail,
+                              'LINK_CANCEL'  => $sLinkCance));
 
-        $this->Body = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_HTML,
-                array('X_MAIL'         => $sXmail,
-                        'ELEVE_X'      => $sEleveX));
+            $this->Body = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_HTML,
+                    array('X_MAIL'         => $sXmail,
+                          'ELEVE_X'      => $sEleveX,
+                          'LINK_CANCEL'  => $sLinkCancel));
 
-        $this->Subject = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_OBJET,
-                array('NOM'          => $this->nom,
-                      'PRENOM'       => $this->prenom));
-        $this->psend();
-
+            $this->Subject = $this->_substitute(self::Action_Accepted,self::CONTENT_TYPE_OBJET,
+                    array('NOM'          => $this->nom,
+                          'PRENOM'       => $this->prenom));
+            $this->psend();
+        } catch (Exception_Mail $e) {
+        	throw new Exception_Mail("Impossible d'envoyer le mail de notification de confirmation de demande", Exception_Mail::Send_Echec_Admissible_DemandeConfirmee, $e);
+        }
     }
 
     /**
@@ -149,5 +164,9 @@ class Mail_Admissible extends Mail {
              */
             throw new Exception_Mail("Un mail n'a pas pu être envoyé à un admissible", Exception_Mail::Send_Echec_Admissible, $e);
         }
+    }
+
+    protected function getNameFromUid($sUid) {
+        return ucwords(str_replace('.', ' ', $sUid));
     }
 }

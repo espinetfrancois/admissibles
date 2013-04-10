@@ -119,6 +119,10 @@ class Layout {
 		//ajout des js de base
 		$this->appendJs('menu.js');
 		$_SESSION['messages'] = array();
+		//ajout du menu admin le cas échéant
+		if (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true) {
+			$this->addMenu('admin.php');
+		}
 	}
 
 	/* ********************************************************************************************************************* *
@@ -145,8 +149,19 @@ class Layout {
 	public function addPage($page) {
 		//démarrage du tampon (permet d'inclure sans renvoyer directement à l'affichage)
 		ob_start();
-		include($page);
-		//récupération et vidage du tampon (sans affichage)
+		try {
+		    include($page);
+		} catch (Exception $e) {//projet exception ???
+    		$this->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
+    		if (APP_ENV != 'production') {
+    			$this->addMessage($e->getMessage() .' : <br/><pre>'. $e->getTraceAsString().'</pre>', MSG_LEVEL_ERROR);
+    		} else {
+    			//redirection sur la page des erreurs
+    			$ewrap = new Exception_Projet("Erreur capturée dans une page : " . $e->getMessage(),null, $e);
+    			$this->addHead('<meta http-equiv="Refresh" CONTENT="1; URL=/errors?exception='. $ewrap->url() . '">');
+    		}
+		}
+		//récupération et vidage du tampon (sans affichage direct)
 		$this->_content[] = ob_get_clean();
 	}
 
@@ -168,6 +183,10 @@ class Layout {
 	 */
 	public function prependContent($sContent) {
 		array_unshift($this->_content, $sContent);
+	}
+
+	public function clearContent() {
+	    $this->_content = array();
 	}
 
 	/**
@@ -299,7 +318,7 @@ class Layout {
 	 * @param string $sMessage
 	 * @param string $sLevel
 	 */
-	public function addMessage($sMessage, $sLevel) {
+	public function addMessage($sMessage, $sLevel="") {
 	    $_SESSION['messages'][] = '<div class="message '.$sLevel.'">'.$sMessage .'</div>';
 	}
 

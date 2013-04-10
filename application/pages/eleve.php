@@ -4,7 +4,6 @@
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
- * @todo gestion du mail d'acceptation
  */
 
 // require_once(APPLICATION_PATH.'/inc/sql.php');
@@ -58,10 +57,16 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
     $demande = $demandeManager->getUnique($_POST['accept']);
     $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
     // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
+    //préparation de l'envoi du mail : récupération des informations de l'X
+    $elevem = new EleveManager(Registry::get('config'));
+    $eleve = $elevem->getUnique($demande->userEleve());
+    $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
+    $mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());
+
     Logs::logger(1, 'Acceptation d\'une demande de logement (user : '.$_SESSION['eleve']->user().')');
 }
 
-// Propostion d'une adresse
+// Proposition d'une adresse
 if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
     $adresse = new Adresse(array('nom' => $_POST['adr_nom'],
                                  'adresse' => $_POST['adr_adresse'],
