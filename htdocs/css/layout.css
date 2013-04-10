@@ -70,7 +70,7 @@ body {
 
 #titre {
 	position: absolute;
-	top: 2%;
+	top: 4%;
 	left: 5%;
 	margin : 0;
 	width : 
@@ -84,7 +84,7 @@ body {
 /** logo **/
 #logo {
 	position: absolute;
-	top: 2%;
+	top: 4%;
 	right: 5%;
 	height: 60px;
 	width: 240px;
