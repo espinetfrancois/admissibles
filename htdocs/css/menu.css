@@ -73,3 +73,28 @@
 	background : #164d6d;
 	color	   : white;
 }
+
+/***************************************/
+/*** menu d'administration de l'app  ***/
+/***************************************/
+
+#admin-menu > li {
+	background: rgb(220, 0, 52);
+}
+
+
+/*** liens généraux ***/
+#admin-menu a:hover {
+	color: #002334;
+	background-color: #ffba00;
+}
+
+/*** niveau 2 ***/
+#admin-menu ul {
+	background: #ffba00;
+}
+
+#admin-menu ul a:hover {
+	background : #164d6d;
+	color	   : white;
+}
