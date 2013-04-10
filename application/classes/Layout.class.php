@@ -86,7 +86,7 @@ class Layout {
 	 */
 	protected $_libraries = array('jquery/jquery-1.9.1.js',
 			'jquery/jquery-ui-1.10.1.custom.min.js',
-			'jquery/jquery.visited.js');
+			'jquery/jquery.visited.js', 'jquery/jquery.ui.datepicker-fr.js');
 
 	/**
 	 * Templates (css des libraries) à ajouter à l'application
@@ -118,6 +118,8 @@ class Layout {
 		$this->addMenu('main.html');
 		//ajout des js de base
 		$this->appendJs('menu.js');
+		$this->appendJs('form.js');
+
 		$_SESSION['messages'] = array();
 		//ajout du menu admin le cas échéant
 		if (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true) {
