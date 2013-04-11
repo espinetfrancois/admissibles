@@ -100,8 +100,18 @@
 
 /* Décoration des erreurs */
 
-form .error {
+form span.error {
 	font-weight : 500;
 	color 		: red;
 	font-size	: 1.1em;
+	white-space	: nowrap;
+	padding		: 2px 1em;
+	float  		: right;
+	border		: none !important;
+	clear		: right;
+}
+
+form .error {
+	color 		: red !important;
+	border		: 1.3px solid red !important;
 }
