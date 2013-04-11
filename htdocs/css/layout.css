@@ -91,11 +91,12 @@ body {
 }
 
 #logo a {
-	height: 50px;
-	width: 210px;
-	margin-left: 10px;
+	height	: 100%;
+	width	: 98%;
+	margin  : 0 1%;
 	background-image:url("../images/logoecoleclair.png");
 	background-repeat: no-repeat;
+	background-position : center center;
 	display: block;
 }
 
