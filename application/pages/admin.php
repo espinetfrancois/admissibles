@@ -489,7 +489,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
             echo '<tr>';
                 echo '<td>'.$adresse->nom().'<br/>'.$adresse->adresse().'<br/>Tél : '.$adresse->tel().'<br/>Mail : '.$adresse->email().'<br/>'.nl2br($adresse->description()).'</td>';
                 echo '<td>'.$adresse->categorie().'</td>';
-                echo '<td><a class="action" href="/administration/gestion?action=hotel&modif='.$adresse->id().'">Modifier</a><a class="action" href="/administration/gestion?action=hotel&suppr='.$adresse->id().'">Supprimer</a></td>';
+                echo '<td>
+                    <a class="action" href="/administration/gestion?action=hotel&modif='.$adresse->id().'">Modifier</a>
+                    <a class="action" href="/administration/gestion?action=hotel&suppr='.$adresse->id().'">Supprimer</a></td>';
             echo '</tr>';
         }
         echo '</tbody></table>';
@@ -508,7 +510,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
             echo '<tr>';
                 echo '<td>'.$adresse->nom().'<br/>'.$adresse->adresse().'<br/>Tél : '.$adresse->tel().'<br/>Mail : '.$adresse->email().'<br/>'.nl2br($adresse->description()).'</td>';
                 echo '<td>'.$adresse->categorie().'</td>';
-                echo '<td><a href="/administration/gestion?action=hotel&modif='.$adresse->id().'">Modif</a> <a href="/administration/gestion?action=hotel&suppr='.$adresse->id().'">Suppr</a></td>';
+                echo '<td>
+                    <a class="action" href="/administration/gestion?action=hotel&modif='.$adresse->id().'">Modifier</a>
+                    <a class="action" href="/administration/gestion?action=hotel&suppr='.$adresse->id().'">Supprimer</a></td>';
             echo '</tr>';
         }
         echo '</tbody></table>';
