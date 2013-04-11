@@ -104,7 +104,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve
     ?>
     <h2>Modifier mes informations personnelles</h2>
     <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
-    <form action="/x/connexion" method="post">
+    <form action="/x/espace-personnel" method="post">
     <p id="champ-sexe" class="champ radio">
         <label for="sexe">Sexe: </label>
         <label> Masculin <input type="radio" name="sexe" value="M"
@@ -173,7 +173,7 @@ $dispos = $eleveManager->getDispo($_SESSION['eleve']->user());
 ?>
 <h2>Disponibilité d'accueil</h2>
 <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
-<a href="/deconnexion">Se déconnecter</a> -- <a href="/x/connexion?&action=modify">Modifier mes informations personnelles</a>
+<a href="/deconnexion">Se déconnecter</a> -- <a href="/x/donnees-personnelles?&action=modify">Modifier mes informations personnelles</a>
 <hr/>
 <?php
 if (!empty($series)) {
@@ -184,7 +184,7 @@ if (!empty($series)) {
     <p>Dès lors, vous serez tenus d'héberger tout admissible vous contactant via cette interface : la validation de ce formulaire tient lieu d'engagement vis à vis de l'admissible qui fera sa demande.</p>
     <p><span class="emph-emph">Pensez donc à venir vous désinscrire dans les temps si vous n'êtes plus disponible !</span></p>
 
-    <form action="/x/connexion" method="post">
+    <form action="/x/espace-personnel" method="post">
     <input type="hidden" name="serie" value="1"/>
     <p class="champ">
     <?php

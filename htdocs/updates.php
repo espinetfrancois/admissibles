@@ -5,6 +5,12 @@ define('ROOT_PATH', realpath(dirname(__FILE__).'/../'));
 define('APPLICATION_PATH', ROOT_PATH.'/application');
 define('LIBRARY_PATH', APPLICATION_PATH.'/library');
 
+if (file_exists(APPLICATION_PATH.'/inc/autoload.php')) {
+	//on sait jamais
+	include_once(APPLICATION_PATH.'/inc/autoload.php');
+	die();
+}
+
 if ($_SESSION['administrateur'] !== true) {
     if (file_exists(APPLICATION_PATH.'/inc/fkz_auth.php')) {
     	include_once(APPLICATION_PATH.'/inc/fkz_auth.php');
