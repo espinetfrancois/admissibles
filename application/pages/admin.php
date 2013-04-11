@@ -247,6 +247,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
     <?php
     foreach ($serie_valide as $value) {
         echo '<option value="'.$value['id'].'">'.$value['intitule'].' (du '.date('d.m.Y', $value['date_debut']).' au '.date('d.m.Y', $value['date_fin']).')</option>';
+        $series[$value['id']] = $value['intitule'];
     }
     ?>
     </select></p>
@@ -255,6 +256,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
     <?php
     foreach ($filieres as $value) {
         echo '<option value="'.$value['id'].'">'.$value['nom'].'</option>';
+        $fil[$value['id']] = $value['nom'];
     }
     ?>
         </select></p><br/>
@@ -264,9 +266,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
     if (isset($_POST['serie-voir']) && isset($_POST['filiere-voir'])) { // Affichage des admissibles
         if (is_numeric($_POST['serie-voir']) && is_numeric($_POST['filiere-voir'])) {
             $admissibles = $parametres->getAdmissibles($_POST['serie-voir'], $_POST['filiere-voir']);
+            echo '<p>Serie : '.$series[$_POST['serie-voir']].', Filière : '.$fil[$_POST['filiere-voir']].'</p>';
             echo '<table border="1" cellspacing="0" cellspadding="1">';
             echo '<thead><tr><th>Nom</th><th>Prénom</th><th>Mail (si inscrit)</th><th>Supprimer définitivement</th></tr></thead>';
             echo '<tbody>';
+            if (count($admissibles) < 1)
+                echo '<tr><td colspan="4">Aucun admissible</td></tr>';
+
             foreach ($admissibles as $admissible) {
                 echo '<tr><td>'.$admissible['nom'].'</td><td>'
                     .$admissible['prenom'].'</td><td>'.$admissible['mail']

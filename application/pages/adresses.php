@@ -10,6 +10,9 @@
 $adresseManager = new AdresseManager(Registry::get('db'));
 $adressesValides = $adresseManager->getListAffiche();
 $cat = '';
+if (count($adressesValides) < 1)
+    echo '<p>Aucune adresse n\'a encore été rentrée</p>';
+
 foreach ($adressesValides as $adresse) {
     if ($adresse->categorie() != $cat) {
         echo '<h3 class="categorie">'.$adresse->categorie().'</h3>';
