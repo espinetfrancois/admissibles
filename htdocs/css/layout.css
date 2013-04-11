@@ -69,11 +69,9 @@ body {
 }
 
 #titre {
-	position: absolute;
-	top: 4%;
-	left: 5%;
 	margin : 0;
-	width : 
+	padding-top : 2em;
+	padding-left : 5%;
 }
 
 #titre > a {
@@ -84,7 +82,7 @@ body {
 /** logo **/
 #logo {
 	position: absolute;
-	top: 4%;
+	top: 2em;
 	right: 5%;
 	height: 60px;
 	width: 240px;
@@ -142,7 +140,7 @@ body {
 /* pas de position absolute, cette div est responsable de la taille du parent */
 #page-wrapper {
 	min-height: 500px;
-	padding : 1em;
+	padding : 1em 2em;
 	margin: 0 0 0 25.7em;
 	border-right : 1px solid;
 }

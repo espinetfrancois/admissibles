@@ -75,13 +75,17 @@
 }
 
 /* Décoration du bouton submit */
-.contenu form > input[type=submit] {
-	float : right;
-	margin-top : 5px;
+.contenu form input[type=submit] {
 	font-size  : 1.3em;
 	cursor		: pointer;
 	border		: 1px solid #002334;
 	border-radius	: 5px;
+	margin-top	: 0px;	
+}
+
+.contenu form > input[type=submit] {
+	margin-top : 5px;
+	float		: right;
 }
 
 .contenu form > input[type=submit]:hover {
@@ -92,4 +96,12 @@
 	background			: white -ms-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
 	background			: white linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
 	color	   			: white;
+}
+
+/* Décoration des erreurs */
+
+form .error {
+	font-weight : 500;
+	color 		: red;
+	font-size	: 1.1em;
 }

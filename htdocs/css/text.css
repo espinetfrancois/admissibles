@@ -14,8 +14,8 @@ h1 {
 }
 
 h2 {
-	font-size	: 2.3em;
-	line-height	: 1.5em;
+	font-size	: 2.6em;
+	line-height	: 1.1em;
 	font-family: "Lucida Sans Unicode", "Lucida Sans", "Lucida Grande",
 		Arial, sans-serif;
 	font-weight: 500;
@@ -23,15 +23,22 @@ h2 {
 }
 
 h3 {
-	font-size: 1.4em;
+	font-size: 1.6em;
+	font-weight : 400;
 	margin: 1em 0;
+	margin-left : 1em;
+	text-transform : uppercase;
+	color : #164D6D;
 }
 
 h4 {
-	font-size: 1.2em;
-	margin: 1em 0;
+	font-size: 1.4em;
+	margin		: 1em 0 0.5em 0.2em;
 }
 
+h3+div {
+	margin-left : 1em;
+}
 /************************		Listes		************************/
 :not(.contenu) ol,ul {
 	list-style: none;
@@ -60,6 +67,9 @@ ol {
 	font-size: 1em;
 }
 
+.content div.indent {
+	margin-left : 1em;
+}
 /************************		Liens		************************/
 .contenu a:link {
 	color: #2896d5;
@@ -86,3 +96,21 @@ ol {
 .contenu p>a {
 	font-size	: 1.1em;
 }
+
+.contenu .emph {
+	font-weight : 600;
+}
+
+/* boutons d'actions */
+a.action {
+	margin : 0 0.5em;
+	padding : 2px 4px;
+	border-radius : 3px;
+	background : #164d6d;
+}
+
+a.action, a.action:visited {
+	color		: white !important;
+	text-decoration : none;
+}
+
