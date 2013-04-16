@@ -114,12 +114,12 @@ class Layout {
 		$this->appendCss('text.css');
 		$this->appendCss('images.css');
 		$this->appendCss('messages.css');
+		$this->appendCss('table.css');
 		//ajout du menu
 		$this->addMenu('main.html');
 		//ajout des js de base
 		$this->appendJs('menu.js');
 		$this->appendJs('form.js');
-
 		$_SESSION['messages'] = array();
 		//ajout du menu admin le cas échéant
 		if (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true) {
@@ -152,8 +152,13 @@ class Layout {
 		//démarrage du tampon (permet d'inclure sans renvoyer directement à l'affichage)
 		ob_start();
 		try {
-		    include($page);
+		    $ret = include($page); //enventuellement, on peut retourner 0 quand tout est ok!
+		} catch (Exception_Page $e) { // problème traité dans la page
+		    $this->addMessage($e->getUserMessage(), MSG_LEVEL_ERROR);
+		    //logger l'exception ici selon le code
+		    $e->log();
 		} catch (Exception $e) {//projet exception ???
+
     		$this->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
     		if (APP_ENV != 'production') {
     			$this->addMessage($e->getMessage() .' : <br/><pre>'. $e->getTraceAsString().'</pre>', MSG_LEVEL_ERROR);

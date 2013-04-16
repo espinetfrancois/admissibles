@@ -5,6 +5,14 @@ define('ROOT_PATH', realpath(dirname(__FILE__).'/../'));
 define('APPLICATION_PATH', ROOT_PATH.'/application');
 define('LIBRARY_PATH', APPLICATION_PATH.'/library');
 
+//obligatoire pour l'authentification
+if (file_exists(APPLICATION_PATH.'/inc/autoload.php')) {
+    include_once(APPLICATION_PATH.'/inc/autoload.php');
+    Registry::set("config", new Config());
+} else {
+    die();
+}
+
 if ($_SESSION['administrateur'] !== true) {
     if (file_exists(APPLICATION_PATH.'/inc/fkz_auth.php')) {
     	include_once(APPLICATION_PATH.'/inc/fkz_auth.php');
@@ -24,7 +32,6 @@ try {
     if (file_exists(APPLICATION_PATH.'/inc/autoload.php')) {
         //on sait jamais
         include_once(APPLICATION_PATH.'/inc/autoload.php');
-        Config::constantes();
         $layout = new Layout();
 
         ob_start();

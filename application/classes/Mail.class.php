@@ -34,7 +34,7 @@ class Mail extends PHPMailer {
      */
     private $mails = null;
 
-    protected $adminMail = "";
+    protected $adminMail = "admissibles@binets.polytechnique.fr";
 
     /**
      * Constructeur
