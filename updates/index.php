@@ -66,7 +66,8 @@ try {
 	<input type='submit' name="appliquer" value="Appliquer"/>
 </form>
 
-<form action='#' method='POST>
-    <input type='hidden' name="pull" value="1"/>
+<form action='#' method='POST'>
+    <p class="champ"><label>Mise à jour de l'application avec la dernière version du dépot git :</label>
+    <input type='hidden' name="pull" value="1"/></p>
     <input type='submit' name="puller" value="Mettre à jour"/>
 </form>

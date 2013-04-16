@@ -8,6 +8,7 @@ define('LIBRARY_PATH', APPLICATION_PATH.'/library');
 //obligatoire pour l'authentification
 if (file_exists(APPLICATION_PATH.'/inc/autoload.php')) {
     include_once(APPLICATION_PATH.'/inc/autoload.php');
+    Registry::set("config", new Config());
 } else {
     die();
 }
@@ -31,7 +32,6 @@ try {
     if (file_exists(APPLICATION_PATH.'/inc/autoload.php')) {
         //on sait jamais
         include_once(APPLICATION_PATH.'/inc/autoload.php');
-        Config::constantes();
         $layout = new Layout();
 
         ob_start();
