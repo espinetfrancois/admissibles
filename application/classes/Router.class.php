@@ -100,11 +100,14 @@ class Router {
     /**
      * Chargement du fichier contenant les routes
      * @author francois.espinet
-     * @todo   gestion des erreurs
      */
     private function _loadRoutes($RoutesFile)
     {
-        $this->routes = require_once($RoutesFile);
+        if (file_exists($RoutesFile)) {
+            $this->routes = require_once($RoutesFile);
+        } else {
+            throw new Exception_Router("Le fichier des routes est absent.", Exception_Router::Routes_Not_Found);
+        }
     }
 
     /**
