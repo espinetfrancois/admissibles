@@ -53,6 +53,21 @@ class Mail_AdminTech extends Mail {
         $this->psend();
     }
 
+    /**
+     * Informe l'administateur d'une erreure moyennement grave
+     * @author francois.espinet
+     * @param string $sException
+     */
+    public function warning($sMsg) {
+        $this->AltBody = $this->_substitute(self::Admin_Level_Warning, self::CONTENT_TYPE_TXT, array('MESSAGE' => $sMsg));
+
+        $this->Body = $this->_substitute(self::Admin_Level_Warning,self::CONTENT_TYPE_HTML, array('MESSAGE' => $sMsg));
+
+        $this->Subject = $this->_substitute(self::Admin_Level_Warning, self::CONTENT_TYPE_OBJET);
+
+        $this->psend();
+    }
+
     protected function psend() {
         try {
             $this->AddAddress($this->adminMail);
