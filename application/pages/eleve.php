@@ -291,7 +291,7 @@ $champInvalide = '<span class="error">Champ invalide</span>';
         <label for="adr_nom">Nom : </label>
         <input type="text" name="adr_nom" value="<?php
                   echo ( isset($adresse) ? $adresse->nom() : '').'"';
-                  echo ( (isset($erreurAjoutAdresse) && in_array(Adresse::Nom_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
+                  echo ( (isset($erreurAjoutAdresse) && in_array(Adresse::Nom_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>'); ?>
     </p>
     <p class="champ" id="champ-adr_adresse">
         <label for="adr_adresse">Adresse : </label>

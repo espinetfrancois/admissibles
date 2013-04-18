@@ -144,7 +144,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
     <p id="champ-sexe" class="champ radio">
         <label for="sexe">Sexe: </label>
         <label> Masculin <input type="radio" name="sexe" value="M"<?php if (!isset($demande) || $demande->sexe() == "M") { echo "checked='checked'"; } ?>/></label>
-        <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/>
+        <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/></label>
     <?php if (isset($erreurD) && in_array(Demande::Sexe_Invalide, $erreurD)) echo $champInvalide; ?></p>
     <p class="champ">
         <label for="prepa">Etablissement d'origine : </label>

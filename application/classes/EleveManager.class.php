@@ -52,7 +52,7 @@ class EleveManager {
             $requete->bindValue(':prepa', $eleve->prepa());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL EleveManager::add : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::add", Exception_Bdd_Query::Level_Critical, $e);
         }
     }
 
@@ -84,10 +84,10 @@ class EleveManager {
                 $requete->bindValue(':prepa', $eleve->prepa());
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL EleveManager::update : '.$e->getMessage());
+                throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::update", Exception_Bdd_Query::Level_Major, $e);
             }
         } else {
-            Logs::logger(3, 'Corruption des parametres : EleveManager::update');
+            throw new Exception_Bdd_Query('Corruption des paramètres : EleveManager::update', Exception_Bdd_Query::Currupt_Params);
         }
     }
 
@@ -113,7 +113,7 @@ class EleveManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL EleveManager::addDispo : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::addDispo", Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
@@ -138,7 +138,7 @@ class EleveManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL EleveManager::deleteDispo : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::addDispo", Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
@@ -166,10 +166,11 @@ class EleveManager {
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL EleveManager::getUnique : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getUnique", Exception_Bdd_Query::Level_Major, $e);
         }
         if ($requete->rowCount() > 1) {
-            throw new RuntimeException('Plusieurs utilisateurs possèdent le même nom'); // Ne se produit jamais en exécution courante
+            // Ne se produit jamais en exécution courante
+            throw new Exception_Bdd_Integrity('Plusieurs utilisateurs possèdent le même nom', Exception_Bdd_Integrity::Duplicate_Entry);
         }
 
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
@@ -197,7 +198,7 @@ class EleveManager {
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL EleveManager::getDispo : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getDispo", Exception_Bdd_Query::Level_Major, $e);
         }
 
         $listeDispo = array();
@@ -228,7 +229,7 @@ class EleveManager {
                                            FROM x');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL EleveManager::getList : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getList", Exception_Bdd_Query::Level_Minor, $e);
         }
 
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
@@ -278,7 +279,7 @@ class EleveManager {
             $requete->bindValue(':serie',  $demande->serie());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL EleveManager::getFavorite : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getFavorite", Exception_Bdd_Query::Level_Blocker, $e);
         }
 
         $requete->setFetchMode(PDO::FETCH_CLASS, 'Eleve'); // Attention : les champs référencées contiennent les valeurs affichables

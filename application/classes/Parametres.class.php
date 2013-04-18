@@ -155,19 +155,19 @@ class Parametres {
         case self::Etablissement:
             $valeurs = 'NOM = :nom, COMMUNE = :commune';
             $table = 'ref_etablissements';
-            $array = array('nom' => $donnees['nom'], 'commune' => $donnees['commune']);
+            $array = array('nom' => htmlentities($donnees['nom']), 'commune' => htmlentities($donnees['commune']));
             break;
 
         case  self::Filiere:
             $valeurs = 'NOM = :nom';
             $table = 'ref_filieres';
-            $array = array('nom' => $donnees['nom']);
+            $array = array('nom' => htmlentities($donnees['nom']));
             break;
 
         case  self::Serie:
             $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
             $table = 'series';
-            $array = array('intitule' => $donnees['intitule'], 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
+            $array = array('intitule' => htmlentities($donnees['intitule']), 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
             break;
 
         default:
@@ -360,7 +360,7 @@ class Parametres {
         $ligne = explode(PHP_EOL, $donnees);
         foreach ($ligne as $value) {
             // Séparation des noms de la forme : 'Nom (Prénom)'
-            $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',$value);
+            $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',htmlentities($value));
             $col = explode('///', $value);
             // traitement des donnees : minuscules et sans accents
             $nom = strtolower(Parametres::wd_remove_accents($col[0]));
