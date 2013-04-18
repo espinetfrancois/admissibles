@@ -26,7 +26,8 @@ try {
 	    $layout->clearContent();
 		$layout->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
 		if (APP_ENV != 'production') {
-			$layout->addMessage($e->getMessage() .' : <br/>'. $e->getTraceAsString(), MSG_LEVEL_ERROR);
+		    $layout->appendCss('erreurs.css');
+			$layout->addMessage($e->getMessage() .' : <br/><pre>'. $e->getTraceAsString() . '</pre><pre>'.$e->getPrevious() . '</pre>', MSG_LEVEL_ERROR);
 		} else {
 			//redirection sur la page des erreurs
 			$ewrap = new Exception_Projet("Erreur capturée dans une page : " . $e->getMessage(),null, $e);
