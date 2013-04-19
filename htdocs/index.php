@@ -38,11 +38,20 @@ try {
 } catch (Exception_Layout $e) {
     //pas de layout, on fait à la main
     echo "Problème lors du chargement du layout de l'application";
+    if (APP_ENV != 'production')
+    	$layout->addMessage($e->getMessage().'<br/><pre>'.$e->getTraceAsString().'</pre><pre>'.$e->getPrevious().'</pre>', MSG_LEVEL_ERROR);
+
 } catch (Exception_Config $e) {
     //pas de layout, on fait à la main
     echo "Problème lors du chargement de la configuration de l'application";
+    if (APP_ENV != 'production')
+    	$layout->addMessage($e->getMessage().'<br/><pre>'.$e->getTraceAsString().'</pre><pre>'.$e->getPrevious().'</pre>', MSG_LEVEL_ERROR);
+
 } catch (Exception_Bdd $e) {
     $layout->addMessage("Un problème est survenu avec la base de données du site.", MSG_LEVEL_ERROR);
+    if (APP_ENV != 'production')
+        $layout->addMessage($e->getMessage().'<br/><pre>'.$e->getTraceAsString().'</pre><pre>'.$e->getPrevious().'</pre>', MSG_LEVEL_ERROR);
+
     echo $layout;
 } catch (Exception $e) {
 	//erreur grave, on fait ce qu'on peut
