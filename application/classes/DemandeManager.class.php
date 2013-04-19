@@ -30,10 +30,10 @@ class DemandeManager {
     /**
      * Méthode permettant d'ajouter une demande
      * @access public
-     * @param Demande $demande
+     * @param Model_Demande $demande
      * @return void
      */
-    public  function add(Demande $demande)
+    public  function add(Model_Demande $demande)
     {
         if (!$demande->isValid()) {
             throw new Exception_Bdd_Query("La demande est invalide, elle ne peut-être enregistrée.", Exception_Bdd_Query::Currupt_Params);
@@ -116,7 +116,7 @@ class DemandeManager {
     /**
      * Méthode renvoyant false si l'admissible a déjà une demande en cours
      * @access public
-     * @param Demande $demande
+     * @param Model_Demande $demande
      * @return bool
      */
     public  function autorisation($demande)
@@ -209,7 +209,7 @@ class DemandeManager {
             throw new Exception_Bdd_Query('Corruption des paramètres : DemandeManager::getUnique : la recherche n\'a renvoyé aucun résultats', Exception_Bdd_Query::Currupt_Params);
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Demande');
 
         return $requete->fetch();
     }
@@ -253,7 +253,7 @@ class DemandeManager {
         } catch (Exception $e) {
             throw new Exception_Bdd_Query('Erreur lors de la requête : DemandeManager::getList', Exception_Bdd_Query::Level_Minor, $e);
         }
-        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les nom
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Model_Demande'); // Attention, les champs référencés contiennent les nom
         $listeDemandes = $requete->fetchAll();
         $requete->closeCursor();
 
@@ -299,7 +299,7 @@ class DemandeManager {
             throw new Exception_Bdd_Query('Erreur lors de la requête : DemandeManager::getDemandes', Exception_Bdd_Query::Level_Major, $e);
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Model_Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
 
         return $requete->fetchAll();
     }

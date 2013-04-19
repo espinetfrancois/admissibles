@@ -62,7 +62,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         $erreurD = $demande->erreurs();
         $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
         if ($id == -1) {
-            $erreurD[] = Demande::Non_Admissible;
+            $erreurD[] = Model_Demande::Non_Admissible;
             Logs::logger(2, 'Formulaire de demande rempli par un non-admissible');
         } else {
             $demande->setId($id);
@@ -114,7 +114,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
 
     $champInvalide = '<span class="error">Champ invalide</span>';
 
-    if (isset($erreurD) && in_array(Demande::Non_Admissible, $erreurD))
+    if (isset($erreurD) && in_array(Model_Demande::Non_Admissible, $erreurD))
         Registry::get('layout')->addMessage('Merci de vérifier vos informations personnelles : vous ne semblez pas être dans les listes d\'admissibilité !', MSG_LEVEL_ERROR);
     ?>
 
@@ -124,28 +124,28 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         <label for="nom">Nom : </label>
         <input type="text" name="nom" value="<?php
             echo (isset($demande) ? $demande->nom() : '').'"';
-            echo ( (isset($erreurD) && in_array(Demande::Nom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
+            echo ( (isset($erreurD) && in_array(Model_Demande::Nom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
         ?>
     </p>
     <p class="champ">
         <label for="prenom">Prénom : </label>
         <input type="text" name="prenom" value="<?php
             echo (isset($demande) ? $demande->prenom() : '').'"';
-            echo ( (isset($erreurD) && in_array(Demande::Prenom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
+            echo ( (isset($erreurD) && in_array(Model_Demande::Prenom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
         ?>
     </p>
     <p class="champ">
         <label for="email">Adresse e-mail valide : </label>
         <input type="text" name="email" value="<?php
             echo (isset($demande) ? $demande->email() : '').'"';
-            echo (( isset($erreurD) && in_array(Demande::Email_Invalide, $erreurD) ) ? 'class="error" />'.$champInvalide : '/>');
+            echo (( isset($erreurD) && in_array(Model_Demande::Email_Invalide, $erreurD) ) ? 'class="error" />'.$champInvalide : '/>');
         ?>
     </p>
     <p id="champ-sexe" class="champ radio">
         <label for="sexe">Sexe: </label>
         <label> Masculin <input type="radio" name="sexe" value="M"<?php if (!isset($demande) || $demande->sexe() == "M") { echo "checked='checked'"; } ?>/></label>
         <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/></label>
-    <?php if (isset($erreurD) && in_array(Demande::Sexe_Invalide, $erreurD)) echo $champInvalide; ?></p>
+    <?php if (isset($erreurD) && in_array(Model_Demande::Sexe_Invalide, $erreurD)) echo $champInvalide; ?></p>
     <p class="champ">
         <label for="prepa">Etablissement d'origine : </label>
         <select name="prepa">
@@ -160,7 +160,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Prepa_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Prepa_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <p class="champ">
         <label for="filiere">Filière : </label>
@@ -176,7 +176,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Filiere_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Filiere_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <p class="champ">
         <label for="serie">Série : </label>
@@ -192,7 +192,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Serie_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Serie_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <p class="champ"><label for="section">Sport préféré : </label>
         <select name="section">
@@ -202,7 +202,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Sport_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Sport_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <br/>
     <input type="submit" value="Rechercher un logement"/>
