@@ -5,7 +5,7 @@
  * @version 1.0
  *
  */
-class Eleve {
+class Model_Eleve extends Model {
 
     /**
      * nom d'utilisateur unique : prenom.nom

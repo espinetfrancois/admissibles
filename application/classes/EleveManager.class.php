@@ -29,10 +29,10 @@ class EleveManager {
     /**
      * Méthode permettant d'ajouter un élève
      * @access public
-     * @param Eleve $eleve
+     * @param Model_Eleve $eleve
      * @return void
      */
-    public  function add(Eleve $eleve)
+    public  function add(Model_Eleve $eleve)
     {
         try {
             $requete = $this->db->prepare('INSERT INTO x
@@ -60,10 +60,10 @@ class EleveManager {
     /**
      * Méthode permettant de modifier un élève
      * @access public
-     * @param Eleve $eleve
+     * @param Model_Eleve $eleve
      * @return void
      */
-    public  function update(Eleve $eleve)
+    public  function update(Model_Eleve $eleve)
     {
         if ($eleve->isValid()) {
             try {
@@ -146,7 +146,7 @@ class EleveManager {
      * Méthode retournant un élève en particulier
      * @access public
      * @param string $user
-     * @return Eleve
+     * @return Model_Eleve
      */
     public  function getUnique($user)
     {
@@ -173,7 +173,7 @@ class EleveManager {
             throw new Exception_Bdd_Integrity('Plusieurs utilisateurs possèdent le même nom', Exception_Bdd_Integrity::Duplicate_Entry);
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Eleve');
 
         return $requete->fetch();
     }
@@ -232,7 +232,7 @@ class EleveManager {
             throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getList", Exception_Bdd_Query::Level_Minor, $e);
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Eleve');
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Eleve');
 
         $listeX = $requete->fetchAll();
         $requete->closeCursor();
@@ -246,7 +246,7 @@ class EleveManager {
      * @access public
      * @param Demande $demande
      * @param $limit
-     * @return array(Eleve)
+     * @return array(Model_Eleve)
      */
     public  function getFavorite(Demande $demande, $limit)
     {
@@ -282,7 +282,7 @@ class EleveManager {
             throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getFavorite", Exception_Bdd_Query::Level_Blocker, $e);
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS, 'Eleve'); // Attention : les champs référencées contiennent les valeurs affichables
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Model_Eleve'); // Attention : les champs référencées contiennent les valeurs affichables
 
         return $requete->fetchAll();
     }

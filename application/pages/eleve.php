@@ -118,7 +118,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve
         if ($_SESSION['eleve']->sexe() == "F")
             echo 'checked="checked"';
         echo '/>';
-        if (isset($erreurs) && in_array(Eleve::Sexe_Invalide, $erreurs))
+        if (isset($erreurs) && in_array(Model_Eleve::Sexe_Invalide, $erreurs))
             echo '<span style="color:red;">Merci de renseigner ce champ</span>';
     ?>
         </label>
@@ -138,7 +138,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve
             }
             ?>
         </select>
-        <?php if (isset($erreurs) && in_array(Eleve::Prepa_Invalide, $erreurs))
+        <?php if (isset($erreurs) && in_array(Model_Eleve::Prepa_Invalide, $erreurs))
             echo '<span style="color:red;">Merci de renseigner ce champ</span>';
         ?>
     </p>
@@ -157,7 +157,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve
             }
             ?>
             </select>
-        <?php if (isset($erreurs) && in_array(Eleve::Filiere_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
+        <?php if (isset($erreurs) && in_array(Model_Eleve::Filiere_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
     </p>
     <br/>
     <input type="submit" value="Modifier mes informations personnelles"/>

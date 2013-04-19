@@ -15,7 +15,7 @@ if (isset($_GET['response'])) {
     $_SESSION['eleve'] = $eleveManager->getUnique($auth['hruid']);
     if ($_SESSION['eleve'] == NULL) {
         $_SESSION['new'] = 1; // Première connexion de l'élève
-        $_SESSION['eleve'] = new Eleve(
+        $_SESSION['eleve'] = new Model_Eleve(
                 array('user' => $auth['hruid'], 'email' => $auth['email'], 'promo' => $auth['promo'], 'section' => $auth['sport'])); //***
     }
     Logs::logger(1, 'Connexion de l\'eleve ' . $auth['hruid'] . ' reussie');
