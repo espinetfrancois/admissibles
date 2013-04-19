@@ -244,11 +244,11 @@ class EleveManager {
     /**
      * Méthode  retournant l'élève disponible compatible avec la demande
      * @access public
-     * @param Demande $demande
+     * @param Model_Demande $demande
      * @param $limit
      * @return array(Model_Eleve)
      */
-    public  function getFavorite(Demande $demande, $limit)
+    public  function getFavorite(Model_Demande $demande, $limit)
     {
         if (!$demande->isValid() || !is_numeric($limit)) {
             Logs::logger(3, 'Corruption des parametres : EleveManager::getFavorite');

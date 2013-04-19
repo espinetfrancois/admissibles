@@ -374,7 +374,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
 
     // Ajout ou Modification d'une annonce
     if (isset ($_POST['nom'])) {
-        $adresse = new Adresse(array('nom' => $_POST['nom'],
+        $adresse = new Model_Adresse(array('nom' => $_POST['nom'],
                                      'adresse' => $_POST['adresse'],
                                      'tel' => $_POST['tel'],
                                      'email' => $_POST['email'],
@@ -411,11 +411,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
         $champInvalide = '<span class"error">Champ invalide</span>';
         ?>
             <form action="/administration/gestion?action=hotel" method="post">
-            <p class="champ"><label for="nom">Nom : </label><input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Nom_Invalide, $erreurModif)) echo $champInvalide ?></p>
-            <p class="champ"><label for="adresse">Adresse : </label><input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Adresse_Invalide, $erreurModif)) echo $champInvalide; ?></p>
-            <p class="champ"><label for="tel">Téléphone : </label><input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Tel_Invalide, $erreurModif)) echo $champInvalide; ?></p>
-            <p class="champ"><label for="email">Email : </label><input type="text" name="email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurModif) && in_array(Adresse::Email_Invalide, $erreurModif)) echo $champInvalide; ?></p>
-            <p class="champ"><label for="description">Description : </label><?php if (isset($erreurModif) && in_array(Adresse::Description_Invalide, $erreurModif)) echo $champInvalide; ?>
+            <p class="champ"><label for="nom">Nom : </label><input type="text" name="nom" value="<?php if (isset($adresse)) { echo $adresse->nom(); } ?>"/> <?php if (isset($erreurModif) && in_array(Model_Adresse::Nom_Invalide, $erreurModif)) echo $champInvalide ?></p>
+            <p class="champ"><label for="adresse">Adresse : </label><input type="text" name="adresse" value="<?php if (isset($adresse)) { echo $adresse->adresse(); } ?>"/> <?php if (isset($erreurModif) && in_array(Model_Adresse::Adresse_Invalide, $erreurModif)) echo $champInvalide; ?></p>
+            <p class="champ"><label for="tel">Téléphone : </label><input type="text" name="tel" value="<?php if (isset($adresse)) { echo $adresse->tel(); } ?>"/> <?php if (isset($erreurModif) && in_array(Model_Adresse::Tel_Invalide, $erreurModif)) echo $champInvalide; ?></p>
+            <p class="champ"><label for="email">Email : </label><input type="text" name="email" value="<?php if (isset($adresse)) { echo $adresse->email(); } ?>"/> <?php if (isset($erreurModif) && in_array(Model_Adresse::Email_Invalide, $erreurModif)) echo $champInvalide; ?></p>
+            <p class="champ"><label for="description">Description : </label><?php if (isset($erreurModif) && in_array(Model_Adresse::Description_Invalide, $erreurModif)) echo $champInvalide; ?>
             <textarea name="description" cols="20" rows="4"><?php if (isset($adresse)) { echo $adresse->description(); } ?></textarea></p>
             <p class="champ"><label for="categorie">Catégorie : </label><select name="categorie">
                 <option value=""></option>
@@ -436,8 +436,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
         }
 
         ?>
-        </select> <?php if (isset($erreurModif) && in_array(Adresse::Categorie_Invalide, $erreurModif)) echo $champInvalide; ?></p>
-        <p class="champ"><label for="valide">Afficher cette annonce sur le site ? </label><input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Adresse::Valide_Invalide, $erreurModif)) echo $champInvalide; ?></p>
+        </select> <?php if (isset($erreurModif) && in_array(Model_Adresse::Categorie_Invalide, $erreurModif)) echo $champInvalide; ?></p>
+        <p class="champ"><label for="valide">Afficher cette annonce sur le site ? </label><input type="checkbox" name="valide" <?php echo $checked; ?>/> <?php if (isset($erreurModif) && in_array(Model_Adresse::Valide_Invalide, $erreurModif)) echo $champInvalide; ?></p>
         <?php
         if(isset($adresse) && !$adresse->isNew()) {
             echo '<input type="hidden" name="id" value="'.$adresse->id().'" />';

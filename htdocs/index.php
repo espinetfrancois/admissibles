@@ -23,6 +23,7 @@ try {
 	try {
 		$layout->addPage($router->file);
 	} catch (Exception $e) {
+	    die("coucou");
 	    $layout->clearContent();
 		$layout->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
 		if (APP_ENV != 'production') {

@@ -164,14 +164,6 @@ class Layout {
 		    $this->_content[] = ob_get_clean();
 		    //on laisse le traitement de l'exception à l'index
 		    throw new Exception_Projet("Erreur non prévue dans une page", null, $e);
-//     		$this->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
-//     		if (APP_ENV != 'production') {
-//     			$this->addMessage($e->getMessage() .' : <br/><pre>'. $e->getTraceAsString().'</pre><br/><pre>', MSG_LEVEL_ERROR);
-//     		} else {
-//     			//redirection sur la page des erreurs
-//     			$ewrap = new Exception_Projet("Erreur capturée dans une page : " . $e->getMessage(),null, $e);
-//     			$this->addHead('<meta http-equiv="Refresh" CONTENT="1; URL=/errors?exception='. $ewrap->url() . '">');
-//     		}
 		}
 		//récupération et vidage du tampon (sans affichage direct)
 		$this->_content[] = ob_get_clean();

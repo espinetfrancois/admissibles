@@ -30,10 +30,10 @@ class AdresseManager {
     /**
      * Méthode permettant d'ajouter une adresse
      * @access protected
-     * @param Adresse $adresse
+     * @param Model_Adresse $adresse
      * @return void
      */
-    protected  function add(Adresse $adresse)
+    protected  function add(Model_Adresse $adresse)
     {
         try {
             $requete = $this->db->prepare('INSERT INTO annonces
@@ -61,10 +61,10 @@ class AdresseManager {
     /**
      * Méthode permettant de modifier une adresse
      * @access protected
-     * @param Adresse $adresse
+     * @param Model_Adresse $adresse
      * @return void
      */
-    protected  function update(Adresse $adresse)
+    protected  function update(Model_Adresse $adresse)
     {
         try {
             $requete = $this->db->prepare('UPDATE annonces
@@ -94,11 +94,11 @@ class AdresseManager {
     /**
      * Méthode permettant d'enregistrer une adresse valide
      * @access public
-     * @param Adresse $adresse
+     * @param Model_Adresse $adresse
      * @return void
      */
 
-    public final  function save(Adresse $adresse)
+    public final  function save(Model_Adresse $adresse)
     {
         if ($adresse->isValid()) {
             $adresse->isNew() ? $this->add($adresse) : $this->update($adresse);
@@ -135,12 +135,12 @@ class AdresseManager {
      * Méthode retournant une adresse en particulier
      * @access public
      * @param int $id
-     * @return Adresse
+     * @return Model_Adresse
      */
     public  function getUnique($id)
     {
         if (!is_numeric($id)) {
-            Logs::logger(3, 'Corruption des parametres : AdresseManager::getUnique');
+            throw new Exception_Bdd_Query('Corruption des parametres : AdresseManager::getUnique', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT ID AS id,
@@ -162,7 +162,7 @@ class AdresseManager {
             throw new Exception_Bdd_Integrity('Corruption de la table "annonces". ID non unique');
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse');
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Adresse');
 
         return $requete->fetch();
     }
@@ -193,7 +193,7 @@ class AdresseManager {
         } catch (Exception $e) {
             throw new Exception_Bdd_Query('Erreur lors de la requête : AdresseManager::getListAffiche', Exception_Bdd_Query::Level_Blocker, $e);
         }
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse'); // les champs références contiennent maintenant la valeur
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Adresse'); // les champs références contiennent maintenant la valeur
 
         $listeAdresse = $requete->fetchAll();
         $requete->closeCursor();
