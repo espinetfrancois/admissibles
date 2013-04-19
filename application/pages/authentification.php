@@ -8,7 +8,7 @@
 // require_once(APPLICATION_PATH.'/inc/sql.php');
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 
-$eleveManager = new EleveManager(Registry::get('db'));
+$eleveManager = new Manager_Eleve(Registry::get('db'));
 
 if (isset($_GET['response'])) {
     $auth = frankiz_get_response();

@@ -6,7 +6,7 @@
  *
  */
 
-$demandeManager = new DemandeManager(Registry::get('db'));
+$demandeManager = new Manager_Demande(Registry::get('db'));
 
 if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
     echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>';
@@ -14,7 +14,7 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
     if ($demande->status() == 0) {
         $demandeManager->updateStatus($_GET['code'], '1');
         //préparation de l'envoi du mail : récupération des informations de l'X
-        $elevem = new EleveManager(Registry::get('config'));
+        $elevem = new Manager_Eleve(Registry::get('config'));
         $eleve = $elevem->getUnique($demande->userEleve());
 
         $mail = new Mail_X($eleve->email());

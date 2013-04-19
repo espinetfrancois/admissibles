@@ -5,14 +5,7 @@
  * @version 1.0
  *
  */
-class Parametres {
-
-    /**
-     * Connexion à la base de données
-     * @var PDO
-     * @access protected
-     */
-    protected  $db;
+class Parametres extends Manager {
 
     /**
      * Constantes relatives aux types de données
@@ -22,19 +15,6 @@ class Parametres {
     const Serie = 3;
     const Section = 4;
     const Promo = 5;
-
-    /**
-     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
-     * @access public
-     * @param PDO $db
-     * @return void
-     */
-    public  function __construct(PDO $db)
-    {
-        $this->db = $db;
-
-    }
-
 
     /**
      * Méthode de remise à zéro de l'interface

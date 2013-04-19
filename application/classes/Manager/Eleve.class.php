@@ -5,26 +5,7 @@
  * @version 1.0
  *
  */
-class EleveManager {
-
-    /**
-     * Connexion à la BDD
-     * @var PDO
-     * @access protected
-     */
-    protected  $db;
-
-    /**
-     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
-     * @access public
-     * @param PDO $db
-     * @return void
-     */
-    public  function __construct(PDO $db)
-    {
-        $this->db = $db;
-    }
-
+class Manager_Eleve extends Manager {
 
     /**
      * Méthode permettant d'ajouter un élève
@@ -52,7 +33,7 @@ class EleveManager {
             $requete->bindValue(':prepa', $eleve->prepa());
             $requete->execute();
         } catch (Exception $e) {
-            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::add", Exception_Bdd_Query::Level_Critical, $e);
+            throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::add", Exception_Bdd_Query::Level_Critical, $e);
         }
     }
 
@@ -84,10 +65,10 @@ class EleveManager {
                 $requete->bindValue(':prepa', $eleve->prepa());
                 $requete->execute();
             } catch (Exception $e) {
-                throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::update", Exception_Bdd_Query::Level_Major, $e);
+                throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::update", Exception_Bdd_Query::Level_Major, $e);
             }
         } else {
-            throw new Exception_Bdd_Query('Corruption des paramètres : EleveManager::update', Exception_Bdd_Query::Currupt_Params);
+            throw new Exception_Bdd_Query('Corruption des paramètres : Manager_Eleve::update', Exception_Bdd_Query::Currupt_Params);
         }
     }
 
@@ -103,7 +84,7 @@ class EleveManager {
     public  function addDispo($user, $serie)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
-            Logs::logger(3, 'Corruption des parametres : EleveManager::addDispo');
+            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::addDispo');
         }
         try {
             $requete = $this->db->prepare('INSERT INTO disponibilites
@@ -113,7 +94,7 @@ class EleveManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::addDispo", Exception_Bdd_Query::Level_Major, $e);
+            throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::addDispo", Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
@@ -128,7 +109,7 @@ class EleveManager {
     public  function deleteDispo($user, $serie)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
-            Logs::logger(3, 'Corruption des parametres : EleveManager::deleteDispo');
+            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::deleteDispo');
         }
         try {
             $requete = $this->db->prepare('DELETE FROM disponibilites
@@ -138,7 +119,7 @@ class EleveManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::addDispo", Exception_Bdd_Query::Level_Major, $e);
+            throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::addDispo", Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
@@ -151,7 +132,7 @@ class EleveManager {
     public  function getUnique($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, 'Corruption des parametres : EleveManager::getUnique');
+            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::getUnique');
         }
         try {
             $requete = $this->db->prepare('SELECT USER AS user,
@@ -166,7 +147,7 @@ class EleveManager {
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getUnique", Exception_Bdd_Query::Level_Major, $e);
+            throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::getUnique", Exception_Bdd_Query::Level_Major, $e);
         }
         if ($requete->rowCount() > 1) {
             // Ne se produit jamais en exécution courante
@@ -187,7 +168,7 @@ class EleveManager {
     public  function getDispo($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, 'Corruption des parametres : EleveManager::getDispo');
+            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::getDispo');
         }
         try {
             $requete = $this->db->prepare('SELECT disponibilites.ID_SERIE AS serie
@@ -198,7 +179,7 @@ class EleveManager {
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getDispo", Exception_Bdd_Query::Level_Major, $e);
+            throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::getDispo", Exception_Bdd_Query::Level_Major, $e);
         }
 
         $listeDispo = array();
@@ -229,7 +210,7 @@ class EleveManager {
                                            FROM x');
             $requete->execute();
         } catch (Exception $e) {
-            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getList", Exception_Bdd_Query::Level_Minor, $e);
+            throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::getList", Exception_Bdd_Query::Level_Minor, $e);
         }
 
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Eleve');
@@ -251,7 +232,7 @@ class EleveManager {
     public  function getFavorite(Model_Demande $demande, $limit)
     {
         if (!$demande->isValid() || !is_numeric($limit)) {
-            Logs::logger(3, 'Corruption des parametres : EleveManager::getFavorite');
+            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::getFavorite');
         }
         try {
             $requete = $this->db->prepare('SELECT x.USER AS user,
@@ -279,7 +260,7 @@ class EleveManager {
             $requete->bindValue(':serie',  $demande->serie());
             $requete->execute();
         } catch (Exception $e) {
-            throw new Exception_Bdd_Query("Erreur lors de la requête : EleveManager::getFavorite", Exception_Bdd_Query::Level_Blocker, $e);
+            throw new Exception_Bdd_Query("Erreur lors de la requête : Manager_Eleve::getFavorite", Exception_Bdd_Query::Level_Blocker, $e);
         }
 
         $requete->setFetchMode(PDO::FETCH_CLASS, 'Model_Eleve'); // Attention : les champs référencées contiennent les valeurs affichables

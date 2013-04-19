@@ -7,7 +7,7 @@
  */
 // require_once(APPLICATION_PATH.'/inc/sql.php');
 
-$adresseManager = new AdresseManager(Registry::get('db'));
+$adresseManager = new Manager_Adresse(Registry::get('db'));
 $adressesValides = $adresseManager->getListAffiche();
 $cat = '';
 if (count($adressesValides) < 1)

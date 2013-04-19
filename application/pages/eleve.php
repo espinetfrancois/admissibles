@@ -8,9 +8,9 @@
 
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 
-$eleveManager = new EleveManager(Registry::get('db'));
-$demandeManager = new DemandeManager(Registry::get('db'));
-$adresseManager = new AdresseManager(Registry::get('db'));
+$eleveManager = new Manager_Eleve(Registry::get('db'));
+$demandeManager = new Manager_Demande(Registry::get('db'));
+$adresseManager = new Manager_Adresse(Registry::get('db'));
 $parametres = Registry::get('parametres');
 
 // Identification
@@ -65,7 +65,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
     $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
     // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
     //préparation de l'envoi du mail : récupération des informations de l'X
-    $elevem = new EleveManager(Registry::get('config'));
+    $elevem = new Manager_Eleve(Registry::get('config'));
     $eleve = $elevem->getUnique($demande->userEleve());
     $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
     $mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());

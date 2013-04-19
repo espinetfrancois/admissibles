@@ -7,7 +7,7 @@
  * @version 1.0
  *
  */
-class Mail extends PHPMailer {
+abstract class Mail extends PHPMailer {
 
     const Ini_File = 'mail.ini';
 

@@ -6,8 +6,8 @@
  *
  */
 
-$demandeManager = new DemandeManager(Registry::get('db'));
-$eleveManager = new EleveManager(Registry::get('db'));
+$demandeManager = new Manager_Demande(Registry::get('db'));
+$eleveManager = new Manager_Eleve(Registry::get('db'));
 $parametres = Registry::get('parametres');
 
 echo '<span id="page_id">11</span>';

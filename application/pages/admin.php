@@ -311,7 +311,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'RAZ') {
 if (isset($_GET['action']) && $_GET['action'] == 'demandes') {
     echo '<span id="page_id">42</span>';
     echo '<h3>Demandes en cours</h3>';
-    $demandeManager = new DemandeManager(Registry::get('db'));
+    $demandeManager = new Manager_Demande(Registry::get('db'));
     $demandes = $demandeManager->getList();
     echo '<table border=1 cellspacing=0>';
     echo '<thead><tr><th>Série</th><th>Filière</th><th>Admissible</th><th>Elève X</th><th>Statut</th></tr></thead>';
@@ -335,7 +335,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demandes') {
 
 // Interface de gestion des hébergements à proximité du campus
 if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
-    $adresseManager = new AdresseManager($db);
+    $adresseManager = new Manager_Adresse($db);
     // Suppression d'une catégorie
     if (isset($_GET['suppr_cat'])) {
         if (!is_numeric($_GET['suppr_cat'])) {

@@ -1,6 +1,12 @@
 <?php
 
-abstract class Model {
+/**
+ * Class abstraite pour les modèles de l'application
+ * @author francois.espinet
+ *
+ */
+abstract class Model
+{
     /**
      * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
      * @access public
