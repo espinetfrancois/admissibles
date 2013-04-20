@@ -34,6 +34,8 @@
 /* Placement des labels */
 .contenu form p.champ label {
 	float : left;
+	vertical-align : middle;
+	padding		: 3px 0;
 }
 
 .contenu form p.champ.radio label:not(:first-child) {
@@ -88,7 +90,7 @@
 	float		: right;
 }
 
-.contenu form > input[type=submit]:hover {
+.contenu form input[type=submit]:hover {
 	background-color	: rgb(22, 77, 109);
 	background			: white -moz-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
 	background			: white -webkit-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;

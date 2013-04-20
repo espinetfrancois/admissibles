@@ -49,7 +49,7 @@ ul,ol,li {
 	padding: 0;
 }
 
-ol li {
+ol {
 	list-style-type: decimal;
 	background: none;
 	padding-left: 0;
@@ -119,3 +119,9 @@ a.action, a.action:visited {
 	text-decoration : none;
 }
 
+.contenu ul {
+	list-style	: disc outside none;
+	margin		: 1em 0;
+	padding-left	: 1em;
+	margin-left		: 1em;
+}

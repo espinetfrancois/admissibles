@@ -10,12 +10,11 @@ session_start();
 try {
 	$config = new Config();
 	$layout = new Layout();
-
-	$router = new Router($_SERVER['REQUEST_URI'], $layout);
-
 	//enregistrement dans le registre (accès à travers l'application)
 	Registry::getInstance()->set('config', $config);
 	Registry::getInstance()->set('layout', $layout);
+
+	$router = new Router($_SERVER['REQUEST_URI'], $layout);
 	//après le layout
 	require_once(APPLICATION_PATH . '/inc/sql.php');
 
@@ -23,7 +22,6 @@ try {
 	try {
 		$layout->addPage($router->file);
 	} catch (Exception $e) {
-	    die("coucou");
 	    $layout->clearContent();
 		$layout->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
 		if (APP_ENV != 'production') {

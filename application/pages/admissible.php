@@ -51,7 +51,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
     //on regarde le bom de l'admissible pour voir s'il est admissible
     if (isset($_POST['nom'])) {
         unset($erreurD);
-        $demande = new Demande(array('nom' => $_POST['nom'],
+        $demande = new Model_Demande(array('nom' => $_POST['nom'],
                                      'prenom' => $_POST['prenom'],
                                      'email' => $_POST['email'],
                                      'sexe' => $_POST['sexe'],

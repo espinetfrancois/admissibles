@@ -11,6 +11,7 @@ return array(
        'mentions-legales' => 'mentions-legales.php',
        'contacts'         => 'contacts.php',
        'x'                => array(
+                                   'root'                    => 'eleve.html',
                                    'connexion'               => 'eleve.php',
                                    'donnees-personnelles'    => 'eleve.php',
                                    'espace-personnel'        => 'eleve.php'
@@ -22,7 +23,7 @@ return array(
                                    'validation-demande'     => 'validation.php'
                                    ),
        'administration'   => array(
-                                   'root'    => 'admin.php',
+                                   'root'                   => 'admin.php',
                                    'gestion'                => 'admin.php',
                                   )
 );
