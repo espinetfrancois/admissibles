@@ -13,7 +13,8 @@ $eleveManager = new Manager_Eleve(Registry::get('db'));
 if (isset($_GET['response'])) {
     $auth = frankiz_get_response();
     $_SESSION['eleve'] = $eleveManager->getUnique($auth['hruid']);
-    if ($_SESSION['eleve'] == NULL) {
+    //élève non trouvé en base
+    if ($_SESSION['eleve'] === false) {
         $_SESSION['new'] = 1; // Première connexion de l'élève
         $_SESSION['eleve'] = new Model_Eleve(
                 array('user' => $auth['hruid'], 'email' => $auth['email'], 'promo' => $auth['promo'], 'section' => $auth['sport'])); //***
@@ -23,7 +24,12 @@ if (isset($_GET['response'])) {
         $_SESSION['administrateur'] = true;
         Logs::logger(1, 'Connexion a l\'interface d\'administration reussie');
     }
-    header("Location:" .$auth['location'], true);
+    //redirection vers l'url demandée si elle n'est pas vide
+    if (isset($auth['location']) && $auth['location'] != "") {
+        header("Location:" .$auth['location'], true);
+    } else {
+        header("Location: /");
+    }
     exit();
 } else {
     frankiz_do_auth();

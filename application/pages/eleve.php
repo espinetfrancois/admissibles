@@ -98,7 +98,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
  */
 
 // on teste si l'élève a déjà entré ses infos personnelles
-if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve']->isValid()) {
+if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['eleve']->isValid()) {
     $prepas = $parametres->getList(Parametres::Etablissement);
     $filieres = $parametres->getList(Parametres::Filiere);
     $champInvalide = '<span class="error">Merci de renseigner ce champ</span>'
@@ -257,8 +257,8 @@ if (empty($demandes)) {
             $action = 'Vous pouvez recevoir une autre demande pour cette série';
             break;
         default:
-            Logs::logger(3, 'Corruption des parametres. eleve.php::statut');
-               break;
+            throw new Exception_Page('Corruption des parametres. eleve.php::statut', 'Le statut demandé est inconnu');
+            break;
         }
 
         echo '<tr>
