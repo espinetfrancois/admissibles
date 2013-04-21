@@ -96,18 +96,18 @@ class Manager_Adresse extends Manager {
      */
     public final  function delete($id)
     {
-        if (is_numeric($id)) {
-            try {
-                $requete = $this->db->prepare('DELETE FROM annonces
-                                               WHERE ID = :id');
-                $requete->bindValue(':id', $id);
-                $requete->execute();
-            } catch (Exception $e) {
-                    Logs::logger(3, 'Erreur SQL Manager_Adresse::delete : '.$e->getMessage());
-            }
-        } else {
+        if (! is_numeric($id))
             throw new Exception_Bdd_Query('Corruption des parametres : Manager_Adresse::delete', Exception_Bdd_Query::Currupt_Params);
+
+        try {
+            $requete = $this->db->prepare('DELETE FROM annonces
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::delete', Exception_Bdd_Query::Level_Minor, $e);
         }
+
     }
 
 

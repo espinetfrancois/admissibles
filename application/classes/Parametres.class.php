@@ -135,19 +135,19 @@ class Parametres extends Manager {
         case self::Etablissement:
             $valeurs = 'NOM = :nom, COMMUNE = :commune';
             $table = 'ref_etablissements';
-            $array = array('nom' => htmlentities($donnees['nom']), 'commune' => htmlentities($donnees['commune']));
+            $array = array('nom' => $this->escape($donnees['nom']), 'commune' => $this->escape($donnees['commune']));
             break;
 
         case  self::Filiere:
             $valeurs = 'NOM = :nom';
             $table = 'ref_filieres';
-            $array = array('nom' => htmlentities($donnees['nom']));
+            $array = array('nom' => $this->escape($donnees['nom']));
             break;
 
         case  self::Serie:
             $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
             $table = 'series';
-            $array = array('intitule' => htmlentities($donnees['intitule']), 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
+            $array = array('intitule' => $this->escape($donnees['intitule']), 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
             break;
 
         default:
@@ -340,11 +340,11 @@ class Parametres extends Manager {
         $ligne = explode(PHP_EOL, $donnees);
         foreach ($ligne as $value) {
             // Séparation des noms de la forme : 'Nom (Prénom)'
-            $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',htmlentities($value));
+            $value = preg_replace('#(.+)\s+\((.+)\)$#','$1///$2',$value);
             $col = explode('///', $value);
             // traitement des donnees : minuscules et sans accents
-            $nom = strtolower(Parametres::wd_remove_accents($col[0]));
-            $prenom = strtolower(Parametres::wd_remove_accents($col[1]));
+            $nom = self::traitementNomPropres($col[0]);
+            $prenom = self::traitementNomPropres($col[1]);
             try {
                 $requete = $this->db->prepare('INSERT INTO admissibles
                                                SET NOM = :nom,
@@ -374,24 +374,6 @@ class Parametres extends Manager {
     }
 
 
-    /**
-     * Méthode retirant les accents
-     * @access public
-     * @access static
-     * @param text $str
-     * @param text $charset
-     * @return text
-     */
-    public static  function wd_remove_accents($str, $charset='utf-8')
-    {
-        $str = htmlentities($str, ENT_NOQUOTES, $charset);
-
-        $str = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
-        $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
-        $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
-
-        return $str;
-    }
 
 
     /**

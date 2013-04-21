@@ -84,7 +84,7 @@ class Manager_Eleve extends Manager {
     public  function addDispo($user, $serie)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
-            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::addDispo');
+            throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::addDispo', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('INSERT INTO disponibilites
@@ -109,7 +109,7 @@ class Manager_Eleve extends Manager {
     public  function deleteDispo($user, $serie)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user) || !is_numeric($serie)) {
-            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::deleteDispo');
+            throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::deleteDispo', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('DELETE FROM disponibilites
@@ -132,7 +132,7 @@ class Manager_Eleve extends Manager {
     public  function getUnique($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::getUnique');
+            throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::getUnique', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT USER AS user,
@@ -168,7 +168,7 @@ class Manager_Eleve extends Manager {
     public  function getDispo($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#',$user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::getDispo');
+            throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::getDispo', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT disponibilites.ID_SERIE AS serie
@@ -232,7 +232,7 @@ class Manager_Eleve extends Manager {
     public  function getFavorite(Model_Demande $demande, $limit)
     {
         if (!$demande->isValid() || !is_numeric($limit)) {
-            Logs::logger(3, 'Corruption des parametres : Manager_Eleve::getFavorite');
+            throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::getFavorite', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT x.USER AS user,

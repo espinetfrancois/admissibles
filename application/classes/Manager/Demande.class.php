@@ -59,8 +59,8 @@ class Manager_Demande extends Manager {
      */
     public  function isAdmissible($nom, $prenom, $serie)
     {
-        $nom = strtolower(Parametres::wd_remove_accents($nom));
-        $prenom = strtolower(Parametres::wd_remove_accents($prenom));
+        $nom = self::traitementNomPropres($nom);
+        $prenom = self::traitementNomPropres($prenom);
         try {
             $requete = $this->db->prepare('SELECT ID
                                            FROM admissibles
@@ -251,7 +251,7 @@ class Manager_Demande extends Manager {
     public  function getDemandes($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, 'Corruption des parametres. Manager_Demande::getDemandes');
+            throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::getDemandes', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT admissibles.ID AS id,
