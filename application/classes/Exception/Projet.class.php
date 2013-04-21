@@ -13,7 +13,7 @@
 class Exception_Projet extends Exception
 {
 
-    const Log_Path = '/exceptions.log';
+    protected $log_file = 'exceptions.log';
 
     public function url()
     {
@@ -50,6 +50,6 @@ class Exception_Projet extends Exception
      */
     public function log() {
         $texte = '['.date('Y-m-d H:i:s', time()).'] '.$_SERVER['REMOTE_ADDR'].' - Type d\'exeption : '.get_class($this).' - Message : '.$this->getMessage(). ' - Fichier : ' . $this->getFile() . ' - L : ' . $this->getLine() . "\n";
-        error_log($texte, 3, LOGS_PATH.self::Log_Path);
+        error_log($texte, 3, LOGS_PATH.'/'.$this->log_file);
     }
 }

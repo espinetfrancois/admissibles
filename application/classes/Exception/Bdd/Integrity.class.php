@@ -11,8 +11,9 @@ class Exception_Bdd_Integrity extends Exception_Bdd
 {
     const Duplicate_Entry    = 1;
 
-    public function __init() {
+    public function __destruct() {
         $mail = new Mail_AdminTech();
         $mail->warning("La base de donnée doit être réparée : ".$this->getMessage());
+        parent::__destruct();
     }
 }
