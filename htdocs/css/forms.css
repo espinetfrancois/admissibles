@@ -13,6 +13,13 @@
 	display : inline-block;
 }
 
+/** Formulaire "en ligne" ie contenus dans un tableau etc... **/
+.contenu form.inline {
+	min-width	: 100px;
+	background-color : transparent;
+	padding			: 0.5em 1em;
+}
+
 /* Décoration des Champs (paragraphes entourant chaque input+label) */
 .contenu form p.champ {
 	float : left;
@@ -34,8 +41,6 @@
 /* Placement des labels */
 .contenu form p.champ label {
 	float : left;
-	vertical-align : middle;
-	padding		: 3px 0;
 }
 
 .contenu form p.champ.radio label:not(:first-child) {
