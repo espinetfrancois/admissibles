@@ -97,7 +97,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                 .$eleve->prepa().'</td><td>'.$eleve->filiere()
                 .'</td><td>'.$eleve->section().'</td>';
             echo '<td>
-                    <form action="/admissible/inscription" method="post">
+                    <form class="inline" action="/admissible/inscription" method="post">
                     <input type="hidden" name="user" value="'.$eleve->user().'"/>
                     <input type="submit" value="Envoyer une demande de logement"/>
                     </form>
