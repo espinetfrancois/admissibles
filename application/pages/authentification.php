@@ -12,7 +12,11 @@ $eleveManager = new Manager_Eleve(Registry::get('db'));
 
 if (isset($_GET['response'])) {
     $auth = frankiz_get_response();
-    $_SESSION['eleve'] = $eleveManager->getUnique($auth['hruid']);
+    try {
+        $_SESSION['eleve'] = $eleveManager->getUnique($auth['hruid']);
+    } catch (Exception_Bdd $e) {
+        throw new Exception_Page('Impossible de vérfier l\'utilisateur dans la base', "L'utilisateur ne peut pas être vérifié en base.", null, $e);
+    }
     //élève non trouvé en base
     if ($_SESSION['eleve'] === false) {
         $_SESSION['new'] = 1; // Première connexion de l'élève

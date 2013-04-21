@@ -10,16 +10,31 @@ $demandeManager = new Manager_Demande(Registry::get('db'));
 
 if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
     echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>';
-    $demande = $demandeManager->getUnique($_GET['code']);
+    try {
+        $demande = $demandeManager->getUnique($_GET['code']);
+    } catch (Exception_Bdd $e) {
+        Registry::get('layout')->addMessage('Impossible de récupérer votre demande dans la base.', MSG_LEVEL_ERROR);
+    }
     if ($demande->status() == 0) {
-        $demandeManager->updateStatus($_GET['code'], '1');
+        try {
+            $demandeManager->updateStatus($_GET['code'], '1');
+        } catch (Exception_Bdd $e) {
+            //rethrow
+            Registry::get('layout')->addMessage("Impossible de mettre à jour l'état de votre demande.", MSG_LEVEL_ERROR);
+        }
         //préparation de l'envoi du mail : récupération des informations de l'X
         $elevem = new Manager_Eleve(Registry::get('config'));
-        $eleve = $elevem->getUnique($demande->userEleve());
+        try {
+            $eleve = $elevem->getUnique($demande->userEleve());
 
-        $mail = new Mail_X($eleve->email());
-        //envoi du mail d'avertissement à l'X
-        $mail->nouvelleDemande();
+            $mail = new Mail_X($eleve->email());
+            //envoi du mail d'avertissement à l'X
+            $mail->nouvelleDemande();
+        } catch (Exception_Mail $e) {
+            Registry::get('layout')->addMessage("Impossible d'envoyer le mail d'annulation à l'élève", MSG_LEVEL_ERROR);
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage("Impossible de retrouver l'élève dans la base de données.", MSG_LEVEL_ERROR);
+        }
 
         //eventuellement envoyer un mail de confirmation à l'admissible
            echo '<p>Votre adresse email a bien été <strong>validée</strong>.<br/>';
@@ -31,6 +46,7 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
         Logs::logger(2, 'Re-validation d\'une demande de logement (id : '.$demande->id().')');
     }
 } else {
-    Logs::logger(3, 'Corruption des parametres. validation.php::GET');
+    throw new Exception_Page('Corruption des parametres. validation.php::GET', 'Le code proposé n\'est pas valide');
+//     Logs::logger(3, 'Corruption des parametres. validation.php::GET');
 }
 ?>
