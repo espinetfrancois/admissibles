@@ -52,10 +52,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
         }
 
         if (!$parametres->isUsedList($_GET['type'], $_GET['suppr'])) {
-            $parametres->deleteFromList($_GET['type'], $_GET['suppr']);
-            Logs::logger(1, 'Administrateur : Suppression d\'un element de liste');
+            try {
+                $parametres->deleteFromList($_GET['type'], $_GET['suppr']);
+                Registry::get('layout')->addMessage('Élément supprimé avec succés.', MSG_LEVEL_OK);
+                Logs::logger(1, 'Administrateur : Suppression d\'un element de liste');
+            } catch (Exception_Bdd $e) {
+                Registry::get("layout")->addMessage('Impossible de supprimer cet élément.', MSG_LEVEL_ERROR);
+            }
         } else {
-            Registry::get('layout')->addMessage('Vous ne pouvez supprimer cet élément tant qu\'il est utilisé dans le profil d\'un élève ou d\'un admissible', MSG_LEVEL_ERROR);
+            Registry::get('layout')->addMessage('Vous ne pouvez supprimer cet élément tant qu\'il est utilisé dans le profil d\'un élève ou d\'un admissible', MSG_LEVEL_WARNING);
             Logs::logger(1, 'Administrateur : Tentative de suppression d\'un element de liste encore utilise');
         }
     }
@@ -64,25 +69,39 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
     if (isset($_POST['nom']) && isset($_POST['ville'])) {
         //vérification du post
         if (!empty($_POST['nom']) && !empty($_POST['ville']) && strlen($_POST['nom']) <= 50 && strlen($_POST['ville']) <= 50) {
-            $parametres->addToList($_GET['type'], array('nom' => $_POST['nom'], 'commune' => $_POST['ville']));
-            Logs::logger(1, 'Administrateur : Ajout d\'un element a une liste');
+            try {
+                $parametres->addToList($_GET['type'], array('nom' => $_POST['nom'], 'commune' => $_POST['ville']));
+                Logs::logger(1, 'Administrateur : Ajout d\'un element a une liste');
+                Registry::get('layout')->addMessage("Lycée ajouté avec succés", MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Registry::get('layout')->addMessage("Impossible d'ajouter ce lycée dans la base de donnée", MSG_LEVEL_ERROR);
+            }
         } else {
-            Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'un nouvel élément', MSG_LEVEL_WARNING);
+            Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'un nouvel élément : l\'élément est invalide', MSG_LEVEL_WARNING);
             Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'un element a une liste');
         }
     } elseif (isset($_POST['nom'])) { // Ajout d'un élément de liste (autre)
         //vérification du post
         if (!empty($_POST['nom']) && strlen($_POST['nom']) <= 50) {
-            $parametres->addToList($_GET['type'], array('nom' => $_POST['nom']));
-            Logs::logger(1, 'Administrateur : Ajout d\'un element a une liste');
+            try {
+                $parametres->addToList($_GET['type'], array('nom' => $_POST['nom']));
+                Logs::logger(1, 'Administrateur : Ajout d\'un element a une liste');
+                Registry::get('layout')->addMessage('Élément ajouté avec succés.',MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Registry::get('Impossible d\'ajouter cet élément dans la base de donnée.', MSG_LEVEL_ERROR);
+            }
         } else {
-            Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'un nouvel élément', MSG_LEVEL_WARNING);
+            Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'un nouvel élément : l\'élément est invalide', MSG_LEVEL_WARNING);
             Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'un element a une liste');
         }
     }
-
-    $liste = $parametres->getList($_GET['type']);
-
+    try {
+        $liste = $parametres->getList($_GET['type']);
+    } catch (Exception_Bdd $e) {
+        //peut-être rethrow ici pour arreter l'execution
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste demandée.', MSG_LEVEL_ERROR);
+    }
+    //formulaire d'ajout
     echo '<form action="/administration/gestion?action=param&type='.$_GET['type'].'" method="post">';
     echo '<table border=1 cellspacing=0>';
     echo '<thead><tr><th>Valeur</th><th>Action</th></tr></thead>';
@@ -115,8 +134,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'series') {
             return 1;
         }
         if (!$parametres->isUsedList(Parametres::Serie, $_GET['suppr'])) {
-            $parametres->deleteFromList(Parametres::Serie, $_GET['suppr']);
-            Logs::logger(1, 'Administrateur : Suppression d\'une serie');
+            try {
+                $parametres->deleteFromList(Parametres::Serie, $_GET['suppr']);
+                Logs::logger(1, 'Administrateur : Suppression d\'une serie');
+                Registry::get('layout')->addMessage("Liste des admissibles supprimée avec succés.", MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Registry::get('layout')->addMessage("Erreur lors de la suppression de la liste d'admissibilité sélectionnée.", MSG_LEVEL_ERROR);
+            }
         } else {
             Registry::get('layout')->addMessage('Vous ne pouvez supprimer cette série tant qu\'elle est utilisée dans le profil d\'un élève ou d\'un admissible', MSG_LEVEL_WARNING);
             Logs::logger(2, 'Administrateur : Tentative de suppression d\'une serie encore utilise');
@@ -138,8 +162,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'series') {
              * La fermeture des demandes correspond à minuit la veille du début des oraux
              *
              */
-            $parametres->addToList(Parametres::Serie, array('intitule' => $_POST['intitule'], 'date_debut' => $date_debut, 'date_fin' => $date_fin, 'ouverture' => $date_debut, 'fermeture' => $date_debut));
-            Logs::logger(1, 'Administrateur : Ajout d\'une serie');
+            try {
+                $parametres->addToList(Parametres::Serie, array('intitule' => $_POST['intitule'], 'date_debut' => $date_debut, 'date_fin' => $date_fin, 'ouverture' => $date_debut, 'fermeture' => $date_debut));
+                Logs::logger(1, 'Administrateur : Ajout d\'une serie');
+                Registry::get('layout')->addMessage('Série ajoutée avec succés', MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Registry::get('layout')->addMessage('Erreur lors de l\'ajout de la série', MSG_LEVEL_ERROR);
+            }
         } else {
             Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'une nouvelle série', MSG_LEVEL_ERROR);
             Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'une serie');
@@ -149,7 +178,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'series') {
     //interface pour l'ajout
     echo '<h3>Séries d\'admissibilité</h3>';
     echo '<span id="page_id">41</span>';
-    $series = $parametres->getList(Parametres::Serie);
+    try {
+        $series = $parametres->getList(Parametres::Serie);
+    } catch (Exception_Bdd $e) {
+        //rethrow ?
+        $series = array();
+        Regitry::get('layout')->addMessage('Impossible de récupérer la liste des séries.', MSG_LEVEL_ERROR);
+    }
     echo '<form action="/administration/gestion?action=series" method="post">';
     echo '<table border=1 cellspacing=0>';
     echo '<thead><tr><th>Intitulé</th><th>Date de début des oraux</th><th>Date de fin des oraux</th><th>Action</th></tr></thead>';
@@ -190,8 +225,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
     // Suppression d'un admissible
     if (isset($_GET['suppr'])) {
         if (is_numeric($_GET['suppr'])) {
-            $parametres->supprAdmissible($_GET['suppr']);
-            Logs::logger(1, 'Administrateur : Suppression d\'un admissible');
+            try {
+                $parametres->supprAdmissible($_GET['suppr']);
+                Logs::logger(1, 'Administrateur : Suppression d\'un admissible');
+                Registry::get('layout')->addMessage('Admissible supprimé avec succés.', MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Registry::get('layout')->addMessage('Impossible de supprimer cet admissible de la base de donnée.', MSG_LEVEL_ERROR);
+            }
         } else {
 //          Logs::logger(2, 'Administrateur : Erreur dans la suppression d\'un admissible');
             throw new Exception_Page('Administrateur : Erreur dans la suppression d\'un admissible', "L'url demandée n'existe pas", Exception_Page::ERROR);
@@ -201,8 +241,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
     //interface de gestion
     echo '<h3>Insérer une liste d\'admissibilité</h3>';
     echo '<span id="page_id">46</span>';
-    $filieres = $parametres->getList(Parametres::Filiere);
-    $series = $parametres->getList(Parametres::Serie);
+    try {
+        $filieres = $parametres->getList(Parametres::Filiere);
+        $series = $parametres->getList(Parametres::Serie);
+    } catch (Exception_Bdd $e) {
+        //rethrow ici à la place?
+        $filieres = array();
+        $series = array();
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des filières ou des séries.', MSG_LEVEL_ERROR);
+    }
     $serie_valide = array();
     foreach ($series as $value) {
         // On ne considère que les séries non encore commencées
@@ -265,7 +312,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
     <?php
     if (isset($_POST['serie-voir']) && isset($_POST['filiere-voir'])) { // Affichage des admissibles
         if (is_numeric($_POST['serie-voir']) && is_numeric($_POST['filiere-voir'])) {
-            $admissibles = $parametres->getAdmissibles($_POST['serie-voir'], $_POST['filiere-voir']);
+            try {
+                $admissibles = $parametres->getAdmissibles($_POST['serie-voir'], $_POST['filiere-voir']);
+            } catch (Exception_Bdd $e) {
+                $admissibles = array();
+                Registry::get('layout')->addMessage('Impossible de récupérer les admissibles de cette serie.', MSG_LEVEL_ERROR);
+            }
             echo '<p>Serie : '.$series[$_POST['serie-voir']].', Filière : '.$fil[$_POST['filiere-voir']].'</p>';
             echo '<table border="1" cellspacing="0" cellspadding="1">';
             echo '<thead><tr><th>Nom</th><th>Prénom</th><th>Mail (si inscrit)</th><th>Supprimer définitivement</th></tr></thead>';
@@ -292,9 +344,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
 if (isset($_GET['action']) && $_GET['action'] == 'RAZ') {
     echo '<span id="page_id">48</span>';
     if (isset($_POST['raz']) && $_POST['raz']) {
-        $parametres->remiseAZero();
-        Registry::get('layout')->addMessage('Remise à zéro effectuée', MSG_LEVEL_OK);
-        Logs::logger(1, 'Administrateur : Remise a zero de l\'interface effectuee');
+        try {
+            $parametres->remiseAZero();
+            Registry::get('layout')->addMessage('Remise à zéro effectuée', MSG_LEVEL_OK);
+            Logs::logger(1, 'Administrateur : Remise a zero de l\'interface effectuee');
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage('Impossible de remettre à zéro l\'interface', MSG_LEVEL_ERROR);
+        }
     }
     ?>
     <p style="color:red;">Attention : la remise à zéro de l'interface est irréversible.</p>
@@ -312,7 +368,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'demandes') {
     echo '<span id="page_id">42</span>';
     echo '<h3>Demandes en cours</h3>';
     $demandeManager = new Manager_Demande(Registry::get('db'));
-    $demandes = $demandeManager->getList();
+    try {
+       $demandes = $demandeManager->getList();
+    } catch (Exception_Bdd $e) {
+        //rethrow
+        $demandes = array();
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des demandes en cours', MSG_LEVEL_ERROR);
+    }
     echo '<table border=1 cellspacing=0>';
     echo '<thead><tr><th>Série</th><th>Filière</th><th>Admissible</th><th>Elève X</th><th>Statut</th></tr></thead>';
     echo '<tbody>';
@@ -343,8 +405,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
 //             Logs::logger(3, 'Corruption des parametres. admin.php::GET');
         }
         if (!$adresseManager->isUsedCat($_GET['suppr_cat'])) {
-            $adresseManager->deleteCategorie($_GET['suppr_cat']);
-            Logs::logger(1, 'Administrateur : Suppression d\'une categorie d\'adresse');
+            try {
+                $adresseManager->deleteCategorie($_GET['suppr_cat']);
+                Logs::logger(1, 'Administrateur : Suppression d\'une categorie d\'adresse');
+                Registry::get('layout')->addMessage("Suppression de la catégorie réussie.", MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Regitry::get('layout')->addMessage('Echec de la suppression de la catégorie.', MSG_LEVEL_ERROR);
+            }
         } else {
             Registry::get('layout')->addMessage('Vous ne pouvez supprimer cette catégorie tant qu\'elle contient des adresses', MSG_LEVEL_WARNING);
             Logs::logger(2, 'Administrateur : Tentative de suppression d\'une categorie d\'adresse encore utilisee');
@@ -356,18 +423,27 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
         if (!is_numeric($_GET['suppr'])) {
             throw new Exception_Page('Corruption des parametres. admin.php::GET', 'Selectionnez un hebergement pour le supprimer', Exception_Page::ERROR);
         }
-        $adresseManager->delete($_GET['suppr']);
+        try {
+            $adresseManager->delete($_GET['suppr']);
+            Registry::get('layout')->addMessage('Suppression de l\'annonce effectuée.', MSG_LEVEL_OK);
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage('Impossible de supprimer cette annonce.', MSG_LEVEL_ERROR);
+        }
         Logs::logger(1, 'Administrateur : Suppression d\'une adresse');
     }
 
     // Ajout d'une catégorie
     if (isset($_POST['nom_cat'])) {
         if (!empty($_POST['nom_cat']) && strlen($_POST['nom_cat']) <= 100) {
-            $adresseManager->addCategorie($_POST['nom_cat']);
-            Logs::logger(1, 'Administrateur : Ajout d\'une adresse');
-            Registry::get('layout')->addMessage('Adresse ajoutée avec succés', MSG_LEVEL_OK);
+            try {
+                $adresseManager->addCategorie($_POST['nom_cat']);
+                Logs::logger(1, 'Administrateur : Ajout d\'une adresse');
+                Registry::get('layout')->addMessage('Adresse ajoutée avec succés', MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Registry::get('layout')->addMessage('Echec lors de l\'ajout de cette adresse dans la base de données.', MSG_LEVEL_ERROR);
+            }
         } else {
-            Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'une nouvelle catégorie', MSG_LEVEL_ERROR);
+            Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'une nouvelle catégorie : la catégorie n\'est pas correctement remplie.', MSG_LEVEL_ERROR);
             Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'une categorie d\'adresses');
         }
     }
@@ -389,16 +465,26 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
             $adresse->setValide(0);
         }
         if ($adresse->isValid()) {
-            $adresseManager->save($adresse);
-            Logs::logger(1, 'Administrateur : Ajout d\'une adresse');
+            try {
+                $adresseManager->save($adresse);
+                Logs::logger(1, 'Administrateur : Ajout d\'une adresse');
+                Registry::get('layout')->addMessage('Adresse ajoutée avec succés', MSG_LEVEL_OK);
+            } catch (Exception_Bdd $e) {
+                Registry::get('layout')->addMessage('Echec lors de l\'ajout d\'une adresse', MSG_LEVEL_ERROR);
+            }
         } else {
             $erreurModif = $adresse->erreurs();
-            Registry::get('layout')->addMessage('Erreur dans le remplissage du formulaire d\'ajout d\'une adresses', MSG_LEVEL_WARNING);
+            Registry::get('layout')->addMessage('Erreur dans le remplissage du formulaire d\'ajout d\'une adresse.', MSG_LEVEL_WARNING);
             Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'une adresses');
         }
     }
-
-    $categories = $adresseManager->getCategories();
+    try {
+        $categories = $adresseManager->getCategories();
+    } catch (Exception_Bdd $e) {
+        //rethrow
+        $categories = array();
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des catégories.', MSG_LEVEL_ERROR);
+    }
 
     //interface de gestion
     echo '<h3>Gestion de la liste des hébergements à proximité de l\'école</h3>';
@@ -406,7 +492,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
     // Interface de modification d'une adresse
     if (isset($_GET['ajout']) || isset($_GET['modif']) || isset($erreurModif)) {
         if (isset($_GET['modif'])) {
-            $adresse = $adresseManager->getUnique($_GET['modif']);
+            try {
+                $adresse = $adresseManager->getUnique($_GET['modif']);
+            } catch (Exception_Bdd $e) {
+                Registry::get('layout')->addMessage('Impossible de récupérer cette adresse pour la modifier.', MSG_LEVEL_ERROR);
+            }
         }
         $champInvalide = '<span class"error">Champ invalide</span>';
         ?>
@@ -478,7 +568,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
         // Gestion des adresses affichées
         echo '<h4>Adresses affichées actuellement sur le site</h4>';
         echo '<p><a href="/administration/gestion?action=hotel&ajout=1">Ajouter une annonce</a></p>';
-        $adressesValides = $adresseManager->getListAffiche();
+        try {
+            $adressesValides = $adresseManager->getListAffiche();
+        } catch (Exception_Bdd $e) {
+            $adressesValides = array();
+            Registry::get('layout')->addMessage('Impossible de récupérer la liste des hébergements.', MSG_LEVEL_ERROR);
+        }
         echo '<table border=1 cellspacing=0>';
         echo '<thead><tr><th>Annonce comme affichée</th><th>Catégorie</th><th>Actions</th></tr></thead>';
         echo '<tbody>';
@@ -499,7 +594,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
         // Gestion des adresses à valider
         echo '<h4>Adresses non affichées (proposées par les élèves)</h4>';
         echo '<p>Pour valider une annonce, cliquez sur Modifier et cocher la case correspondannte</p>';
-        $adressesValides = $adresseManager->getListAffiche(0);
+        try {
+            $adressesValides = $adresseManager->getListAffiche(0);
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage('Impossible de récupérer la liste des hébergements à valider.', MSG_LEVEL_ERROR);
+        }
         echo '<table border=1 cellspacing=0>';
         echo '<thead><tr><th>Annonce comme affichée</th><th>Catégorie</th><th>Actions</th></tr></thead>';
         echo '<tbody>';
