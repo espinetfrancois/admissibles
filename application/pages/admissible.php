@@ -15,7 +15,13 @@ echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux<
 
 //gestion de la validation de la demande une fois postée
 if (isset($_SESSION['demande']) && isset($_POST['user'])) {
-    $dispos = $eleveManager->getDispo($_POST['user']);
+    try {
+        $dispos = $eleveManager->getDispo($_POST['user']);
+    } catch (Exception_Bdd $e) {
+        //rethrow ?
+        $dispos = array();
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des disponibilités de l\'élève choisi.', MSG_LEVEL_ERROR);
+    }
     $demande = unserialize($_SESSION['demande']);
     if (!in_array($demande->serie(), $dispos)) {
         echo '<p>Désolé, l\'élève que vous avez choisi vient d\'être sollicité. Merci de reitérer votre recherche.</p>';
@@ -27,14 +33,18 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
         $demande->setUserEleve($_POST['user']);
         $demande->setStatus('0');
         $demande->setCode(md5(sha1(time().$demande->email())));
-        $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
 
+        $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
         $mail->demandeEnvoyee($demande->userEleve(), '/admissible/annulation-demande?code='.$demande->code(), '/admissible/validation-demande?code='.$demande->code());
-        $demandeManager->add($demande);
-        $eleveManager->deleteDispo($_POST['user'], $demande->serie());
-        Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
-        Registry::get('layout')->addMessage('Votre demande de logement est prète à être envoyée', MSG_LEVEL_OK);
-        $success = 1;
+        try {
+            $demandeManager->add($demande);
+            $eleveManager->deleteDispo($_POST['user'], $demande->serie());
+            Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
+            Registry::get('layout')->addMessage('Votre demande de logement est prète à être envoyée.', MSG_LEVEL_OK);
+            $success = 1;
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage('Impossible d\'ajouter votre demande dans la base de données.', MSG_LEVEL_ERROR);
+        }
     }
 }
 
@@ -60,7 +70,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                                      'filiere' => $_POST['filiere'],
                                      'serie' => $_POST['serie']));
         $erreurD = $demande->erreurs();
-        $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
+        try {
+            $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage("Impossible de vérifier votre admissibilité dans la base de données.", MSG_LEVEL_ERROR);
+        }
         if ($id == -1) {
             $erreurD[] = Model_Demande::Non_Admissible;
             Logs::logger(2, 'Formulaire de demande rempli par un non-admissible');
@@ -70,17 +84,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
     }
 
     if (!empty($erreurD)) {
-        Registry::get('layout')->addMessage('Erreur dans le remplissage du formulaire de demande de logement', MSG_LEVEL_WARNING);
+        Registry::get('layout')->addMessage('Erreur dans le remplissage du formulaire de demande de logement.', MSG_LEVEL_WARNING);
         Logs::logger(2, 'Erreur dans le remplissage du formulaire de demande de logement');
     }
 
     // Demande réussie : affichage de deux X pouvant les héberger
     if (isset($demande) && empty($erreurD)) {
         $_SESSION['demande'] = serialize($demande);
-        $eleves = $eleveManager->getFavorite($demande, 2);
+        try {
+            $eleves = $eleveManager->getFavorite($demande, 2);
+        } catch (Exception_Bdd $e) {
+            throw new Exception_Page("Erreur lors de la requête en base pour trouver les élèves.", "Impossible de trouver des élèves dans la base de données.", null, $e);
+        }
         if (empty($eleves)) {
             echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités).<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
-            throw new Exception_Page('Plus aucun eleve disponible', 'Aucun élève n\'a été trouvé', Exception_Page::WARNING);
+            throw new Exception_Page('Plus aucun eleve disponible.', 'Aucun élève n\'a été trouvé.', Exception_Page::WARNING);
             return;
         }
         //on affiche les élève disponible
