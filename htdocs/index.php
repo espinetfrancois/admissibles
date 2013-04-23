@@ -1,5 +1,4 @@
 <?php
-mail('espinetfrancois@gmail.com', 'Testing Sendmail', 'Testing McTesterson');
 define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('APPLICATION_PATH', ROOT_PATH . '/application');
 define('LIBRARY_PATH', APPLICATION_PATH . '/library');
