@@ -5,35 +5,15 @@
  * @version 1.0
  *
  */
-class AdresseManager {
-
-    /**
-     * Connexion à la BDD
-     * @var PDO
-     * @access protected
-     */
-    protected  $db;
-
-
-    /**
-     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
-     * @access public
-     * @param PDO $db
-     * @return void
-     */
-    public  function __construct(PDO $db)
-    {
-        $this->db = $db;
-    }
-
+class Manager_Adresse extends Manager {
 
     /**
      * Méthode permettant d'ajouter une adresse
      * @access protected
-     * @param Adresse $adresse
+     * @param Model_Adresse $adresse
      * @return void
      */
-    protected  function add(Adresse $adresse)
+    protected  function add(Model_Adresse $adresse)
     {
         try {
             $requete = $this->db->prepare('INSERT INTO annonces
@@ -53,7 +33,7 @@ class AdresseManager {
             $requete->bindValue(':categorie', $adresse->categorie());
             $requete->execute();
         } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL AdresseManager::add : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::add', Exception_Bdd_Query::Level_Major,$e);
         }
     }
 
@@ -61,10 +41,10 @@ class AdresseManager {
     /**
      * Méthode permettant de modifier une adresse
      * @access protected
-     * @param Adresse $adresse
+     * @param Model_Adresse $adresse
      * @return void
      */
-    protected  function update(Adresse $adresse)
+    protected  function update(Model_Adresse $adresse)
     {
         try {
             $requete = $this->db->prepare('UPDATE annonces
@@ -86,7 +66,7 @@ class AdresseManager {
             $requete->bindValue(':categorie', $adresse->categorie());
             $requete->execute();
         } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL AdresseManager::update : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::update', Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
@@ -94,16 +74,16 @@ class AdresseManager {
     /**
      * Méthode permettant d'enregistrer une adresse valide
      * @access public
-     * @param Adresse $adresse
+     * @param Model_Adresse $adresse
      * @return void
      */
 
-    public final  function save(Adresse $adresse)
+    public final  function save(Model_Adresse $adresse)
     {
         if ($adresse->isValid()) {
             $adresse->isNew() ? $this->add($adresse) : $this->update($adresse);
         } else {
-            Logs::logger(3, 'Corruption des parametres : AdresseManager::save');
+            throw new Exception_Bdd_Query("Une adresse invalide à été présenté pour l'enregistrement", Exception_Bdd_Query::Currupt_Params);
         }
     }
 
@@ -116,18 +96,18 @@ class AdresseManager {
      */
     public final  function delete($id)
     {
-        if (is_numeric($id)) {
-            try {
-                $requete = $this->db->prepare('DELETE FROM annonces
-                                               WHERE ID = :id');
-                $requete->bindValue(':id', $id);
-                $requete->execute();
-            } catch (Exception $e) {
-                    Logs::logger(3, 'Erreur SQL AdresseManager::delete : '.$e->getMessage());
-            }
-        } else {
-            Logs::logger(3, 'Corruption des parametres : AdresseManager::delete');
+        if (! is_numeric($id))
+            throw new Exception_Bdd_Query('Corruption des parametres : Manager_Adresse::delete', Exception_Bdd_Query::Currupt_Params);
+
+        try {
+            $requete = $this->db->prepare('DELETE FROM annonces
+                                           WHERE ID = :id');
+            $requete->bindValue(':id', $id);
+            $requete->execute();
+        } catch (Exception $e) {
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::delete', Exception_Bdd_Query::Level_Minor, $e);
         }
+
     }
 
 
@@ -135,12 +115,12 @@ class AdresseManager {
      * Méthode retournant une adresse en particulier
      * @access public
      * @param int $id
-     * @return Adresse
+     * @return Model_Adresse
      */
     public  function getUnique($id)
     {
         if (!is_numeric($id)) {
-            Logs::logger(3, 'Corruption des parametres : AdresseManager::getUnique');
+            throw new Exception_Bdd_Query('Corruption des parametres : Manager_Adresse::getUnique', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT ID AS id,
@@ -156,13 +136,13 @@ class AdresseManager {
             $requete->bindValue(':id', $id);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL AdresseManager::getUnique : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::getUnique', Exception_Bdd_Query::Level_Major, $e);
         }
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, 'Corruption de la table "annonces". ID non unique');
+            throw new Exception_Bdd_Integrity('Corruption de la table "annonces". ID non unique');
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse');
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Adresse');
 
         return $requete->fetch();
     }
@@ -191,9 +171,9 @@ class AdresseManager {
             $requete->bindValue(':valid', $valid);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL AdresseManager::getListAffiche : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::getListAffiche', Exception_Bdd_Query::Level_Blocker, $e);
         }
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Adresse'); // les champs références contiennent maintenant la valeur
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Adresse'); // les champs références contiennent maintenant la valeur
 
         $listeAdresse = $requete->fetchAll();
         $requete->closeCursor();
@@ -215,7 +195,7 @@ class AdresseManager {
                                            FROM ref_categories');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL AdresseManager::getCategories : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::getCategories', Exception_Bdd_Query::Level_Critical, $e);
         }
 
         return $requete->fetchAll();
@@ -236,7 +216,7 @@ class AdresseManager {
             $requete->bindValue(':nom', $nom);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL AdresseManager::addCategorie : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::addCategorie', Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
@@ -256,7 +236,7 @@ class AdresseManager {
             $requete->bindValue(':id', $id);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL AdresseManager::deleteCategorie : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::deleteCategorie', Exception_Bdd_Query::Level_Minor, $e);
         }
     }
 
@@ -276,7 +256,7 @@ class AdresseManager {
             $requete->bindValue(':id', $id);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL AdresseManager::isUsedCat : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Adresse::isUserCat', Exception_Bdd_Query::Level_Minor, $e);
         }
         if ($requete->rowCount() > 0) {
             return true;

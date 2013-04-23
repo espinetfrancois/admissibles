@@ -13,6 +13,13 @@
 	display : inline-block;
 }
 
+/** Formulaire "en ligne" ie contenus dans un tableau etc... **/
+.contenu form.inline {
+	min-width	: 100px;
+	background-color : transparent;
+	padding			: 0.5em 1em;
+}
+
 /* Décoration des Champs (paragraphes entourant chaque input+label) */
 .contenu form p.champ {
 	float : left;
@@ -88,7 +95,7 @@
 	float		: right;
 }
 
-.contenu form > input[type=submit]:hover {
+.contenu form input[type=submit]:hover {
 	background-color	: rgb(22, 77, 109);
 	background			: white -moz-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;
 	background			: white -webkit-linear-gradient(top center, rgba(22, 77, 109, 0.82) 0%, rgba(22, 77, 109, 0.92) 100%) no-repeat;

@@ -2,9 +2,8 @@
 
 /**
  * Classes de gestion du Layout
- * @author François Espinet
- * @version 1.0
- *
+ * @author francois.espinet
+ * @version 1.1
  */
 class Layout {
 
@@ -13,7 +12,8 @@ class Layout {
 	 * @var array
 	 */
 	protected $_meta = array(
-			'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">');
+	                            '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">'
+	                        );
 
 	/**
 	 * Contient les css à ajouter
@@ -32,6 +32,7 @@ class Layout {
 	 * @var string
 	 */
 	public $_title = 'École Polytechnique - Logement des admissibles';
+
 	/**
 	 * menus de la page
 	 * Le menu principal est ajouté dans le contruct.
@@ -45,12 +46,6 @@ class Layout {
 	 * @var array
 	 */
 	protected $_content = array();
-
-	/**
-	 * Contient les messages pouvant être affichés sur l'application
-	 * @var array
-	 */
-	protected $_messages = null;
 
 	/**
 	 * Propriété true dans le cas ou la page est non-trouvée
@@ -80,13 +75,19 @@ class Layout {
 	const Css = 2;
 
 	/**
+	 * Index utilisé dans $_SESSION pour stocker les messages
+	 * @var string
+	 */
+	const Messages_Index = 'messages';
+	/**
 	 * Libraries js à ajouter à l'application
 	 * @var array
 	 * @access protected
 	 */
 	protected $_libraries = array('jquery/jquery-1.9.1.js',
-			'jquery/jquery-ui-1.10.1.custom.min.js',
-			'jquery/jquery.visited.js', 'jquery/jquery.ui.datepicker-fr.js');
+	                              'jquery/jquery-ui-1.10.1.custom.min.js',
+	                              'jquery/jquery.visited.js',
+	                              'jquery/jquery.ui.datepicker-fr.js');
 
 	/**
 	 * Templates (css des libraries) à ajouter à l'application
@@ -102,10 +103,8 @@ class Layout {
 	 */
 	public function __construct() {
 		//ajout des liens pour l'icone de l'application
-		$this->_meta[] = '<link href="' . HTTP_IMAGES_PATH
-				. '/favicon.ico" type="image/x-icon" rel="shortcut icon">';
-		$this->_meta[] = '<link href="' . HTTP_IMAGES_PATH
-				. '/favicon.png" type="image/png" rel="icon">';
+		$this->_meta[] = '<link href="' . HTTP_IMAGES_PATH . '/favicon.ico" type="image/x-icon" rel="shortcut icon">';
+		$this->_meta[] = '<link href="' . HTTP_IMAGES_PATH . '/favicon.png" type="image/png" rel="icon">';
 
 		//ajout des css de base
 		$this->appendCss('layout.css');
@@ -115,12 +114,16 @@ class Layout {
 		$this->appendCss('images.css');
 		$this->appendCss('messages.css');
 		$this->appendCss('table.css');
+
 		//ajout du menu
 		$this->addMenu('main.html');
+
 		//ajout des js de base
 		$this->appendJs('menu.js');
 		$this->appendJs('form.js');
-		$_SESSION['messages'] = array();
+
+		//set des messages à vide
+		$_SESSION[self::Messages_Index] = array();
 		//ajout du menu admin le cas échéant
 		if (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true) {
 			$this->addMenu('admin.php');
@@ -158,15 +161,9 @@ class Layout {
 		    //logger l'exception ici selon le code
 		    $e->log();
 		} catch (Exception $e) {//projet exception ???
-
-    		$this->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
-    		if (APP_ENV != 'production') {
-    			$this->addMessage($e->getMessage() .' : <br/><pre>'. $e->getTraceAsString().'</pre>', MSG_LEVEL_ERROR);
-    		} else {
-    			//redirection sur la page des erreurs
-    			$ewrap = new Exception_Projet("Erreur capturée dans une page : " . $e->getMessage(),null, $e);
-    			$this->addHead('<meta http-equiv="Refresh" CONTENT="1; URL=/errors?exception='. $ewrap->url() . '">');
-    		}
+		    $this->_content[] = ob_get_clean();
+		    //on laisse le traitement de l'exception à l'index
+		    throw new Exception_Projet("Erreur non prévue dans une page", null, $e);
 		}
 		//récupération et vidage du tampon (sans affichage direct)
 		$this->_content[] = ob_get_clean();
@@ -174,6 +171,7 @@ class Layout {
 
 	/**
 	 * Ajoute du contenu dans la partie contenu du layout
+	 * Ne supporte pas les noms de fichier en entrée
 	 * @access public
 	 * @param string $sContent : du contenu sous forme html
 	 * @return void
@@ -192,6 +190,10 @@ class Layout {
 		array_unshift($this->_content, $sContent);
 	}
 
+	/**
+	 * Méthode de suppression du contenu précedement ajouté
+	 * @author francois.espinet
+	 */
 	public function clearContent() {
 	    $this->_content = array();
 	}
@@ -208,7 +210,7 @@ class Layout {
 	}
 
 	/**
-	 * ajoute le head à la page
+	 * ajoute une balise dans le head de la page
 	 * @access public
 	 * @param string $sHead
 	 * @return void
@@ -224,8 +226,7 @@ class Layout {
 	 * @return void
 	 */
 	public function addWebJs($sUrl) {
-		$this->_js[] = '<script type="text/javascript" src="' . $sUrl
-				. '"></script>';
+		$this->_js[] = '<script type="text/javascript" src="' . $sUrl . '"></script>';
 	}
 
 	/**
@@ -281,10 +282,13 @@ class Layout {
 	protected function _add($sElement, $type, $placement = self::Append) {
 		$element = $this->__generateUrl($sElement, $type);
 		switch ($type) {
+		//si c'est un css
 		case self::Css:
 			if ($placement == self::Append) {
+			    //ajout à la fin du tableau des css
 				$this->_css[] = $element;
 			} else {
+			    //ajout au début du tableau des css
 				array_unshift($this->_css, $element);
 			}
 			break;
@@ -302,7 +306,7 @@ class Layout {
 	}
 
 	/**
-	 * Génère une url en fontion du type donné
+	 * Génère une url en fontion du type de fichier (js ou css) à ajouter
 	 * @access protected
 	 * @param string $sUrl url relative au path du type de l'élément à ajouter
 	 * @param int $nType type de l'élément à générer (css ou js)
@@ -310,30 +314,32 @@ class Layout {
 	 */
 	protected function __generateUrl($sUrl, $nType) {
 		if ($nType == self::Js) {
-			return '<script type="text/javascript" src="' . HTTP_JS_PATH . '/'
-					. $sUrl . '"></script>';
+			return '<script type="text/javascript" src="' . HTTP_JS_PATH . '/'. $sUrl . '"></script>';
 		} else {
-			return '<link type="text/css" href="' . HTTP_CSS_PATH . '/' . $sUrl
-					. '" rel="stylesheet" media="all" />';
+			return '<link type="text/css" href="' . HTTP_CSS_PATH . '/' . $sUrl . '" rel="stylesheet" media="all" />';
 		}
-
 	}
 
 	/**
 	 * Ajoute un message dans l'application à la fin des messages
 	 * @author francois.espinet
-	 * @param string $sMessage
-	 * @param string $sLevel
+	 * @param string $sMessage  le message à afficher
+	 * @param string $sLevel    le niveau, doit être : MSG_LEVEL_ERROR | MSG_LEVEL_WARNING | MSG_LEVEL_OK
 	 */
 	public function addMessage($sMessage, $sLevel="") {
-	    $_SESSION['messages'][] = '<div class="message '.$sLevel.'">'.$sMessage .'</div>';
+	    $_SESSION[self::Messages_Index][] = '<div class="message '.$sLevel.'">'.$sMessage .'</div>';
 	}
 
+	/**
+	 * Ajoute un message dans l'application au début des messages
+	 * @author francois.espinet
+	 * @param string $sMessage  le message à afficher
+	 * @param string $sLevel
+	 */
 	public function prependMessage($sMessage, $sLevel = '') {
-	    array_unshift($_SESSION['messages'], '<div class="message '.$sLevel.'">' . $sMessage .'</div>');
+	    array_unshift($_SESSION[self::Messages_Index], '<div class="message '.$sLevel.'">' . $sMessage .'</div>');
 
 	}
-
 
 	/* ********************************************************************************************************************* *
 
@@ -360,10 +366,10 @@ class Layout {
 	public function renderMeta()
 	{
 		$sMetas = '';
+		//parcours du tableau méta
 		foreach ($this->_meta as $sMeta) {
 			$sMetas .= $sMeta . "\n";
 		}
-
 		return $sMetas;
 	}
 
@@ -448,7 +454,7 @@ class Layout {
 				$sContents .= $sContent . "\n";
 			}
 		}
-		return $sContents . '</div> </div>';
+		return $sContents . '</div> </div>'."\n";
 	}
 
 	/**
@@ -468,15 +474,22 @@ class Layout {
 		return $sMenu . '</div>';
 	}
 
+	/**
+	 * Méthode de rendu des messages de l'application
+	 * Cette méthode efface la variable $_SESSION[self::Messages_Index] après que les messages ont été affichés.
+	 * @author francois.espinet
+	 * @return string
+	 */
 	public function renderMessages() {
 	    $sMessages = '<div class="messages">';
-	    if (isset($_SESSION['messages']) && $_SESSION['messages'] !== null) {
+	    if (isset($_SESSION[self::Messages_Index]) && $_SESSION[self::Messages_Index] !== null) {
 	        $this->appendCss('messages.css');
-	        foreach ($_SESSION['messages'] as $message) {
+	        foreach ($_SESSION[self::Messages_Index] as $message) {
 	            $sMessages .= $message;
 	        }
 	        //les messages ont été rendus, on les détruits de la session
-	        unset($_SESSION['messages']);
+	        unset($_SESSION[self::Messages_Index]);
+	        $_SESSION[self::Messages_Index] = array();
 	    }
 	    return $sMessages . '</div>';
 	}

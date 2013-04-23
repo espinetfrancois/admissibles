@@ -6,8 +6,8 @@
  *
  */
 
-$demandeManager = new DemandeManager(Registry::get('db'));
-$eleveManager = new EleveManager(Registry::get('db'));
+$demandeManager = new Manager_Demande(Registry::get('db'));
+$eleveManager = new Manager_Eleve(Registry::get('db'));
 $parametres = Registry::get('parametres');
 
 echo '<span id="page_id">11</span>';
@@ -15,7 +15,13 @@ echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux<
 
 //gestion de la validation de la demande une fois postée
 if (isset($_SESSION['demande']) && isset($_POST['user'])) {
-    $dispos = $eleveManager->getDispo($_POST['user']);
+    try {
+        $dispos = $eleveManager->getDispo($_POST['user']);
+    } catch (Exception_Bdd $e) {
+        //rethrow ?
+        $dispos = array();
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des disponibilités de l\'élève choisi.', MSG_LEVEL_ERROR);
+    }
     $demande = unserialize($_SESSION['demande']);
     if (!in_array($demande->serie(), $dispos)) {
         echo '<p>Désolé, l\'élève que vous avez choisi vient d\'être sollicité. Merci de reitérer votre recherche.</p>';
@@ -27,20 +33,28 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
         $demande->setUserEleve($_POST['user']);
         $demande->setStatus('0');
         $demande->setCode(md5(sha1(time().$demande->email())));
-        $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
 
+        $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
         $mail->demandeEnvoyee($demande->userEleve(), '/admissible/annulation-demande?code='.$demande->code(), '/admissible/validation-demande?code='.$demande->code());
-        $demandeManager->add($demande);
-        $eleveManager->deleteDispo($_POST['user'], $demande->serie());
-        Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
-        Registry::get('layout')->addMessage('Votre demande de logement est prète à être envoyée', MSG_LEVEL_OK);
-        $success = 1;
+        try {
+            $demandeManager->add($demande);
+            $eleveManager->deleteDispo($_POST['user'], $demande->serie());
+            Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
+            Registry::get('layout')->addMessage('Votre demande de logement est prète à être envoyée.', MSG_LEVEL_OK);
+            $success = 1;
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage('Impossible d\'ajouter votre demande dans la base de données.', MSG_LEVEL_ERROR);
+        }
     }
 }
 
 //interface pour poser une nouvelle demande
 if (isset($_GET['action']) && $_GET['action'] == 'demande') {
-    $series = $parametres->getCurrentSeries();
+    try {
+        $series = $parametres->getCurrentSeries();
+    } catch (Exception_Bdd $e) {
+        throw new Exception_Page('Impossible de récupérer la liste des séries actives', 'Un problème est survenu lors de la récupération de la liste des séries.', null, $e);
+    }
 
     // Interface fermée aux demandes
     if (empty($series)) {
@@ -51,7 +65,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
     //on regarde le bom de l'admissible pour voir s'il est admissible
     if (isset($_POST['nom'])) {
         unset($erreurD);
-        $demande = new Demande(array('nom' => $_POST['nom'],
+        $demande = new Model_Demande(array('nom' => $_POST['nom'],
                                      'prenom' => $_POST['prenom'],
                                      'email' => $_POST['email'],
                                      'sexe' => $_POST['sexe'],
@@ -60,9 +74,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                                      'filiere' => $_POST['filiere'],
                                      'serie' => $_POST['serie']));
         $erreurD = $demande->erreurs();
-        $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
+        try {
+            $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage("Impossible de vérifier votre admissibilité dans la base de données.", MSG_LEVEL_ERROR);
+        }
         if ($id == -1) {
-            $erreurD[] = Demande::Non_Admissible;
+            $erreurD[] = Model_Demande::Non_Admissible;
             Logs::logger(2, 'Formulaire de demande rempli par un non-admissible');
         } else {
             $demande->setId($id);
@@ -70,17 +88,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
     }
 
     if (!empty($erreurD)) {
-        Registry::get('layout')->addMessage('Erreur dans le remplissage du formulaire de demande de logement', MSG_LEVEL_WARNING);
+        Registry::get('layout')->addMessage('Erreur dans le remplissage du formulaire de demande de logement.', MSG_LEVEL_WARNING);
         Logs::logger(2, 'Erreur dans le remplissage du formulaire de demande de logement');
     }
 
     // Demande réussie : affichage de deux X pouvant les héberger
     if (isset($demande) && empty($erreurD)) {
         $_SESSION['demande'] = serialize($demande);
-        $eleves = $eleveManager->getFavorite($demande, 2);
+        try {
+            $eleves = $eleveManager->getFavorite($demande, 2);
+        } catch (Exception_Bdd $e) {
+            throw new Exception_Page("Erreur lors de la requête en base pour trouver les élèves.", "Impossible de trouver des élèves dans la base de données.", null, $e);
+        }
         if (empty($eleves)) {
             echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités).<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
-            throw new Exception_Page('Plus aucun eleve disponible', 'Aucun élève n\'a été trouvé', Exception_Page::WARNING);
+            throw new Exception_Page('Plus aucun eleve disponible.', 'Aucun élève n\'a été trouvé.', Exception_Page::WARNING);
             return;
         }
         //on affiche les élève disponible
@@ -97,7 +119,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                 .$eleve->prepa().'</td><td>'.$eleve->filiere()
                 .'</td><td>'.$eleve->section().'</td>';
             echo '<td>
-                    <form action="/admissible/inscription" method="post">
+                    <form class="inline" action="/admissible/inscription" method="post">
                     <input type="hidden" name="user" value="'.$eleve->user().'"/>
                     <input type="submit" value="Envoyer une demande de logement"/>
                     </form>
@@ -114,7 +136,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
 
     $champInvalide = '<span class="error">Champ invalide</span>';
 
-    if (isset($erreurD) && in_array(Demande::Non_Admissible, $erreurD))
+    if (isset($erreurD) && in_array(Model_Demande::Non_Admissible, $erreurD))
         Registry::get('layout')->addMessage('Merci de vérifier vos informations personnelles : vous ne semblez pas être dans les listes d\'admissibilité !', MSG_LEVEL_ERROR);
     ?>
 
@@ -124,28 +146,28 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         <label for="nom">Nom : </label>
         <input type="text" name="nom" value="<?php
             echo (isset($demande) ? $demande->nom() : '').'"';
-            echo ( (isset($erreurD) && in_array(Demande::Nom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
+            echo ( (isset($erreurD) && in_array(Model_Demande::Nom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
         ?>
     </p>
     <p class="champ">
         <label for="prenom">Prénom : </label>
         <input type="text" name="prenom" value="<?php
             echo (isset($demande) ? $demande->prenom() : '').'"';
-            echo ( (isset($erreurD) && in_array(Demande::Prenom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
+            echo ( (isset($erreurD) && in_array(Model_Demande::Prenom_Invalide, $erreurD)) ? 'class="error" />'.$champInvalide : '/>');
         ?>
     </p>
     <p class="champ">
         <label for="email">Adresse e-mail valide : </label>
         <input type="text" name="email" value="<?php
             echo (isset($demande) ? $demande->email() : '').'"';
-            echo (( isset($erreurD) && in_array(Demande::Email_Invalide, $erreurD) ) ? 'class="error" />'.$champInvalide : '/>');
+            echo (( isset($erreurD) && in_array(Model_Demande::Email_Invalide, $erreurD) ) ? 'class="error" />'.$champInvalide : '/>');
         ?>
     </p>
     <p id="champ-sexe" class="champ radio">
         <label for="sexe">Sexe: </label>
         <label> Masculin <input type="radio" name="sexe" value="M"<?php if (!isset($demande) || $demande->sexe() == "M") { echo "checked='checked'"; } ?>/></label>
-        <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/>
-    <?php if (isset($erreurD) && in_array(Demande::Sexe_Invalide, $erreurD)) echo $champInvalide; ?></p>
+        <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/></label>
+    <?php if (isset($erreurD) && in_array(Model_Demande::Sexe_Invalide, $erreurD)) echo $champInvalide; ?></p>
     <p class="champ">
         <label for="prepa">Etablissement d'origine : </label>
         <select name="prepa">
@@ -160,7 +182,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Prepa_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Prepa_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <p class="champ">
         <label for="filiere">Filière : </label>
@@ -176,7 +198,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Filiere_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Filiere_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <p class="champ">
         <label for="serie">Série : </label>
@@ -192,7 +214,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Serie_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Serie_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <p class="champ"><label for="section">Sport préféré : </label>
         <select name="section">
@@ -202,7 +224,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         ?>
         </select>
-        <?php if (isset($erreurD) && in_array(Demande::Sport_Invalide, $erreurD)) echo $champInvalide; ?>
+        <?php if (isset($erreurD) && in_array(Model_Demande::Sport_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
     <br/>
     <input type="submit" value="Rechercher un logement"/>

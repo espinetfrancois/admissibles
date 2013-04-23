@@ -17,4 +17,6 @@ class Exception_Mail extends Exception_Projet
     const Send_Echec_Admissible_DemandeEnvoyee  = 23;
 
     const Send_Echec_Admin = 4;
+
+    protected $log_file = 'mails.log';
 }

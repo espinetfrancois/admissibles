@@ -5,7 +5,7 @@
  * @version 1.0
  *
  */
-class Eleve {
+class Model_Eleve extends Model {
 
     /**
      * nom d'utilisateur unique : prenom.nom
@@ -75,37 +75,6 @@ class Eleve {
     const Filiere_Invalide = 7;
 
     /**
-     * Constructeur de la classe qui assigne les données spécifiées en paramètre aux attributs correspondants
-     * @access public
-     * @param array $valeurs Les valeurs à assigner
-     * @return void
-     */
-    public  function __construct($valeurs = array())
-    {
-        if (!empty($valeurs)) { // Si on a spécifié des valeurs, alors on hydrate l'objet
-            $this->hydrate($valeurs);
-        }
-    }
-
-
-    /**
-     * Méthode assignant les valeurs spécifiées aux attributs correspondant
-     * @access public
-     * @param array $donnees Les données à assigner
-     * @return void
-     */
-    public  function hydrate($donnees)
-    {
-        foreach ($donnees as $attribut => $valeur) {
-            $methode = 'set'.ucfirst($attribut);
-            if (is_callable(array($this, $methode))) {
-                $this->$methode($valeur);
-            }
-        }
-    }
-
-
-    /**
      * Méthode permettant de savoir si l'éleve est nouveau
      * @access public
      * @return bool
@@ -121,7 +90,7 @@ class Eleve {
      * @access public
      * @return bool
      */
-    public final  function isValid()
+    public final function isValid()
     {
         return !(empty($this->user) || empty($this->sexe) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
     }

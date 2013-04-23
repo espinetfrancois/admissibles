@@ -17,7 +17,7 @@
             </li>
             <li id="48"><a href="/administration/gestion?action=RAZ">Remise à zéro de l'interface d'hébergement</a>
             </li>
-            <li id="49"><a href="/administration/gestion?action=deconnect">Se déconnecter</a>
+            <li id="49"><a href="/deconnexion">Se déconnecter</a>
             </li>
         </ul>
     </li>

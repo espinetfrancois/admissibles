@@ -6,37 +6,18 @@
  * @version 1.0
  *
  */
-class DemandeManager {
-
-    /**
-     * Connexion à la BDD
-     * @var PDO
-     * @access protected
-     */
-    protected  $db;
-
-    /**
-     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
-     * @access public
-     * @param PDO $db
-     * @return void
-     */
-    public  function __construct(PDO $db)
-    {
-        $this->db = $db;
-    }
-
+class Manager_Demande extends Manager {
 
     /**
      * Méthode permettant d'ajouter une demande
      * @access public
-     * @param Demande $demande
+     * @param Model_Demande $demande
      * @return void
      */
-    public  function add(Demande $demande)
+    public  function add(Model_Demande $demande)
     {
         if (!$demande->isValid()) {
-            Logs::logger(3, 'Corruption des parametres. DemandeManager::add');
+            throw new Exception_Bdd_Query("La demande est invalide, elle ne peut-être enregistrée.", Exception_Bdd_Query::Currupt_Params);
         } else {
             try {
                 $requete = $this->db->prepare('UPDATE admissibles
@@ -62,7 +43,7 @@ class DemandeManager {
                 $requete->bindValue(':status', $demande->status());
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL DemandeManager::add : '.$e->getMessage());
+                throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::add', Exception_Bdd_Query::Level_Blocker, $e);
             }
         }
     }
@@ -78,8 +59,8 @@ class DemandeManager {
      */
     public  function isAdmissible($nom, $prenom, $serie)
     {
-        $nom = strtolower(Parametres::wd_remove_accents($nom));
-        $prenom = strtolower(Parametres::wd_remove_accents($prenom));
+        $nom = self::traitementNomPropres($nom);
+        $prenom = self::traitementNomPropres($prenom);
         try {
             $requete = $this->db->prepare('SELECT ID
                                            FROM admissibles
@@ -91,7 +72,7 @@ class DemandeManager {
             $requete->bindValue(':serie', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL DemandeManager::isAdmissible : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::isAdmissible', Exception_Bdd_Query::Level_Critical, $e);
         }
         if ($requete->rowCount() == 0) {
             return -1;
@@ -100,6 +81,11 @@ class DemandeManager {
             $requete->closeCursor();
             return $result['ID'];
         } else {
+            try {
+                throw new Exception_Bdd_Integrity('Corruption de la table "admissibles". Non unicite des champs');
+            } catch (Exception $e) {
+
+            }
             Logs::logger(2, 'Corruption de la table "admissibles". Non unicite des champs');
             $result = $requete->fetch(PDO::FETCH_ASSOC);
             $requete->closeCursor();
@@ -111,7 +97,7 @@ class DemandeManager {
     /**
      * Méthode renvoyant false si l'admissible a déjà une demande en cours
      * @access public
-     * @param Demande $demande
+     * @param Model_Demande $demande
      * @return bool
      */
     public  function autorisation($demande)
@@ -134,7 +120,7 @@ class DemandeManager {
             $requete->bindValue(':filiere', $demande->filiere());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL DemandeManager::autorisation : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::autorisation', Exception_Bdd_Query::Level_Major, $e);
         }
 
         return ($requete->rowCount() == 0);
@@ -150,7 +136,7 @@ class DemandeManager {
     public  function updateStatus($code, $status)
     {
         if (!is_numeric($status) || !preg_match('#^[a-f0-9]{32}$#', $code)) {
-            Logs::logger(3, 'Corruption des parametres. DemandeManager::updateStatus');
+            throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::updateStatus', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('UPDATE demandes
@@ -160,7 +146,7 @@ class DemandeManager {
             $requete->bindValue(':code', $code);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL DemandeManager::updateStatus : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::updateStatus', Exception_Bdd_Query::Level_Critical, $e);
         }
 
     }
@@ -175,7 +161,7 @@ class DemandeManager {
     public  function getUnique($code)
     {
         if (!preg_match('#^[0-9a-f]{32}$#', $code)) {
-            Logs::logger(3, 'Corruption des parametres. DemandeManager::getUnique');
+            throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::getUnique', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT admissibles.ID AS id,
@@ -196,15 +182,15 @@ class DemandeManager {
             $requete->bindValue(':code', $code);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL DemandeManager::getUnique : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::getUnique', Exception_Bdd_Query::Level_Critical, $e);
         }
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, 'Corruption de la table "demandes". Non unicite de "LIEN" ou lien');
+            throw new Exception_Bdd_Integrity('Corruption de la table "demandes". Non unicite de "LIEN" ou lien');
         } else if ($requete->rowCount() == 0) {
-            Logs::logger(3, 'Corruption des parametres : DemandeManager::getUnique');
+            throw new Exception_Bdd_Query('Corruption des paramètres : Manager_Demande::getUnique : la recherche n\'a renvoyé aucun résultats', Exception_Bdd_Query::Currupt_Params);
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Demande');
+        $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Demande');
 
         return $requete->fetch();
     }
@@ -246,9 +232,9 @@ class DemandeManager {
                                                     admissibles.PRENOM');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL DemandeManager::getList : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::getList', Exception_Bdd_Query::Level_Minor, $e);
         }
-        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les nom
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Model_Demande'); // Attention, les champs référencés contiennent les nom
         $listeDemandes = $requete->fetchAll();
         $requete->closeCursor();
 
@@ -265,7 +251,7 @@ class DemandeManager {
     public  function getDemandes($user)
     {
         if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
-            Logs::logger(3, 'Corruption des parametres. DemandeManager::getDemandes');
+            throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::getDemandes', Exception_Bdd_Query::Currupt_Params);
         }
         try {
             $requete = $this->db->prepare('SELECT admissibles.ID AS id,
@@ -291,10 +277,10 @@ class DemandeManager {
             $requete->bindValue(':user', $user);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL DemandeManager::getDemandes : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::getDemandes', Exception_Bdd_Query::Level_Major, $e);
         }
 
-        $requete->setFetchMode(PDO::FETCH_CLASS, 'Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
+        $requete->setFetchMode(PDO::FETCH_CLASS, 'Model_Demande'); // Attention, les champs référencés contiennent les noms et non les valeurs
 
         return $requete->fetchAll();
     }

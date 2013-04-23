@@ -4,6 +4,8 @@
 	****************************************************************************************************************
 	**************************************************************************************************************** */
 
+
+
 table {
 	border-collapse : collapse;
 	border			: 1.8px solid black;
@@ -23,4 +25,12 @@ table td * {
 
 table th {
 	font-size : 1.2em;
+}
+
+.contenu table tbody tr:nth-child(even) {
+	background-color 	: rgba(22, 77, 109, 0.3);
+}
+
+.contenu table tbody tr:hover {
+	background-color	: rgba(255, 186, 0, 0.65);
 }

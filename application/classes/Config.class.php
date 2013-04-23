@@ -75,8 +75,6 @@ class Config {
 
         //constantes d'environement
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
-        define('APP_MAIL', true);
-        define('APP_CACHE', true);
 
         //définition des niveaux de messages
         define('MSG_LEVEL_ERROR', 'error');
@@ -130,6 +128,9 @@ class Config {
                 case 'php':
                     $this->initPhp($configitem);
                     break;
+                case 'app':
+                    $this->initApp($configitem);
+                    break;
                 default:
                     array_merge($this->_otherparam,$configitem);
                     break;
@@ -174,6 +175,19 @@ class Config {
         foreach ($aConfig as $item => $value) {
             ini_set($item, $value);
         }
+    }
+
+    /**
+     * Configuration des constantes de l'application
+     * @author francois.espinet
+     * @param unknown $aConfig
+     */
+    protected function initApp($aConfig) {
+        foreach ($aConfig as $item => $value) {
+            define(strtoupper($item), $value);
+        }
+        defined('APP_MAIL') || define('APP_MAIL', false);
+        defined('APP_CACHE') || define('APP_CACHE', false);
     }
 
 

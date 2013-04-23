@@ -1,4 +1,5 @@
 <?php
+mail('espinetfrancois@gmail.com', 'Testing Sendmail', 'Testing McTesterson');
 define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('APPLICATION_PATH', ROOT_PATH . '/application');
 define('LIBRARY_PATH', APPLICATION_PATH . '/library');
@@ -6,16 +7,14 @@ define('LIBRARY_PATH', APPLICATION_PATH . '/library');
 require_once(APPLICATION_PATH . '/inc/autoload.php');
 session_start();
 //instanciation des objets de base (ne doit pas rater)
-
 try {
 	$config = new Config();
 	$layout = new Layout();
-
-	$router = new Router($_SERVER['REQUEST_URI'], $layout);
-
 	//enregistrement dans le registre (accès à travers l'application)
 	Registry::getInstance()->set('config', $config);
 	Registry::getInstance()->set('layout', $layout);
+
+	$router = new Router($_SERVER['REQUEST_URI'], $layout);
 	//après le layout
 	require_once(APPLICATION_PATH . '/inc/sql.php');
 
@@ -26,7 +25,8 @@ try {
 	    $layout->clearContent();
 		$layout->addContent(file_get_contents(TEMPLATE_PATH . '/probleme.html'));
 		if (APP_ENV != 'production') {
-			$layout->addMessage($e->getMessage() .' : <br/>'. $e->getTraceAsString(), MSG_LEVEL_ERROR);
+		    $layout->appendCss('erreurs.css');
+			$layout->addMessage($e->getMessage() .' : <br/><pre>'. $e->getTraceAsString() . '</pre><pre>'.$e->getPrevious() . '</pre>', MSG_LEVEL_ERROR);
 		} else {
 			//redirection sur la page des erreurs
 			$ewrap = new Exception_Projet("Erreur capturée dans une page : " . $e->getMessage(),null, $e);
@@ -37,11 +37,20 @@ try {
 } catch (Exception_Layout $e) {
     //pas de layout, on fait à la main
     echo "Problème lors du chargement du layout de l'application";
+    if (APP_ENV != 'production')
+    	$layout->addMessage($e->getMessage().'<br/><pre>'.$e->getTraceAsString().'</pre><pre>'.$e->getPrevious().'</pre>', MSG_LEVEL_ERROR);
+
 } catch (Exception_Config $e) {
     //pas de layout, on fait à la main
     echo "Problème lors du chargement de la configuration de l'application";
+    if (APP_ENV != 'production')
+    	$layout->addMessage($e->getMessage().'<br/><pre>'.$e->getTraceAsString().'</pre><pre>'.$e->getPrevious().'</pre>', MSG_LEVEL_ERROR);
+
 } catch (Exception_Bdd $e) {
     $layout->addMessage("Un problème est survenu avec la base de données du site.", MSG_LEVEL_ERROR);
+    if (APP_ENV != 'production')
+        $layout->addMessage($e->getMessage().'<br/><pre>'.$e->getTraceAsString().'</pre><pre>'.$e->getPrevious().'</pre>', MSG_LEVEL_ERROR);
+
     echo $layout;
 } catch (Exception $e) {
 	//erreur grave, on fait ce qu'on peut

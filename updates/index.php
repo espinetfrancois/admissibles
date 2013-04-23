@@ -20,7 +20,7 @@ try {
 if (isset($_POST['pull']) && $_POST['pull'] == 1) {
     //on essaye de puller
     try {
-        echo '<pre>'.$repo->git('pull --rebase origin production').'</pre>';
+        echo '<p><pre>'.$repo->git('pull --rebase origin production').'</pre></p>';
     } catch (GitRuntimeException $e) {
         echo "<br/><p>Erreur lors du pull ".$e->getMessage().'</p><br/><pre>'.$e->getTraceAsString().'</pre>';
     }
@@ -29,15 +29,14 @@ if (isset($_POST['pull']) && $_POST['pull'] == 1) {
 try {
     if (isset($_POST['commande'])) {
     	$command = $_POST['commande'];
-    	echo '<pre>'.$repo->git($command).'</pre>';
+    	echo '<p><pre>'.$repo->git($command).'</pre></p>';
     }
 } catch (GitRuntimeException $e) {
-    echo "Une erreur est survenue lors de l'execution de la commande : ".$command."<br/>".$e->getMessage().'<br/>';
+    echo "<p>Une erreur est survenue lors de l'execution de la commande : ".$command."<br/>".$e->getMessage().'<br/></p>';
 }
-// echo "<pre>".$repo->git('log --oneline')."</pre>";
 ?>
 <form action='#' method='POST'>
-	<p class="champ"><label for='commande'>Commande git : </label><input type='text' name="commande"/></p>
+	<p class="champ"><label for='commande'>Commande git : </label><input type='text' name="commande" value="git status"/></p>
 	<input type='submit' name="appliquer" value="Appliquer"/>
 </form>
 

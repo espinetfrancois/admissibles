@@ -100,11 +100,14 @@ class Router {
     /**
      * Chargement du fichier contenant les routes
      * @author francois.espinet
-     * @todo   gestion des erreurs
      */
     private function _loadRoutes($RoutesFile)
     {
-        $this->routes = require_once($RoutesFile);
+        if (file_exists($RoutesFile)) {
+            $this->routes = require_once($RoutesFile);
+        } else {
+            throw new Exception_Router("Le fichier des routes est absent.", Exception_Router::Routes_Not_Found);
+        }
     }
 
     /**
@@ -130,8 +133,9 @@ class Router {
         }
         //tant qu'on est pas arrivé au bout, on continue la descente
         while (is_array($a) && $this->requete->depth >= $this->depth) {
-            if (array_key_exists($this->requete->aParts[$this->depth], $a)) {
+            if (array_key_exists($this->depth, $this->requete->aParts) && array_key_exists($this->requete->aParts[$this->depth], $a)) {
                 $a = $a[$this->requete->aParts[$this->depth]];
+                $this->depth++;
             } elseif (array_key_exists(self::Root_Keyword, $a) && $this->depth == $this->requete->depth) {
                 $a = $a[self::Root_Keyword];
             } else {
@@ -139,7 +143,6 @@ class Router {
                 $this->setAccueil();
                 return;
             }
-            $this->depth++;
         }
 
         //si les profondeurs ne sont pas les mêmes, la route n'a pas été trouvée

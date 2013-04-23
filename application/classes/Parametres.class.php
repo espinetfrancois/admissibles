@@ -5,14 +5,7 @@
  * @version 1.0
  *
  */
-class Parametres {
-
-    /**
-     * Connexion à la base de données
-     * @var PDO
-     * @access protected
-     */
-    protected  $db;
+class Parametres extends Manager {
 
     /**
      * Constantes relatives aux types de données
@@ -22,19 +15,6 @@ class Parametres {
     const Serie = 3;
     const Section = 4;
     const Promo = 5;
-
-    /**
-     * Constructeur étant chargé d'enregistrer l'instance de PDO dans l'attribut $db
-     * @access public
-     * @param PDO $db
-     * @return void
-     */
-    public  function __construct(PDO $db)
-    {
-        $this->db = $db;
-
-    }
-
 
     /**
      * Méthode de remise à zéro de l'interface
@@ -50,7 +30,7 @@ class Parametres {
             $requete = $this->db->query('DELETE FROM x');
             $requete = $this->db->query('DELETE FROM admissibles');
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::remiseAZero : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de l'execution de la requête SQL Parametres::remiseAZero", Exception_Bdd_Query::Level_Critical, $e);
         }
     }
 
@@ -73,11 +53,11 @@ class Parametres {
             $requete->bindValue(':time', time());
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::getCurrentSeries : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de l'execution de la requête SQL Parametres::getCurrentSeries", Exception_Bdd_Query::Level_Blocker, $e);
         }
         $n = $requete->rowCount();
         if ($n == 0) {
-            return (array());
+            return array();
         } else {
             return $requete->fetchAll();
         }
@@ -124,7 +104,7 @@ class Parametres {
             break;
 
         default:
-            Logs::logger(3, 'Corruption des parametres. Parametres::getList');
+            throw new Exception_Bdd_Query('Corruption des parametres. Parametres::getList', Exception_Bdd_Query::Currupt_Params);
             break;
         }
         try {
@@ -133,7 +113,7 @@ class Parametres {
                                            ORDER BY '.$order.'');
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::getList : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de l'execution de la requête SQL Parametres::getList", Exception_Bdd_Query::Level_Blocker, $e);
         }
         $liste = $requete->fetchAll();
         $requete->closeCursor();
@@ -155,23 +135,23 @@ class Parametres {
         case self::Etablissement:
             $valeurs = 'NOM = :nom, COMMUNE = :commune';
             $table = 'ref_etablissements';
-            $array = array('nom' => $donnees['nom'], 'commune' => $donnees['commune']);
+            $array = array('nom' => $this->escape($donnees['nom']), 'commune' => $this->escape($donnees['commune']));
             break;
 
         case  self::Filiere:
             $valeurs = 'NOM = :nom';
             $table = 'ref_filieres';
-            $array = array('nom' => $donnees['nom']);
+            $array = array('nom' => $this->escape($donnees['nom']));
             break;
 
         case  self::Serie:
             $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
             $table = 'series';
-            $array = array('intitule' => $donnees['intitule'], 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
+            $array = array('intitule' => $this->escape($donnees['intitule']), 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'], 'fermeture' => $donnees['fermeture']);
             break;
 
         default:
-            Logs::logger(3, 'Corruption des parametres. Parametres::addToList');
+            throw new Exception_Bdd_Query('Corruption des parametres. Parametres::addToList', Exception_Bdd_Query::Currupt_Params);
             break;
         }
         try {
@@ -182,7 +162,7 @@ class Parametres {
             }
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::addToList : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Erreur lors de l\'execution de la requête :  Parametres::addToList', Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
@@ -210,7 +190,7 @@ class Parametres {
             break;
 
         default:
-            Logs::logger(3, 'Corruption des parametres. Parametres::deleteFromList');
+            throw new Exception_Bdd_Query('Corruption des parametres. Parametres::deleteFromList', Exception_Bdd_Query::Currupt_Params);
             break;
         }
         try {
@@ -220,11 +200,11 @@ class Parametres {
             $requete->bindValue(':id', $id);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::deleteFromList : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Erreur lors de l'execution de la requête : Parametres::deleteFromList", Exception_Bdd_Query::Level_Minor, $e);
         }
 
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, 'Corruption de la table '.$table.'. Tentative de suppression d\'un element inexistant');
+            throw new Exception_Bdd_Query( 'Corruption de la table '.$table.'. Tentative de suppression d\'un element inexistant', Exception_Bdd_Query::Level_Minor, $e);
         }
         $requete->closeCursor();
         try {
@@ -232,8 +212,9 @@ class Parametres {
                                            WHERE ID = :id');
             $requete->bindValue(':id', $id);
             $requete->execute();
+
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::deleteFromList : '.$e->getMessage());
+            throw new Exception_Bdd_Query( 'Erreur lors de l\'execution de la requête : Parametres::deleteFromList', Exception_Bdd_Query::Level_Minor, $e);
         }
     }
 
@@ -261,14 +242,10 @@ class Parametres {
                 $requete2->bindValue(':id', $id);
                 $requete2->execute();
             } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
+                throw new Exception_Bdd_Query('Erreur lors de l\'execution de la requête : Parametres::isUsedList', Exception_Bdd_Query::Level_Major, $e);
             }
 
-            if ($requete->rowCount() + $requete2->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return ($requete->rowCount() + $requete2->rowCount() > 0);
             break;
 
         case self::Filiere:
@@ -284,14 +261,10 @@ class Parametres {
                 $requete2->bindValue(':id', $id);
                 $requete2->execute();
             } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
+                throw new Exception_Bdd_Query('Erreur lors de l\'execution de la requête : Parametres::isUsedList', Exception_Bdd_Query::Level_Major, $e);
             }
 
-            if ($requete->rowCount() + $requete2->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return ($requete->rowCount() + $requete2->rowCount() > 0);
             break;
 
         case self::Serie:
@@ -307,18 +280,14 @@ class Parametres {
                 $requete2->bindValue(':id', $id);
                 $requete2->execute();
             } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL Parametres::isUsedList : '.$e->getMessage());
-            }
+                throw new Exception_Bdd_Query('Erreur lors de l\'execution de la requête : Parametres::isUsedList', Exception_Bdd_Query::Level_Major, $e);
+           }
 
-            if ($requete->rowCount() + $requete2->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return ($requete->rowCount() + $requete2->rowCount() > 0);
             break;
 
         default:
-            Logs::logger(3, 'Corruption des parametres. Parametres::isUsedList');
+            throw new Exception_Bdd_Query('Corruption des parametres : Parametres::isUsedList', Exception_Bdd_Query::Currupt_Params);
             break;
         }
 
@@ -344,11 +313,11 @@ class Parametres {
             $requete->bindValue(':id', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Problème lors de l\'execution de la requête : Parametres::parseADM', Exception_Bdd_Query::Level_Major, $e);
         }
 
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, 'Corruption du parametre "serie". Parametres::parseADM');
+            throw new Exception_Bdd_Query("La série demandée n'a pas été trouvée dans la base de donnée.", Exception_Bdd_Query::Level_Major);
         }
         $requete->closeCursor();
 
@@ -360,11 +329,11 @@ class Parametres {
             $requete->bindValue(':id', $filiere);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+            throw new Exception_Bdd_Query('Problème lors de l\'execution de la requête : Parametres::parseADM', Exception_Bdd_Query::Level_Major, $e);
         }
 
         if ($requete->rowCount() != 1) {
-            Logs::logger(3, 'Corruption du parametre "filiere". Parametres::parseADM');
+            throw new Exception_Bdd_Query("La filière demandée n'a pas été trouvée dans la base de donnée.", Exception_Bdd_Query::Level_Major);
         }
         $requete->closeCursor();
 
@@ -372,11 +341,11 @@ class Parametres {
         $ligne = explode(PHP_EOL, $donnees);
         foreach ($ligne as $value) {
             // Séparation des noms de la forme : 'Nom (Prénom)'
-            $value = preg_replace('#(.+)\s\((.+)\)$#','$1///$2',$value);
+            $value = preg_replace('#(.+)\s+\((.+)\)$#','$1///$2',$value);
             $col = explode('///', $value);
             // traitement des donnees : minuscules et sans accents
-            $nom = strtolower(Parametres::wd_remove_accents($col[0]));
-            $prenom = strtolower(Parametres::wd_remove_accents($col[1]));
+            $nom = self::traitementNomPropres($col[0]);
+            $prenom = self::traitementNomPropres($col[1]);
             try {
                 $requete = $this->db->prepare('INSERT INTO admissibles
                                                SET NOM = :nom,
@@ -389,7 +358,7 @@ class Parametres {
                 $requete->bindValue(':filiere', $filiere);
                 $requete->execute();
             } catch (Exception $e) {
-                Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+                throw new Exception_Bdd_Query("Impossible d'inserer les admissibles dans la base de donnée.", Exception_Bdd_Query::Level_Critical, $e);
             }
         }
 
@@ -401,29 +370,11 @@ class Parametres {
             $requete->bindValue(':id', $serie);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Impossible d'ouvrir les admissibilité pour la liste choisie.", Exception_Bdd_Query::Level_Major, $e);
         }
     }
 
 
-    /**
-     * Méthode retirant les accents
-     * @access public
-     * @access static
-     * @param text $str
-     * @param text $charset
-     * @return text
-     */
-    public static  function wd_remove_accents($str, $charset='utf-8')
-    {
-        $str = htmlentities($str, ENT_NOQUOTES, $charset);
-
-        $str = preg_replace('#&([A-za-z])(?:acute|cedil|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
-        $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
-        $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
-
-        return $str;
-    }
 
 
     /**
@@ -448,7 +399,7 @@ class Parametres {
             $requete->bindValue(':filiere', $filiere);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Impossible de récupérer les admissibles.", Exception_Bdd_Query::Level_Major, $e);
         }
 
         return $requete->fetchAll();
@@ -474,7 +425,7 @@ class Parametres {
             $requete->bindValue(':id', $id);
             $requete->execute();
         } catch (Exception $e) {
-            Logs::logger(3, 'Erreur SQL Parametres::parseADM : '.$e->getMessage());
+            throw new Exception_Bdd_Query("Impossible de supprimer un admissible", Exception_Bdd_Query::Level_Minor, $e);
         }
     }
 }

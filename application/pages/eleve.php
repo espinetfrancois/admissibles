@@ -8,9 +8,9 @@
 
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 
-$eleveManager = new EleveManager(Registry::get('db'));
-$demandeManager = new DemandeManager(Registry::get('db'));
-$adresseManager = new AdresseManager(Registry::get('db'));
+$eleveManager = new Manager_Eleve(Registry::get('db'));
+$demandeManager = new Manager_Demande(Registry::get('db'));
+$adresseManager = new Manager_Adresse(Registry::get('db'));
 $parametres = Registry::get('parametres');
 
 // Identification
@@ -65,7 +65,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
     $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
     // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
     //préparation de l'envoi du mail : récupération des informations de l'X
-    $elevem = new EleveManager(Registry::get('config'));
+    $elevem = new Manager_Eleve(Registry::get('config'));
     $eleve = $elevem->getUnique($demande->userEleve());
     $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
     $mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());
@@ -75,7 +75,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
 
 // Proposition d'une adresse
 if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
-    $adresse = new Adresse(array('nom' => $_POST['adr_nom'],
+    $adresse = new Model_Adresse(array('nom' => $_POST['adr_nom'],
                                  'adresse' => $_POST['adr_adresse'],
                                  'tel' => $_POST['adr_tel'],
                                  'email' => $_POST['adr_email'],
@@ -98,9 +98,10 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
  */
 
 // on teste si l'élève a déjà entré ses infos personnelles
-if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve']->isValid()) {
+if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['eleve']->isValid()) {
     $prepas = $parametres->getList(Parametres::Etablissement);
     $filieres = $parametres->getList(Parametres::Filiere);
+    $champInvalide = '<span class="error">Merci de renseigner ce champ</span>'
     ?>
     <h2>Modifier mes informations personnelles</h2>
     <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
@@ -118,7 +119,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve
         if ($_SESSION['eleve']->sexe() == "F")
             echo 'checked="checked"';
         echo '/>';
-        if (isset($erreurs) && in_array(Eleve::Sexe_Invalide, $erreurs))
+        if (isset($erreurs) && in_array(Model_Eleve::Sexe_Invalide, $erreurs))
             echo '<span style="color:red;">Merci de renseigner ce champ</span>';
     ?>
         </label>
@@ -138,8 +139,8 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve
             }
             ?>
         </select>
-        <?php if (isset($erreurs) && in_array(Eleve::Prepa_Invalide, $erreurs))
-            echo '<span style="color:red;">Merci de renseigner ce champ</span>';
+        <?php if (isset($erreurs) && in_array(Model_Eleve::Prepa_Invalide, $erreurs))
+            echo $champInvalide;
         ?>
     </p>
     <p id="champ-filiere" class="champ">
@@ -157,7 +158,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || !$_SESSION['eleve
             }
             ?>
             </select>
-        <?php if (isset($erreurs) && in_array(Eleve::Filiere_Invalide, $erreurs)) echo '<span style="color:red;">Merci de renseigner ce champ</span>'; ?>
+        <?php if (isset($erreurs) && in_array(Model_Eleve::Filiere_Invalide, $erreurs)) echo $champInvalide; ?>
     </p>
     <br/>
     <input type="submit" value="Modifier mes informations personnelles"/>
@@ -256,8 +257,8 @@ if (empty($demandes)) {
             $action = 'Vous pouvez recevoir une autre demande pour cette série';
             break;
         default:
-            Logs::logger(3, 'Corruption des parametres. eleve.php::statut');
-               break;
+            throw new Exception_Page('Corruption des parametres. eleve.php::statut', 'Le statut demandé est inconnu');
+            break;
         }
 
         echo '<tr>
@@ -291,33 +292,33 @@ $champInvalide = '<span class="error">Champ invalide</span>';
         <label for="adr_nom">Nom : </label>
         <input type="text" name="adr_nom" value="<?php
                   echo ( isset($adresse) ? $adresse->nom() : '').'"';
-                  echo ( (isset($erreurAjoutAdresse) && in_array(Adresse::Nom_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
+                  echo ( (isset($erreurAjoutAdresse) && in_array(Model_Adresse::Nom_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>'); ?>
     </p>
     <p class="champ" id="champ-adr_adresse">
         <label for="adr_adresse">Adresse : </label>
         <input type="text" name="adr_adresse" value="<?php
                   echo ( isset($adresse) ? $adresse->adresse() : '').'"';
-                  echo ( (isset($erreurAjoutAdresse) && in_array(Adresse::Adresse_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
+                  echo ( (isset($erreurAjoutAdresse) && in_array(Model_Adresse::Adresse_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
     </p>
     <p class="champ" id="champ-adr_tel">
         <label for="adr_tel">Téléphone : </label>
         <input type="text" name="adr_tel" value="<?php
                   echo ( isset($adresse) ? $adresse->tel() : '').'"';
-                  echo ( (isset($erreurAjoutAdresse) && in_array(Adresse::Tel_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
+                  echo ( (isset($erreurAjoutAdresse) && in_array(Model_Adresse::Tel_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
     </p>
     <p class="champ" id="champ-adr_email">
         <label for="adr_email">Email : </label>
         <input type="text" name="adr_email" value="<?php
                   echo ( isset($adresse) ? $adresse->email() : '').'"';
-                  echo ( (isset($erreurAjoutAdresse) && in_array(Adresse::Email_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
+                  echo ( (isset($erreurAjoutAdresse) && in_array(Model_Adresse::Email_Invalide, $erreurAjoutAdresse)) ? 'class="error"/>'.$champInvalide : '/>');?>
     </p>
     <p class="champ" id="champ-adr_description">
         <label for="adr_description">Description : </label>
         <textarea name="adr_description" cols="20" rows="4"<?php
-            echo ( (isset($erreurAjoutAdresse) && in_array(Adresse::Description_Invalide, $erreurAjoutAdresse)) ? ' class="error">' : '>');
+            echo ( (isset($erreurAjoutAdresse) && in_array(Model_Adresse::Description_Invalide, $erreurAjoutAdresse)) ? ' class="error">' : '>');
             if (isset($adresse)) { echo $adresse->description(); } ?>
         </textarea>
-        <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Description_Invalide, $erreurAjoutAdresse)) echo $champInvalide; ?>
+        <?php if (isset($erreurAjoutAdresse) && in_array(Model_Adresse::Description_Invalide, $erreurAjoutAdresse)) echo $champInvalide; ?>
     </p>
     <p class="champ" id="champ-adr_categorie">
         <label for="adr_categorie">Catégorie : </label>
@@ -334,7 +335,7 @@ $champInvalide = '<span class="error">Champ invalide</span>';
             }
             ?>
         </select>
-        <?php if (isset($erreurAjoutAdresse) && in_array(Adresse::Categorie_Invalide, $erreurAjoutAdresse)) echo $champInvalide; ?>
+        <?php if (isset($erreurAjoutAdresse) && in_array(Model_Adresse::Categorie_Invalide, $erreurAjoutAdresse)) echo $champInvalide; ?>
     </p>
     <br/>
     <input type="submit" value="Proposer cet établissement" />

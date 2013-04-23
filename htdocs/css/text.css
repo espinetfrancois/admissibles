@@ -15,7 +15,7 @@ h1 {
 
 h2 {
 	font-size	: 2.6em;
-	line-height	: 1.1em;
+	line-height	: 1.3em;
 	font-family: "Lucida Sans Unicode", "Lucida Sans", "Lucida Grande",
 		Arial, sans-serif;
 	font-weight: 500;
@@ -23,11 +23,12 @@ h2 {
 }
 
 h3 {
-	font-size: 1.6em;
+	font-size: 1.8em;
 	font-weight : 400;
 	margin: 1em 0;
 	margin-left : 1em;
-	text-transform : uppercase;
+/* 	text-transform : uppercase; */
+	font-variant	: small-caps;
 	color : #164D6D;
 }
 
@@ -49,7 +50,7 @@ ul,ol,li {
 	padding: 0;
 }
 
-ol li {
+ol {
 	list-style-type: decimal;
 	background: none;
 	padding-left: 0;
@@ -119,3 +120,9 @@ a.action, a.action:visited {
 	text-decoration : none;
 }
 
+.contenu ul {
+	list-style	: disc outside none;
+	margin		: 1em 0;
+	padding-left	: 1em;
+	margin-left		: 1em;
+}

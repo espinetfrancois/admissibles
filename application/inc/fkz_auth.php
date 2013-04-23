@@ -54,7 +54,7 @@ function frankiz_get_response()
     $timestamp = (isset($_GET['timestamp']) ? $_GET['timestamp'] : 0);
     $response  = (isset($_GET['response'])  ? urldecode($_GET['response']) : "");
     $hash      = (isset($_GET['hash'])      ? $_GET['hash']      : "");
-    $location  = (isset($_GET['location'])  ? $_GET['location']  : "");
+    $location  = (isset($_GET['location'])  ? $_GET['location']  : "/");
 
     // Frankiz security protocol
     if (abs($timestamp - time()) > 600)
@@ -65,6 +65,7 @@ function frankiz_get_response()
        die("Session compromise.");
 
     $response = json_decode($response, true);
+
     $response['location'] = $location;
     // Set empty fields
     $fields = array('hruid',
