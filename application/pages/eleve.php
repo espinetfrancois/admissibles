@@ -77,7 +77,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
         try {
         	// envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
         	//préparation de l'envoi du mail : récupération des informations de l'X
-        	$elevem = new Manager_Eleve(Registry::get('config'));
+        	$elevem = new Manager_Eleve(Registry::get('db'));
         	$eleve = $elevem->getUnique($demande->userEleve());
         	$mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
         	$mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());

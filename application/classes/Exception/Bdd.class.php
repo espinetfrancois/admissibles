@@ -12,7 +12,7 @@ class Exception_Bdd extends Exception_Projet
 
     public function log() {
         parent::log();
-        error_log($this->getPrevious()."\n\n\n", 3, LOGS_PATH.'/'.$this->log_file);
+        error_log($this->getPrevious()->getMessage()."\n\n\n", 3, LOGS_PATH.'/'.$this->log_file);
     }
 
 }
