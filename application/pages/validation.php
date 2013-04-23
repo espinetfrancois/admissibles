@@ -22,9 +22,10 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
             //rethrow
             Registry::get('layout')->addMessage("Impossible de mettre à jour l'état de votre demande.", MSG_LEVEL_ERROR);
         }
-        //préparation de l'envoi du mail : récupération des informations de l'X
-        $elevem = new Manager_Eleve(Registry::get('config'));
+
         try {
+            //préparation de l'envoi du mail : récupération des informations de l'X
+            $elevem = new Manager_Eleve(Registry::get('db'));
             $eleve = $elevem->getUnique($demande->userEleve());
 
             $mail = new Mail_X($eleve->email());

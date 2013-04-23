@@ -24,9 +24,10 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
         }
         //demande confirmée par l'admissible au moins
         if ($demande->status() != 0) {
-            //préparation de l'envoi du mail : récupération des informations de l'X
-            $elevem = new Manager_Eleve(Registry::get('config'));
+
             try {
+                //préparation de l'envoi du mail : récupération des informations de l'X
+                $elevem = new Manager_Eleve(Registry::get('db'));
                 $eleve = $elevem->getUnique($demande->userEleve());
 
                 $mail = new Mail_X($eleve->email());
