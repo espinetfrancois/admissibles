@@ -30,13 +30,19 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['filiere'
     $_SESSION['eleve']->setSexe($_POST['sexe']);
     $_SESSION['eleve']->setFiliere($_POST['filiere']);
     if ($_SESSION['eleve']->isValid()) {
-        if (isset($_SESSION['new']) && $_SESSION['new'] == 1) {
-            $eleveManager->add($_SESSION['eleve']);
-            unset($_SESSION['new']);
-        } else {
-            $eleveManager->update($_SESSION['eleve']);
+        try {
+            if (isset($_SESSION['new']) && $_SESSION['new'] == 1) {
+                    $eleveManager->add($_SESSION['eleve']);
+
+                unset($_SESSION['new']);
+            } else {
+
+                $eleveManager->update($_SESSION['eleve']);
+            }
+            Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
+        } catch (Exception_Bdd $e) {
+        	Registry::get('layout')->addMessage("Impossible de vous ajouter dans la base de données.", MSG_LEVEL_ERROR);
         }
-        Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
     } else {
         $erreurs = $_SESSION['eleve']->erreurs();
         Logs::logger(2, 'Erreur de remplissage du formulaire informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
@@ -47,30 +53,42 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['filiere'
 if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1") {
     $series = $parametres->getList(Parametres::Serie);
     $dispo = array();
-    foreach ($series as $value) {
-        if ($value['ouverture'] > time()) {
-            if (isset($_POST['serie'.$value['id']]) && $_POST['serie'.$value['id']]) {
-                $eleveManager->addDispo($_SESSION['eleve']->user(), $value['id']);
-            } else {
-                $eleveManager->deleteDispo($_SESSION['eleve']->user(), $value['id']);
+    try {
+        foreach ($series as $value) {
+            if ($value['ouverture'] > time()) {
+                if (isset($_POST['serie'.$value['id']]) && $_POST['serie'.$value['id']]) {
+                    $eleveManager->addDispo($_SESSION['eleve']->user(), $value['id']);
+                } else {
+                    $eleveManager->deleteDispo($_SESSION['eleve']->user(), $value['id']);
+                }
             }
         }
+    } catch (Exception_Bdd $e) {
+    	Registry::get('layout')->addMessage("Impossible de mettre à jour vos disponibilités.", MSG_LEVEL_ERROR);
     }
     Logs::logger(1, 'Modification des disponibilites eleve (user : '.$_SESSION['eleve']->user().')');
 }
 
 // Acceptation d'une demande de logement
 if (isset($_POST['accept']) && !empty($_POST['accept'])) {
-    $demande = $demandeManager->getUnique($_POST['accept']);
-    $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
-    // envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
-    //préparation de l'envoi du mail : récupération des informations de l'X
-    $elevem = new Manager_Eleve(Registry::get('config'));
-    $eleve = $elevem->getUnique($demande->userEleve());
-    $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
-    $mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());
+    try {
+        $demande = $demandeManager->getUnique($_POST['accept']);
+        $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
+        try {
+        	// envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
+        	//préparation de l'envoi du mail : récupération des informations de l'X
+        	$elevem = new Manager_Eleve(Registry::get('config'));
+        	$eleve = $elevem->getUnique($demande->userEleve());
+        	$mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
+        	$mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());
 
-    Logs::logger(1, 'Acceptation d\'une demande de logement (user : '.$_SESSION['eleve']->user().')');
+        	Logs::logger(1, 'Acceptation d\'une demande de logement (user : '.$_SESSION['eleve']->user().')');
+        } catch (Exception_Mail $e) {
+        	Registry::get('layout')->addMessage("Envoi du mail à l'admissible impossible. Contactez manuellement : ".$demande->email(), MSG_LEVEL_ERROR);
+        }
+    } catch (Exception_Bdd $e) {
+        Registry::get('layout')->addMessage("Impossible de mettre à jour le statut de la demande", MSG_LEVEL_ERROR);
+    }
 }
 
 // Proposition d'une adresse
@@ -83,10 +101,14 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
                                  'categorie' => $_POST['adr_categorie'],
                                  'valide' => "0"));
     if ($adresse->isValid()) {
-        $adresseManager->save($adresse);
-        unset($adresse);
-        $successAjoutAdresse = 1;
-        Logs::logger(1, 'Proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
+        try {
+            $adresseManager->save($adresse);
+            unset($adresse);
+            $successAjoutAdresse = 1;
+            Logs::logger(1, 'Proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
+        } catch (Exception_Bdd $e) {
+            Registry::get('layout')->addMessage("Impossible de sauvegarder votre adresse en base de donnée", MSG_LEVEL_ERROR);
+        }
     } else {
         $erreurAjoutAdresse = $adresse->erreurs();
         Logs::logger(2, 'Erreur de remplissage du formulaire de proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
@@ -99,8 +121,14 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
 
 // on teste si l'élève a déjà entré ses infos personnelles
 if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['eleve']->isValid()) {
-    $prepas = $parametres->getList(Parametres::Etablissement);
-    $filieres = $parametres->getList(Parametres::Filiere);
+    try {
+        $prepas = $parametres->getList(Parametres::Etablissement);
+        $filieres = $parametres->getList(Parametres::Filiere);
+    } catch (Exception_Bdd $e) {
+        $prepas  = array();
+        $filieres = array();
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des établissement ou des filières.', MSG_LEVEL_ERROR);
+    }
     $champInvalide = '<span class="error">Merci de renseigner ce champ</span>'
     ?>
     <h2>Modifier mes informations personnelles</h2>
@@ -168,9 +196,14 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
 }
 
 //informations personnelles déjà rentrées, interface de gestion
-
-$series = $parametres->getList(Parametres::Serie);
-$dispos = $eleveManager->getDispo($_SESSION['eleve']->user());
+try {
+    $series = $parametres->getList(Parametres::Serie);
+    $dispos = $eleveManager->getDispo($_SESSION['eleve']->user());
+} catch (Exception_Bdd $e) {
+    Registry::get('layout')->addMessage("Impossible de récupérer vos disponibilités ou la liste des séries.", MSG_LEVEL_ERROR);
+    $series = array();
+    $dispos = array();
+}
 ?>
 <h2>Disponibilité d'accueil</h2>
 <p>Bienvenue <?php echo $_SESSION['eleve']->user(); ?></p>
@@ -218,7 +251,12 @@ if (!empty($series)) {
 
 <h3>Récapitulatif de vos demandes :</h3>
 <?php
-$demandes = $demandeManager->getDemandes($_SESSION['eleve']->user());
+try {
+    $demandes = $demandeManager->getDemandes($_SESSION['eleve']->user());
+} catch (Exception_Bdd $e) {
+    Registry::get('layout')->addMessage("Impossible de récupérer la liste des demandes en cours.", MSG_LEVEL_ERROR);
+    $demandes = array();
+}
 if (empty($demandes)) {
     echo '<p>Vous n\'avez reçu aucune demande jusqu\'à présent.<br/>
           Vous recevrez une alerte email pour toute demande à valider...</p>';
@@ -246,7 +284,7 @@ if (empty($demandes)) {
             break;
         case 1:
             $status_libele = 'En attente d\'acceptation';
-            $action = '<form class="inline" action="/x/connexion" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
+            $action = '<form class="inline" action="/x/espace-personnel" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
             break;
         case 2:
             $status_libele = 'Validée';
@@ -284,7 +322,11 @@ if (isset($successAjoutAdresse)) {
     Registry::get('layout')->addMessage('Votre annonce a bien été prise en compte. Elle sera examinée par un administrateur avant d\'être publiée sur le site du concours.', MSG_LEVEL_OK);
 }
 //interface d'ajout d'une adresse
-$categories = $adresseManager->getCategories();
+try {
+    $categories = $adresseManager->getCategories();
+} catch (Exception_Bdd $e) {
+    Registry::get('layout')->addMessage('Impossible de récupérer la liste des catégories d\'hébergement', MSG_LEVEL_ERROR);
+}
 $champInvalide = '<span class="error">Champ invalide</span>';
 ?>
 <form action="/x/espace-personnel" method="post">
