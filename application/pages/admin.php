@@ -100,6 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
     } catch (Exception_Bdd $e) {
         //peut-être rethrow ici pour arreter l'execution
         Registry::get('layout')->addMessage('Impossible de récupérer la liste demandée.', MSG_LEVEL_ERROR);
+        $liste = array();
     }
     //formulaire d'ajout
     echo '<form action="/administration/gestion?action=param&type='.$_GET['type'].'" method="post">';

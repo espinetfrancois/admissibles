@@ -50,7 +50,11 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
 
 //interface pour poser une nouvelle demande
 if (isset($_GET['action']) && $_GET['action'] == 'demande') {
-    $series = $parametres->getCurrentSeries();
+    try {
+        $series = $parametres->getCurrentSeries();
+    } catch (Exception_Bdd $e) {
+        throw new Exception_Page('Impossible de récupérer la liste des séries actives', 'Un problème est survenu lors de la récupération de la liste des séries.', null, $e);
+    }
 
     // Interface fermée aux demandes
     if (empty($series)) {

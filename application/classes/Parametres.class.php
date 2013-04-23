@@ -212,6 +212,7 @@ class Parametres extends Manager {
                                            WHERE ID = :id');
             $requete->bindValue(':id', $id);
             $requete->execute();
+
         } catch (Exception $e) {
             throw new Exception_Bdd_Query( 'Erreur lors de l\'execution de la requête : Parametres::deleteFromList', Exception_Bdd_Query::Level_Minor, $e);
         }
@@ -280,7 +281,7 @@ class Parametres extends Manager {
                 $requete2->execute();
             } catch (Exception $e) {
                 throw new Exception_Bdd_Query('Erreur lors de l\'execution de la requête : Parametres::isUsedList', Exception_Bdd_Query::Level_Major, $e);
-                            }
+           }
 
             return ($requete->rowCount() + $requete2->rowCount() > 0);
             break;

@@ -1,9 +1,5 @@
 SetEnv APP_ENV dev
 
-#<ifModule mod_headers.c>
-#	Header set 
-#</ifModule>
-
 #AddType image/x-icon .ico
 
 RewriteEngine on

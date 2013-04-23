@@ -1,4 +1,5 @@
 <?php
+mail('espinetfrancois@gmail.com', 'Testing Sendmail', 'Testing McTesterson');
 define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('APPLICATION_PATH', ROOT_PATH . '/application');
 define('LIBRARY_PATH', APPLICATION_PATH . '/library');
@@ -6,7 +7,6 @@ define('LIBRARY_PATH', APPLICATION_PATH . '/library');
 require_once(APPLICATION_PATH . '/inc/autoload.php');
 session_start();
 //instanciation des objets de base (ne doit pas rater)
-
 try {
 	$config = new Config();
 	$layout = new Layout();
