@@ -34,7 +34,7 @@ abstract class Manager
      * @param string $enc
      * @return string
      */
-    public static function escape($string, $flags = ENT_HTML5, $enc = 'UTF-8') {
+    public static function escape($string, $flags = 0, $enc = 'UTF-8') {
         return htmlentities($string, $flags, $enc);
     }
 
