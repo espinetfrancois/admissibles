@@ -246,7 +246,7 @@ if (empty($demandes)) {
             break;
         case 1:
             $status_libele = 'En attente d\'acceptation';
-            $action = '<form action="/x/connexion" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
+            $action = '<form class="inline" action="/x/connexion" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
             break;
         case 2:
             $status_libele = 'Validée';
