@@ -40,6 +40,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['filiere'
                 $eleveManager->update($_SESSION['eleve']);
             }
             Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
+            Registry::get('layout')->addMessage("Vous vous êtes enregistrés avec succés.", MSG_LEVEL_OK);
         } catch (Exception_Bdd $e) {
         	Registry::get('layout')->addMessage("Impossible de vous ajouter dans la base de données.", MSG_LEVEL_ERROR);
         }
@@ -63,6 +64,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
                 }
             }
         }
+        Registry::get('layout')->addMessage("Vos disponibilités ont été mises à jour avec succés.", MSG_LEVEL_OK);
     } catch (Exception_Bdd $e) {
     	Registry::get('layout')->addMessage("Impossible de mettre à jour vos disponibilités.", MSG_LEVEL_ERROR);
     }
@@ -74,6 +76,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
     try {
         $demande = $demandeManager->getUnique($_POST['accept']);
         $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
+        Registry::get('layout')->addMessage('Votre acceptation à bien été confirmée', MSG_LEVEL_OK);
         try {
         	// envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
         	//préparation de l'envoi du mail : récupération des informations de l'X
@@ -83,6 +86,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
         	$mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());
 
         	Logs::logger(1, 'Acceptation d\'une demande de logement (user : '.$_SESSION['eleve']->user().')');
+        	Registry::get('layout')->addMessage('Un mail à été envoyé à l\'admissible, son adresse figure dans votre espace personnel.', MSG_LEVEL_OK);
         } catch (Exception_Mail $e) {
         	Registry::get('layout')->addMessage("Envoi du mail à l'admissible impossible. Contactez manuellement : ".$demande->email(), MSG_LEVEL_ERROR);
         }
@@ -104,13 +108,14 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
         try {
             $adresseManager->save($adresse);
             unset($adresse);
-            $successAjoutAdresse = 1;
+            Registry::get('layout')->addMessage('Votre adresse a été ajoutée à la base de donnée. Elle sera affichée après validation par les administrateurs.',MSG_LEVEL_OK);
             Logs::logger(1, 'Proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
         } catch (Exception_Bdd $e) {
             Registry::get('layout')->addMessage("Impossible de sauvegarder votre adresse en base de donnée", MSG_LEVEL_ERROR);
         }
     } else {
         $erreurAjoutAdresse = $adresse->erreurs();
+        Registry::get('layout')->addMessage("L'adresse proposée comporte des erreurs.", MSG_LEVEL_WARNING);
         Logs::logger(2, 'Erreur de remplissage du formulaire de proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
     }
 }
@@ -318,9 +323,6 @@ if (empty($demandes)) {
 <p>Vous avez dormi à proximité de l'école durant vos oraux de concours ?<br/>
 N'hésitez pas à partager avec les futurs admissibles les adresses qui vous ont aidées !</p>
 <?php
-if (isset($successAjoutAdresse)) {
-    Registry::get('layout')->addMessage('Votre annonce a bien été prise en compte. Elle sera examinée par un administrateur avant d\'être publiée sur le site du concours.', MSG_LEVEL_OK);
-}
 //interface d'ajout d'une adresse
 try {
     $categories = $adresseManager->getCategories();
