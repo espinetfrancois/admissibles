@@ -78,9 +78,9 @@ class Mail_X extends Mail
     public function nouvelleDemande()
     {
         try {
-            $this->AltBody = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_TXT, array('HOST' => $this->appRootUrl.'x/espace-personnel'));
+            $this->AltBody = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_TXT, array('HOST' => $this->appRootUrl.'/x/espace-personnel'));
 
-            $this->Body = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_HTML, array('HOST' =>  $this->appRootUrl.'x/espace-personnel'));
+            $this->Body = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_HTML, array('HOST' =>  $this->appRootUrl.'/x/espace-personnel'));
 
             $this->Subject = $this->_substitute(self::Action_NvDemande, self::CONTENT_TYPE_OBJET);
             $this->psend();
