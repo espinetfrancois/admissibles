@@ -341,7 +341,7 @@ class Parametres extends Manager {
         $ligne = explode(PHP_EOL, $donnees);
         foreach ($ligne as $value) {
             // Séparation des noms de la forme : 'Nom (Prénom)'
-            $value = preg_replace('#(.+)\s+\((.+)\)$#','$1///$2',$value);
+            $value = preg_replace('#\s+(.+)\s+\(\s+(.+)\s+\)\s+$#','$1///$2', $value);
             $col = explode('///', $value);
             // traitement des donnees : minuscules et sans accents
             $nom = self::traitementNomPropres($col[0]);

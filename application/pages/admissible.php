@@ -114,7 +114,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
                          <th>Contact</th></tr></thead>';
         echo '<tbody>';
         foreach ($eleves as $eleve) {
-            echo '<tr><td>'.$eleve->user()
+            echo '<tr><td>'.preg_replace("#^([a-z0-9_-])[a-z0-9_-]*\.((de-)?[a-z0-9]*)[a-z0-9_-]*$#","$1.$2", $eleve->user())
                 .'</td><td>'.$eleve->sexe().'</td><td>'
                 .$eleve->prepa().'</td><td>'.$eleve->filiere()
                 .'</td><td>'.$eleve->section().'</td>';
