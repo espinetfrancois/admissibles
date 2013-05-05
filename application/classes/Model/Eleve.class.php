@@ -20,6 +20,13 @@ class Model_Eleve extends Model {
      * @access protected
      */
     protected  $sexe;
+	
+	/**
+     * 1 || 0
+     * @var int
+     * @access protected
+     */
+    protected  $sexeAdm;
 
     /**
      * Adresse email
@@ -73,6 +80,7 @@ class Model_Eleve extends Model {
     const Section_Invalide = 5;
     const Prepa_Invalide = 6;
     const Filiere_Invalide = 7;
+	const SexeAdm_Invalide = 8;
 
     /**
      * Méthode permettant de savoir si l'éleve est nouveau
@@ -92,7 +100,7 @@ class Model_Eleve extends Model {
      */
     public final function isValid()
     {
-        return !(empty($this->user) || empty($this->sexe) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
+        return !(empty($this->user) || empty($this->sexe) || empty($this->sexeAdm) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
     }
 
 
@@ -122,6 +130,22 @@ class Model_Eleve extends Model {
     {
         if ($sexe != 'M' && $sexe != 'F') { // de la forme M ou F
             $this->erreurs[] = self::Sexe_Invalide;
+        } else {
+            $this->sexe = $sexe;
+        }
+    }
+
+
+	/**
+     * Setter sexeAdm
+     * @access public
+     * @param int $sexeAdm
+     * @return void
+     */
+    public  function setSexeAdm($sexeAdm)
+    {
+        if ($sexeAdm != 0 && $sexeAdm != 1) { // de la forme 0 ou 1
+            $this->erreurs[] = self::SexeAdm_Invalide;
         } else {
             $this->sexe = $sexe;
         }
@@ -230,6 +254,17 @@ class Model_Eleve extends Model {
     public  function sexe()
     {
         return $this->sexe;
+    }
+	
+	
+	/**
+     * Getter sexeAdm
+     * @access public
+     * @return string
+     */
+    public  function sexeAdm()
+    {
+        return $this->sexeAdm;
     }
 
 
