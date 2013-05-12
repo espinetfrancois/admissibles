@@ -14,7 +14,7 @@
 	padding : 8px 15px;
 	margin  : 5px 3px;
 	border : 1px solid black;
-	font-size : 1.3em;
+	font-size : 1.2em;
 }
 
 .message.ok {
@@ -22,7 +22,7 @@
 	color : rgba(35, 70, 0, 1);
 	border-color : rgba(187, 238, 119, 1);
 	box-shadow   : 0px 0px 2px 1px rgba(187, 238, 119, 0.8);
-	font-size    : 1.1em;
+	font-size    : 1.7em;
 }
 
 .message.warning {

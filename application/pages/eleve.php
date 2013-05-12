@@ -24,10 +24,11 @@ if (!isset($_SESSION['eleve'])) {
  */
 echo '<span id="page_id">3</span>';
 //Modification des informations personnelles
-if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['filiere']) && isset($_POST['prepa'])) {
+if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['sexeAdm']) && isset($_POST['filiere']) && isset($_POST['prepa'])) {
     $_SESSION['eleve']->setErreurs();
     $_SESSION['eleve']->setPrepa($_POST['prepa']);
     $_SESSION['eleve']->setSexe($_POST['sexe']);
+	$_SESSION['eleve']->setSexeAdm($_POST['sexeAdm']);
     $_SESSION['eleve']->setFiliere($_POST['filiere']);
     if ($_SESSION['eleve']->isValid()) {
         try {
@@ -156,6 +157,19 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
             echo '<span style="color:red;">Merci de renseigner ce champ</span>';
     ?>
         </label>
+    </p>
+	<p id="champ-sexeAdm" class="champ radio">
+        <label for="sexeAdm">J'accepte de loger un admissible du sexe opposé s'il me demande: </label>
+		<select name="sexeAdm">
+			<option value="1"<?php
+        		if ($_SESSION['eleve']->sexeAdm() == "1" || $_SESSION['eleve']->sexeAdm() == "")
+					echo 'selected';
+       		?>>Oui</option>
+			<option value="0"<?php
+        		if ($_SESSION['eleve']->sexeAdm() == "0")
+					echo 'selected';
+       		?>>Non</option>
+		</select>
     </p>
     <p id="champ-prepa" class="champ">
         <label for="prepa">Etablissement d'origine : </label>

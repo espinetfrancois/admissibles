@@ -19,6 +19,7 @@ class Manager_Eleve extends Manager {
             $requete = $this->db->prepare('INSERT INTO x
                                            SET USER = :user,
                                                SEXE = :sexe,
+											   SEXE_ADM = :sexeAdm,
                                                SECTION = :section,
                                                ADRESSE_MAIL = :email,
                                                ID_FILIERE = :filiere,
@@ -26,6 +27,7 @@ class Manager_Eleve extends Manager {
                                                ID_ETABLISSEMENT = :prepa');
             $requete->bindValue(':user', $eleve->user());
             $requete->bindValue(':sexe', $eleve->sexe());
+			$requete->bindValue(':sexeAdm', $eleve->sexeAdm());
             $requete->bindValue(':section', $eleve->section());
             $requete->bindValue(':email', $eleve->email());
             $requete->bindValue(':filiere', $eleve->filiere());
@@ -50,6 +52,7 @@ class Manager_Eleve extends Manager {
             try {
                 $requete = $this->db->prepare('UPDATE x
                                                SET SEXE = :sexe,
+											   	   SEXE_ADM = :sexeAdm
                                                    SECTION = :section,
                                                    ADRESSE_MAIL = :email,
                                                    ID_FILIERE = :filiere,
@@ -58,6 +61,7 @@ class Manager_Eleve extends Manager {
                                                WHERE USER = :user');
                 $requete->bindValue(':user', $eleve->user());
                 $requete->bindValue(':sexe', $eleve->sexe());
+				$requete->bindValue(':sexeAdm', $eleve->sexeAdm());
                 $requete->bindValue(':section', $eleve->section());
                 $requete->bindValue(':email', $eleve->email());
                 $requete->bindValue(':filiere', $eleve->filiere());
@@ -137,6 +141,7 @@ class Manager_Eleve extends Manager {
         try {
             $requete = $this->db->prepare('SELECT USER AS user,
                                                   SEXE AS sexe,
+												  SEXE_ADM AS sexeAdm,
                                                   SECTION AS section,
                                                   ADRESSE_MAIL AS email,
                                                   ID_FILIERE AS filiere,
@@ -202,6 +207,7 @@ class Manager_Eleve extends Manager {
         try {
             $requete = $this->db->prepare('SELECT USER AS user,
                                                   SEXE AS sexe,
+												  SEXE_ADM AS sexeAdm,
                                                   SECTION AS section,
                                                   ADRESSE_MAIL AS email,
                                                   ID_FILIERE AS filiere,
@@ -237,6 +243,7 @@ class Manager_Eleve extends Manager {
         try {
             $requete = $this->db->prepare('SELECT x.USER AS user,
                                                   x.SEXE AS sexe,
+												  x.SEXE_ADM AS sexeAdm,
                                                   x.SECTION AS section,
                                                   x.ADRESSE_MAIL AS email,
                                                   ref_filieres.NOM AS filiere,
@@ -251,6 +258,7 @@ class Manager_Eleve extends Manager {
                                            INNER JOIN ref_filieres
                                            ON ref_filieres.ID = x.ID_FILIERE
                                            WHERE disponibilites.ID_SERIE = :serie
+										   AND (x.SEXE_ADM = 1 OR x.SEXE = :sexe)
                                            ORDER BY pertinent DESC
                                            LIMIT '.$limit);
             $requete->bindValue(':sexe', $demande->sexe());
