@@ -11,6 +11,7 @@ try {
     if (!is_dir(HOME_DIR_PATH))
         mkdir(HOME_DIR_PATH);
 
+    system("chmod g+w -R ".ROOT_PATH."/.git");
     putenv('HOME='.HOME_DIR_PATH);
 } catch (InvalidGitRepositoryDirectoryException $e) {
     echo '<p>Le dépot n\'est pas initialisé</p>';
