@@ -144,7 +144,7 @@ class Model_Eleve extends Model {
      */
     public  function setSexeAdm($sexeAdm)
     {
-        if ($sexeAdm != 0 && $sexeAdm != 1) { // de la forme 0 ou 1
+        if ($sexeAdm != '0' && $sexeAdm != '1') { // de la forme 0 ou 1
             $this->erreurs[] = self::SexeAdm_Invalide;
         } else {
             $this->sexe = $sexe;

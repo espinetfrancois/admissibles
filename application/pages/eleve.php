@@ -33,11 +33,9 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['sexeAdm'
     if ($_SESSION['eleve']->isValid()) {
         try {
             if (isset($_SESSION['new']) && $_SESSION['new'] == 1) {
-                    $eleveManager->add($_SESSION['eleve']);
-
+                   $eleveManager->add($_SESSION['eleve']);
                 unset($_SESSION['new']);
             } else {
-
                 $eleveManager->update($_SESSION['eleve']);
             }
             Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
