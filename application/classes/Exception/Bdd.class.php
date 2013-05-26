@@ -12,7 +12,8 @@ class Exception_Bdd extends Exception_Projet
 
     public function log() {
         parent::log();
-        error_log($this->getPrevious()->getMessage()."\n\n\n", 3, LOGS_PATH.'/'.$this->log_file);
+        if ($this->getPrevious() != null)
+            error_log($this->getPrevious()->getMessage()."\n\n\n", 3, LOGS_PATH.'/'.$this->log_file);
     }
 
 }

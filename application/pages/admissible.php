@@ -40,7 +40,7 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
             $demandeManager->add($demande);
             $eleveManager->deleteDispo($_POST['user'], $demande->serie());
             Logs::logger(1, 'Demande de logement '.$demande->id().' effectuee');
-            Registry::get('layout')->addMessage('Votre demande de logement est prète à être envoyée.', MSG_LEVEL_OK);
+            Registry::get('layout')->addMessage('Votre demande de logement est prête à être envoyée.', MSG_LEVEL_OK);
             $success = 1;
         } catch (Exception_Bdd $e) {
             Registry::get('layout')->addMessage('Impossible d\'ajouter votre demande dans la base de données.', MSG_LEVEL_ERROR);
