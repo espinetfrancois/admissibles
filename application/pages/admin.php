@@ -330,7 +330,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
                 echo '<tr><td>'.$admissible['nom'].'</td><td>'
                     .$admissible['prenom'].'</td><td>'.$admissible['mail']
                     .'</td><td><a class="action" href="/administration/gestion?action=admissibles&suppr='
-                    .$admissible['id'].'">Supprimer</a></td></tr>';
+                    .$admissible['id'].'&serie-voir='.$_POST['serie-voir'].'&filiere-voir='.$_POST['filiere-voir'].'">Supprimer</a></td></tr>';
             }
             echo '</tbody></table>';
         } else {
