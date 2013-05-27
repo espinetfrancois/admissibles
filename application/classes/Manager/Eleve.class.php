@@ -52,7 +52,7 @@ class Manager_Eleve extends Manager {
             try {
                 $requete = $this->db->prepare('UPDATE x
                                                SET SEXE = :sexe,
-											   	   SEXE_ADM = :sexeAdm
+											   	   SEXE_ADM = :sexeAdm,
                                                    SECTION = :section,
                                                    ADRESSE_MAIL = :email,
                                                    ID_FILIERE = :filiere,

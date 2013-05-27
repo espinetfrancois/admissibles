@@ -169,6 +169,9 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
        		?>>Non</option>
 		</select>
     </p>
+    <?php if (isset($erreurs) && in_array(Model_Eleve::SexeAdm_Invalide, $erreurs))
+            echo $champInvalide;
+        ?>
     <p id="champ-prepa" class="champ">
         <label for="prepa">Etablissement d'origine : </label>
         <select name="prepa">
