@@ -20,7 +20,7 @@ class Model_Eleve extends Model {
      * @access protected
      */
     protected  $sexe;
-	
+
 	/**
      * 1 || 0
      * @var int
@@ -100,7 +100,7 @@ class Model_Eleve extends Model {
      */
     public final function isValid()
     {
-        return !(empty($this->user) || empty($this->sexe) || empty($this->sexeAdm) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
+        return !(empty($this->user) || empty($this->sexe) || ($this->sexeAdm != 0 && $this->sexeAdm != 1) || empty($this->promo) || empty($this->section) || empty($this->prepa) || empty($this->filiere) || empty($this->email));
     }
 
 
@@ -147,7 +147,7 @@ class Model_Eleve extends Model {
         if ($sexeAdm != '0' && $sexeAdm != '1') { // de la forme 0 ou 1
             $this->erreurs[] = self::SexeAdm_Invalide;
         } else {
-            $this->sexe = $sexe;
+            $this->sexeAdm = (int) $sexeAdm;
         }
     }
 
@@ -255,12 +255,12 @@ class Model_Eleve extends Model {
     {
         return $this->sexe;
     }
-	
-	
+
+
 	/**
      * Getter sexeAdm
      * @access public
-     * @return string
+     * @return int
      */
     public  function sexeAdm()
     {
