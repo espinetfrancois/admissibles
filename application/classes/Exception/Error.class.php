@@ -5,6 +5,9 @@
  * Wrapper pour les erreurs php.
  *
  * @author francois.espinet
+ * @version 1.1
+ * @deprecated
+ * @package Exception
  *
  */
 class Exception_Error extends Exception_Projet

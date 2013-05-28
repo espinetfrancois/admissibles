@@ -5,6 +5,7 @@
  * Permet d'avoir un appel unifié pour tous les caches : Cache::fonction
  *
  * @author francois.espinet
+ * @version 1.1
  */
 class Cache
 {

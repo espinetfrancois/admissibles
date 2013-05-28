@@ -4,7 +4,8 @@
  * Exception lancées lors des appels à la base de données.
  *
  * @author francois.espinet
- *
+ * @version 1.1
+ * @package Exception
  */
 class Exception_Bdd extends Exception_Projet
 {

@@ -4,7 +4,8 @@
  * Exception lancée en cas de problème dans l'execution requête.
  *
  * @author francois.espinet
- *
+ * @version 1.1
+ * @package Exception
  */
 class Exception_Bdd_Query extends Exception_Bdd
 {

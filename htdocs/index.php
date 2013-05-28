@@ -1,14 +1,7 @@
 <?php
-//TODO : @category
-//TODO @license
-//TODO : @package
-//TODO : @link
-//TODO : @param class $var comment<< + align types
-//TODO : @version for files
 //TODO : newline after control structure
 //TODO : 2 blank lines after function
 //TODO : check @return
-//TODO : cyclomatic complexity of 11 in isUsedList
 
 define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
 define('APPLICATION_PATH', ROOT_PATH . '/application');

@@ -4,7 +4,8 @@
  * Exception lancé dans les pages.
  *
  * @author francois.espinet
- *
+ * @version 1.1
+ * @package Exception
  */
 class Exception_Page extends Exception_Projet
 {

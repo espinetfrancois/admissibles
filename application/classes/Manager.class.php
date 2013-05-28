@@ -4,6 +4,7 @@
  * Class abstraite pour les managers de l'application.
  *
  * @author francois.espinet
+ * @version 1.1
  */
 abstract class Manager
 {

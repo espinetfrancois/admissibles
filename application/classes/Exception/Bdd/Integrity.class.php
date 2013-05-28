@@ -6,7 +6,8 @@
  * Elle déclenche l'envoi d'un mail aux administrateurs techniques pour qu'ils puissent réparer la base de donnée.
  *
  * @author francois.espinet
- *
+ * @version 1.1
+ * @package Exception
  */
 class Exception_Bdd_Integrity extends Exception_Bdd
 {

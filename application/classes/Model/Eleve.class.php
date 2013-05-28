@@ -5,7 +5,7 @@
  *
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
- *
+ * @package Model
  */
 class Model_Eleve extends Model
 {

@@ -4,7 +4,8 @@
  * Classe d'exception pour les mails.
  *
  * @author francois.espinet
- *
+ * @version 1.1
+ * @package Exception
  */
 class Exception_Mail extends Exception_Projet
 {

@@ -8,7 +8,8 @@
  *     2 problème grave entrainant une disfontionnement majeur de l'application (mais celle-ci peut encore fonctionner de façon limitée)
  *
  * @author francois.espinet
- *
+ * @version 1.1
+ * @package Exception
  */
 class Exception_Projet extends Exception
 {

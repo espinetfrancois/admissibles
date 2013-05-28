@@ -4,7 +4,7 @@
  * Class abstraite pour les modèles de l'application.
  *
  * @author francois.espinet
- *
+ * @version 1.0
  */
 abstract class Model
 {

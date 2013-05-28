@@ -6,7 +6,7 @@
  *
  * @author francois.espinet
  * @version 1.0
- *
+ * @package Mail
  */
 class Mail_AdminFonc extends Mail {
 

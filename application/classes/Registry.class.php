@@ -5,6 +5,7 @@
  *
  * Permet de définir un équivalent de variable globales
  * @author francois.espinet
+ * @version 1.0
  *
  */
 class Registry extends ArrayObject

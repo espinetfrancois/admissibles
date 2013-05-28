@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Class pour l'envoi de mail aux admissibles
+ * Class pour l'envoi de mail aux admissibles.
+ *
  * @author francois.espinet
  * @version 1.0
- *
+ * @package Mail
  */
 class Mail_Admissible extends Mail
 {

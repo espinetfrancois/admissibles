@@ -235,6 +235,7 @@ class Parametres extends Manager
 
     /**
      * Méthode vérifiant l'utilisation d'un paramètre.
+     * TODO : cyclomatic complexity of 11 in isUsedList
      *
      * @access public
      * @param integer $type type de la liste
