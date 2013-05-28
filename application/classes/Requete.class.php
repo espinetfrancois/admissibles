@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Classe représantant la requete d'un utilisateur
+ * Classe représantant la requete d'un utilisateur.
+ *
  * @author francois.espinet
  * @version 1.0
  *
@@ -10,25 +11,29 @@ class Requete
 {
 
     /**
-     * Les parties de la requète
+     * Les parties de la requète.
+     *
      * @var array
      */
     public $aParts = array();
 
     /**
-     * Dis si la requete est valide ou non
+     * Dis si la requete est valide ou non.
+     *
      * @var boolean
      */
-    public $is_invalide = false;
+    public $isInvalide = false;
 
     /**
-     * La profondeur de la requête de l'utilisateur
-     * @var int
+     * La profondeur de la requête de l'utilisateur.
+     *
+     * @var integer
      */
     public $depth = 0;
 
     /**
-     * Constructeur de la classe reque^te
+     * Constructeur de la classe requête.
+     *
      * @author francois.espinet
      * @param string $request la requete de l'utilisateur
      */
@@ -39,20 +44,21 @@ class Requete
     }
 
     /**
-     * Méthode qui analyse la requête et remplit les champs
+     * Méthode qui analyse la requête et remplit les champs.
+     *
      * @author francois.espinet
      * @param string $request la requete de l'utilisateur
      */
     protected function _setRequete($request)
     {
         //contient tous les éléments de la requète
-        $aAllRequestParts= parse_url($request);
+        $aAllRequestParts = parse_url($request);
         //séparation de la requête en éléments
         $aRequeteParts = explode('/', $aAllRequestParts['path']);
         //on enlève le premier membre qui est toujours ""
         array_shift($aRequeteParts);
         //gère le cas ou l'url finit par / (ex: /x/admissibles/)
-        if (end($aRequeteParts) == "") {
+        if (end($aRequeteParts) == '') {
             array_pop($aRequeteParts);
         }
         $this->depth = count($aRequeteParts);
@@ -60,11 +66,13 @@ class Requete
     }
 
     /**
-     * Retourne une formulation compacte de l'url demandée
+     * Retourne une formulation compacte de l'url demandée.
+     *
      * @author francois.espinet
      * @return string
      */
-    public function compact() {
+    public function compact()
+    {
         return urlencode(implode('/', $this->aParts));
     }
 }

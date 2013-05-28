@@ -14,15 +14,15 @@
  */
 function autoloader($class) {
 	try {
-		$sDefaultClass = APPLICATION_PATH . '/classes/' . $class . ".class.php";
+		$sDefaultClass = APPLICATION_PATH . '/classes/' . $class . '.class.php';
 		if (file_exists($sDefaultClass)) {
 			require_once($sDefaultClass);
 		} else {
 			require_once(APPLICATION_PATH . '/classes/'
-					. str_replace('_', '/', $class) . ".class.php");
+					. str_replace('_', '/', $class) . '.class.php');
 		}
 	} catch (Exception $e) {
-		throw new Exception("Erreur lors du chargement de la classe : " . $class, null, $e);
+		throw new Exception('Erreur lors du chargement de la classe : ' . $class, null, $e);
 	}
 }
 
@@ -35,7 +35,7 @@ function autoloader($class) {
 function projet_exception_handler(Exception $exception)
 {
 	if (class_exists('Exception_Projet', true)) {
-		$e = new Exception_Projet("Exception non capturée", null, $exception);
+		$e = new Exception_Projet('Exception non capturée', null, $exception);
 		//gestion de l'exception (redirection vers la page des erreurs
 		$e->handleException();
 	} else {

@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Classe de registre pour l'application
+ * Classe de registre pour l'application.
+ *
  * Permet de définir un équivalent de variable globales
  * @author francois.espinet
  *
@@ -11,12 +12,14 @@ class Registry extends ArrayObject
 
     /**
      * Class name of the singleton registry object.
+     *
      * @var string
      */
     private static $_registryClassName = 'Registry';
 
     /**
      * Registry object provides storage for shared objects.
+     *
      * @var Registry
      */
     private static $_registry = null;
@@ -36,10 +39,11 @@ class Registry extends ArrayObject
     }
 
     /**
+     * Returns the object stored under index.
      *
      * @author francois.espinet
      * @param mixed $index
-     * @throws Zend_Exception
+     * @throws Exception
      * @return mixed
      */
     public static function get($index)
@@ -47,14 +51,14 @@ class Registry extends ArrayObject
         $instance = self::getInstance();
 
         if (!$instance->offsetExists($index)) {
-            throw new Exception("No entry is registered for key ".$index);
+            throw new Exception("No entry is registered for key " . $index);
         }
 
         return $instance->offsetGet($index);
     }
 
     /**
-     * setter method, basically same as offsetSet().
+     * Setter method, basically same as offsetSet().
      *
      * This method can be called from an object of type Zend_Registry, or it
      * can be called statically.  In the latter case, it uses the default
@@ -62,7 +66,7 @@ class Registry extends ArrayObject
      *
      * @param string $index The location in the ArrayObject in which to store
      *   the value.
-     * @param mixed $value The object to store in the ArrayObject.
+     * @param mixed  $value The object to store in the ArrayObject.
      * @return void
      */
     public static function set($index, $value)
@@ -87,11 +91,11 @@ class Registry extends ArrayObject
     }
 
     /**
-     * Constructs a parent ArrayObject with default
-     * ARRAY_AS_PROPS to allow acces as an object
+     * Constructs a parent ArrayObject with default.
+     * ARRAY_AS_PROPS to allow acces as an object.
      *
      * @param array $array data array
-     * @param integer $flags ArrayObject flags
+     * @param integereger $flags ArrayObject flags
      */
     public function __construct($array = array(), $flags = parent::ARRAY_AS_PROPS)
     {
@@ -100,7 +104,7 @@ class Registry extends ArrayObject
 
     /**
      * @param string $index
-     * @returns mixed
+     * @return mixed
      *
      * Workaround for http://bugs.php.net/bug.php?id=40442 (ZF-960).
      */

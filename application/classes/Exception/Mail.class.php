@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Classe d'exception pour les mails
+ * Classe d'exception pour les mails.
+ *
  * @author francois.espinet
  *
  */

@@ -1,37 +1,45 @@
 <?php
+
 /**
- * Class pour l'envoi de mail aux administrateurs techniques
+ * Class pour l'envoi de mail aux administrateurs techniques.
+ *
  * @author francois.espinet
  * @version 1.0
  *
  */
-class Mail_AdminTech extends Mail {
+class Mail_AdminTech extends Mail
+{
 
     const Admin_Level_Warning = 'warning';
     const Admin_Level_Error = 'error';
     const Admin_Level_Notice = 'notice';
     const Admin_Level_Exception = 'exception';
 
-    protected function _substitute($sAction='', $sType, $aRemplacement = array()) {
+    protected function _substitute($sAction = '', $sType, $aRemplacement = array())
+    {
         return parent::substitute(self::Pers_Admin_Tech, $sAction, $sType, $aRemplacement);
     }
 
     /**
      * Notifie l'administrateur technique (celui qui gère le code) d'une erreur fatale.
-     * Cette fonction adjoint les logs au mail
+     * Cette fonction adjoint les logs au mail.
+     *
      * @author francois.espinet
-     * @param string $sMessage     le message d'erreur à communiquer à l'administrateur
+     * @param string $sMessage le message d'erreur à communiquer à l'administrateur
      */
-    public function fatalError($sMessage = 'inconnu') {
-        $this->AltBody = $this->_substitute(self::Admin_Level_Error, self::CONTENT_TYPE_TXT, array('MESSAGE' => $sMessage,
-                                                                                              'HOST' => $_SERVER['HTTP_HOST'],
-                                                                                              'APP_LOG' => file_get_contents(LOGS_PATH.'/application.log'),
-                                                                                              'PHP_LOG' => file_get_contents(LOGS_PATH.'/php.log')));
+    public function fatalError($sMessage = 'inconnu')
+    {
+        $this->AltBody = $this
+                ->_substitute(self::Admin_Level_Error, self::CONTENT_TYPE_TXT,
+                        array('MESSAGE' => $sMessage, 'HOST' => $_SERVER['HTTP_HOST'], 'APP_LOG' => file_get_contents(LOGS_PATH . '/application.log'),
+                                'PHP_LOG' => file_get_contents(LOGS_PATH . '/php.log')
+                        ));
 
-        $this->Body = $this->_substitute(self::Admin_Level_Error,self::CONTENT_TYPE_HTML, array('MESSAGE' => $sMessage,
-                                                                                              'HOST' => $_SERVER['HTTP_HOST'],
-                                                                                              'APP_LOG' => file_get_contents(LOGS_PATH.'/application.log'),
-                                                                                              'PHP_LOG' => file_get_contents(LOGS_PATH.'/php.log')));
+        $this->Body = $this
+                ->_substitute(self::Admin_Level_Error, self::CONTENT_TYPE_HTML,
+                        array('MESSAGE' => $sMessage, 'HOST' => $_SERVER['HTTP_HOST'], 'APP_LOG' => file_get_contents(LOGS_PATH . '/application.log'),
+                                'PHP_LOG' => file_get_contents(LOGS_PATH . '/php.log')
+                        ));
         $this->Subject = $this->_substitute(self::Admin_Level_Error, self::CONTENT_TYPE_OBJET);
 
         $this->psend();
@@ -40,13 +48,15 @@ class Mail_AdminTech extends Mail {
     /**
      * Informe l'administrateur technique qu'une erreur grave a été affichée à l'utilisateur (sur la page errors.php)
      * Le texte est l'exception elle-même, avec sa trace.
+     *
      * @author francois.espinet
      * @param string $sException l'exception qui est remontée
      */
-    public function exception($sException) {
+    public function exception($sException)
+    {
         $this->AltBody = $this->_substitute(self::Admin_Level_Exception, self::CONTENT_TYPE_TXT, array('EXCEPTION' => $sException));
 
-        $this->Body = $this->_substitute(self::Admin_Level_Exception,self::CONTENT_TYPE_HTML, array('EXCEPTION' => $sException));
+        $this->Body = $this->_substitute(self::Admin_Level_Exception, self::CONTENT_TYPE_HTML, array('EXCEPTION' => $sException));
 
         $this->Subject = $this->_substitute(self::Admin_Level_Exception, self::CONTENT_TYPE_OBJET);
 
@@ -54,21 +64,24 @@ class Mail_AdminTech extends Mail {
     }
 
     /**
-     * Informe l'administateur d'une erreure moyennement grave
+     * Informe l'administateur d'une erreure moyennement grave.
+     *
      * @author francois.espinet
      * @param string $sException
      */
-    public function warning($sMsg) {
+    public function warning($sMsg)
+    {
         $this->AltBody = $this->_substitute(self::Admin_Level_Warning, self::CONTENT_TYPE_TXT, array('MESSAGE' => $sMsg));
 
-        $this->Body = $this->_substitute(self::Admin_Level_Warning,self::CONTENT_TYPE_HTML, array('MESSAGE' => $sMsg));
+        $this->Body = $this->_substitute(self::Admin_Level_Warning, self::CONTENT_TYPE_HTML, array('MESSAGE' => $sMsg));
 
         $this->Subject = $this->_substitute(self::Admin_Level_Warning, self::CONTENT_TYPE_OBJET);
 
         $this->psend();
     }
 
-    protected function psend() {
+    protected function psend()
+    {
         try {
             $this->AddAddress($this->adminMail);
             parent::psend();

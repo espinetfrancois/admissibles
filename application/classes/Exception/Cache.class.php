@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Classe d'exception pour les erreurs du cache
+ * Classe d'exception pour les erreurs du cache.
+ *
  * @author francois.espinet
  *
  */

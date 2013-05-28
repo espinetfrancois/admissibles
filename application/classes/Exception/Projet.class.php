@@ -40,16 +40,20 @@ class Exception_Projet extends Exception
         return $sErrTxt;
     }
 
-    public function handleException() {
-        header("Location: /errors?exception=".$this->url());
+    public function handleException()
+    {
+        header("Location: /errors?exception=" . $this->url());
     }
 
     /**
-     * Permet de logger une exception
+     * Permet de logger une exception.
+     *
      * @author francois.espinet
      */
-    public function log() {
-        $texte = '['.date('Y-m-d H:i:s', time()).'] '.$_SERVER['REMOTE_ADDR'].' - Type d\'exeption : '.get_class($this).' - Message : '.$this->getMessage(). ' - Fichier : ' . $this->getFile() . ' - L : ' . $this->getLine() . "\n";
-        error_log($texte, 3, LOGS_PATH.'/'.$this->log_file);
+    public function log()
+    {
+        $texte = '[' . date('Y-m-d H:i:s', time()) . '] ' . $_SERVER['REMOTE_ADDR'] . ' - Type d\'exeption : ' . get_class($this) . ' - Message : ' . $this->getMessage() . ' - Fichier : '
+                . $this->getFile() . ' - L : ' . $this->getLine() . "\n";
+        error_log($texte, 3, LOGS_PATH . '/' . $this->log_file);
     }
 }

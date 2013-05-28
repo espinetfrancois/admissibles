@@ -16,7 +16,7 @@ try {
     Registry::set('db', $db);
     Registry::set('parametres', new Parametres($db));
 } catch (PDOException $e) {
-    throw new Exception_Bdd("Impossible de se connecter à la base de données", Exception_Bdd::Bdd_Unreachable,$e);
+    throw new Exception_Bdd('Impossible de se connecter à la base de données', Exception_Bdd::Bdd_Unreachable,$e);
 } catch (Exception $e) {
-    throw new Exception_Bdd("Un problème est survenue lors de la tentative de connexion à la base de données", null, $e);
+    throw new Exception_Bdd('Un problème est survenue lors de la tentative de connexion à la base de données', null, $e);
 }

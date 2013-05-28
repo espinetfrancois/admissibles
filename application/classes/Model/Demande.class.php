@@ -1,6 +1,8 @@
 <?php
+
 /**
- * Classe représentant un admissible et sa demande de logement
+ * Classe représentant un admissible et sa demande de logement.
+ *
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
  *
@@ -8,95 +10,108 @@
 class Model_Demande extends Model {
 
     /**
-     * Identifiant unique
-     * @var int
+     * Identifiant unique.
+     *
+     * @var integer
      * @access protected
      */
-    protected  $id;
+    protected $id;
 
     /**
+     * Le nom.
      *
      * @var string
      * @access protected
      */
-    protected  $nom;
+    protected $nom;
 
     /**
+     * Le prénom.
      *
      * @var string
      * @access protected
      */
-    protected  $prenom;
+    protected $prenom;
 
     /**
-     * Adresse email de contact de l'admissible
+     * Adresse email de contact de l'admissible.
+     *
      * @var string
      * @access protected
      */
-    protected  $email;
+    protected $email;
 
     /**
      * M || F
+     *
      * @var string
      * @access protected
      */
-    protected  $sexe;
+    protected $sexe;
 
     /**
-     * Etablissement scolaire d'origine
+     * Etablissement scolaire d'origine.
+     *
      * @var string
      * @access protected
      */
-    protected  $prepa;
+    protected $prepa;
 
     /**
-     * Filière d'origine
+     * Filière d'origine.
+     *
      * @var string
      * @access protected
      */
-    protected  $filiere;
+    protected $filiere;
 
     /**
-     * Série d'admissibilité
-     * @var int
+     * Série d'admissibilité.
+     *
+     * @var integer
      * @access protected
      */
-    protected  $serie;
+    protected $serie;
 
     /**
-     * Sport préféré
+     * Sport préféré.
+     *
      * @var text
      * @access protected
      */
-    protected  $sport;
+    protected $sport;
 
     /**
-     * Nom d'utilisateur de l'élève polytechnicien accueillant l'admissible
+     * Nom d'utilisateur de l'élève polytechnicien accueillant l'admissible.
+     *
      * @var string
      * @access protected
      */
-    protected  $userEleve;
+    protected $userEleve;
 
     /**
-     * Statut de la demande de logement
-     * @var int
+     * Statut de la demande de logement.
+     *
+     * @var integer
      * @access protected
      */
-    protected  $status;
+    protected $status;
 
     /**
-     * Identifiant unique transmis lors des requêtes GET
+     * Identifiant unique transmis lors des requêtes GET.
+     *
      * @var string
      * @access protected
      */
-    protected  $code;
+    protected $code;
 
     /**
-     * Erreurs de remplissage des attributs
+     * Erreurs de remplissage des attributs.
+     *
      * @var array
      * @access protected
      */
-    protected  $erreurs;
+    protected $erreurs;
 
     /**
      * Constantes relatives aux erreurs possibles rencontrées lors de l'exécution de la méthode
@@ -116,83 +131,86 @@ class Model_Demande extends Model {
     const Non_Admissible = 13;
 
     /**
-     * Méthode permettant de savoir si les attributs sont valides
+     * Méthode permettant de savoir si les attributs sont valides.
+     *
      * @access public
      * @return bool
      */
-    public final  function isValid()
+    public final function isValid()
     {
-        return !(empty($this->nom) || empty($this->prenom) || empty($this->email) || empty($this->sexe) || empty($this->prepa) || empty($this->filiere) || empty($this->sport));
+        return !(empty($this->nom) || empty($this->prenom) || empty($this->email)
+                || empty($this->sexe) || empty($this->prepa) || empty($this->filiere)
+                || empty($this->sport));
     }
 
-
     /**
-     * Setter id
+     * Setter id.
+     *
      * @access public
      * @param string $id
      * @return void
      */
-    public  function setId($id)
+    public function setId($id)
     {
         $this->id = (int) $id;
     }
 
-
     /**
-     * Setter nom
+     * Setter nom.
+     *
      * @access public
      * @param string $nom
      * @return void
      */
-    public  function setNom($nom)
+    public function setNom($nom)
     {
-        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $nom)) { // lettres seulement
+        if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $nom) === false) { // lettres seulement
             $this->erreurs[] = self::Nom_Invalide;
         } else {
             $this->nom = $nom;
         }
     }
 
-
     /**
-     * Setter prenom
+     * Setter prenom.
+     *
      * @access public
      * @param string $prenom
      * @return void
      */
-    public  function setPrenom($prenom)
+    public function setPrenom($prenom)
     {
-        if (!preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $prenom)) { // lettres seulement
+        if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $prenom) === false) { // lettres seulement
             $this->erreurs[] = self::Prenom_Invalide;
         } else {
             $this->prenom = $prenom;
         }
     }
 
-
     /**
-     * Setter email
+     * Setter email.
+     *
      * @access public
      * @param string $email
      * @return void
      */
-    public  function setEmail($email)
+    public function setEmail($email)
     {
-        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email)) { // adresse email
+        if (preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email) === false) { // adresse email
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;
         }
     }
 
-
     /**
-     * Setter sexe
+     * Setter sexe.
+     *
      * @access public
      * @param string $sexe
      * @return void
      */
-    public  function setSexe($sexe)
+    public function setSexe($sexe)
     {
         if ($sexe != 'M' && $sexe != 'F') { // de la forme M ou F
             $this->erreurs[] = self::Sexe_Invalide;
@@ -201,106 +219,106 @@ class Model_Demande extends Model {
         }
     }
 
-
     /**
-     * Setter prepa
+     * Setter prepa.
+     *
      * @access public
-     * @param int $prepa
+     * @param integer $prepa
      * @return void
      */
-    public  function setPrepa($prepa)
+    public function setPrepa($prepa)
     {
-        if (!is_numeric($prepa)) { // id numérique
+        if (is_numeric($prepa) === false) { // id numérique
             $this->erreurs[] = self::Prepa_Invalide;
         } else {
             $this->prepa = $prepa;
         }
     }
 
-
     /**
-     * Setter filiere
+     * Setter filiere.
+     *
      * @access public
-     * @param int $filiere
+     * @param integer $filiere
      * @return void
      */
-    public  function setFiliere($filiere)
+    public function setFiliere($filiere)
     {
-        if (!is_numeric($filiere)) { // id numérique
+        if (is_numeric($filiere) === false) { // id numérique
             $this->erreurs[] = self::Filiere_Invalide;
         } else {
             $this->filiere = $filiere;
         }
     }
 
-
     /**
-     * Setter serie
+     * Setter serie.
+     *
      * @access public
-     * @param int $serie
+     * @param integer $serie
      * @return void
      */
-    public  function setSerie($serie)
+    public function setSerie($serie)
     {
-        if (!is_numeric($serie)) {
+        if (is_numeric($serie) === false) {
             $this->erreurs[] = self::Serie_Invalide;
         } else {
             $this->serie = $serie;
         }
     }
 
-
     /**
-     * Setter sport
+     * Setter sport.
+     *
      * @access public
      * @param text $sport
      * @return void
      */
-    public  function setSport($sport)
+    public function setSport($sport)
     {
         $this->sport = $sport;
     }
 
-
     /**
-     * Setter userEleve
+     * Setter userEleve.
+     *
      * @access public
      * @param string $user
      * @return void
      */
-    public  function setUserEleve($user)
+    public function setUserEleve($user)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) === false) { // de la forme prenom.nom
             $this->erreurs[] = self::User_Invalide;
         } else {
             $this->userEleve = $user;
         }
     }
 
-
     /**
-     * Setter status
+     * Setter status.
+     *
      * @access public
-     * @param int $status
+     * @param integer $status
      * @return void
      */
-    public  function setStatus($status)
+    public function setStatus($status)
     {
-        if (!is_numeric($status)) { // id numérique
+        if (is_numeric($status) === false) { // id numérique
             $this->erreurs[] = self::Status_Invalide;
         } else {
             $this->status = $status;
         }
     }
 
-
     /**
-     * Setter code
+     * Setter code.
+     *
      * @access public
      * @param string $code
      * @return void
      */
-    public  function setCode($code)
+    public function setCode($code)
     {
         if (strlen($code) != 32) { // id numérique
             $this->erreurs[] = self::Code_Invalide;
@@ -310,145 +328,145 @@ class Model_Demande extends Model {
 
     }
 
-
     /**
-     * Getter id
+     * Getter id.
+     *
      * @access public
      * @return int
      */
-    public  function id()
+    public function id()
     {
         return $this->id;
     }
 
-
     /**
-     * Getter nom
+     * Getter nom.
+     *
      * @access public
      * @return string
      */
-    public  function nom()
+    public function nom()
     {
         return $this->nom;
     }
 
-
     /**
-     * Getter prenom
+     * Getter prenom.
+     *
      * @access public
      * @return string
      */
-    public  function prenom()
+    public function prenom()
     {
         return $this->prenom;
     }
 
-
     /**
-     * Getter email
+     * Getter email.
+     *
      * @access public
      * @return string
      */
-    public  function email()
+    public function email()
     {
         return $this->email;
     }
 
-
     /**
-     * Getter sexe
+     * Getter sexe.
+     *
      * @access public
      * @return string
      */
-    public  function sexe()
+    public function sexe()
     {
         return $this->sexe;
     }
 
-
     /**
-     * Getter prepa
+     * Getter prepa.
+     *
      * @access public
      * @return int
      */
-    public  function prepa()
+    public function prepa()
     {
         return $this->prepa;
     }
 
-
     /**
-     * Getter filiere
+     * Getter filiere.
+     *
      * @access public
      * @return int
      */
-    public  function filiere()
+    public function filiere()
     {
         return $this->filiere;
     }
 
-
     /**
-     * Getter serie
+     * Getter serie.
+     *
      * @access public
      * @return int
      */
-    public  function serie()
+    public function serie()
     {
         return $this->serie;
     }
 
-
     /**
-     * Getter sport
+     * Getter sport.
+     *
      * @access public
      * @return text
      */
-    public  function sport()
+    public function sport()
     {
         return $this->sport;
     }
 
-
     /**
-     * Getter userEleve
+     * Getter userEleve.
+     *
      * @access public
      * @return string
      */
-    public  function userEleve()
+    public function userEleve()
     {
         return $this->userEleve;
     }
 
-
     /**
-     * Getter status
+     * Getter status.
+     *
      * @access public
      * @return int
      */
-    public  function status()
+    public function status()
     {
         return $this->status;
     }
 
-
     /**
-     * Getter code
+     * Getter code.
+     *
      * @access public
      * @return string
      */
-    public  function code()
+    public function code()
     {
         return $this->code;
     }
 
-
     /**
-     * Getter erreurs
+     * Getter erreurs.
+     *
      * @access public
      * @return array
      */
-    public  function erreurs()
+    public function erreurs()
     {
         return $this->erreurs;
     }

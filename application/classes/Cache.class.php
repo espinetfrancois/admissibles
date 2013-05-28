@@ -3,20 +3,22 @@
 /**
  * Classe de facade pour toutes les classes de mise en cache
  * Permet d'avoir un appel unifié pour tous les caches : Cache::fonction
- * @author francois.espinet
  *
+ * @author francois.espinet
  */
 class Cache
 {
 
     /**
-     * Le cache présent sur le serveur (et à défaut Registry)
+     * Le cache présent sur le serveur (et à défaut Registry).
+     *
      * @var Cache_Interface
      */
     private static $_cache = null;
 
     /**
-     * Initialisation de l'instance du cache
+     * Initialisation de l'instance du cache.
+     *
      * @author francois.espinet
      */
     public function __construct()
@@ -26,7 +28,8 @@ class Cache
 
     /**
      * Initialisation de l'instance du cache en fonction des caches installés sur le serveur.
-     * L'ordre des priorités est apc > xcache > memcache
+     * L'ordre des priorités est apc > xcache > memcache.
+     *
      * @author francois.espinet
      * @throws Exception_Cache
      */
@@ -60,7 +63,8 @@ class Cache
     }
 
     /**
-     * Récupère l'instance courante du cache en la créant si elle n'existe pas
+     * Récupère l'instance courante du cache en la créant si elle n'existe pas.
+     *
      * @author francois.espinet
      * @return Cache_Interface
      */
@@ -74,14 +78,16 @@ class Cache
 
     /**
      * Les méthodes ci-dessous sont des raccourcis évitant l'usage systematique de Cache::getInstance->fonction();
-     * Raccourcis (permettent d'éviter de getInstance()
+     * Raccourcis (permettent d'éviter de getInstance().
+     *
      * @author francois.espinet
      */
 
     /**
-     * Test si l'index à déjà été enregistré pour une valeur
+     * Test si l'index à déjà été enregistré pour une valeur.
+     *
      * @author francois.espinet
-     * @param unknown $id l'id de l'élèment à rechercher dans le cache
+     * @param mixed $id l'id de l'élèment à rechercher dans le cache
      */
     public static function test($id)
     {
@@ -89,7 +95,8 @@ class Cache
     }
 
     /**
-     * Nettoie le cache de l'application
+     * Nettoie le cache de l'application.
+     *
      * @author francois.espinet
      */
     public static function clean()
@@ -98,9 +105,10 @@ class Cache
     }
 
     /**
-     * Renvoie l'objet stocké à l'index $id, s'il n'existe pas, renvoie false
+     * Renvoie l'objet stocké à l'index $id, s'il n'existe pas, renvoie false.
+     *
      * @author francois.espinet
-     * @param unknown $id
+     * @param mixed $id l'id à regarder
      */
     public static function load($id)
     {
@@ -108,9 +116,10 @@ class Cache
     }
 
     /**
-     * Supprime l'objet $id du cache
+     * Supprime l'objet $id du cache.
+     *
      * @author francois.espinet
-     * @param unknown $id
+     * @param mixed $id l'id de l'objet à supprimmer
      */
     public static function remove($id)
     {
@@ -118,11 +127,12 @@ class Cache
     }
 
     /**
-     * Sauvegarde un nouvel objet $data dans le cache, à l'index $id
+     * Sauvegarde un nouvel objet $data dans le cache, à l'index $id.
+     *
      * @author francois.espinet
-     * @param unknown $data
-     * @param unknown $id
-     * @param unknown $tags
+     * @param mixed $data  les données à ajouter
+     * @param mixed $id    l'id ou stocker les données
+     * @param array $tags  les tags pour le stockage
      * @param boolean $specificLifetime
      */
     public static function save($data, $id, $tags = array(), $specificLifetime = false)

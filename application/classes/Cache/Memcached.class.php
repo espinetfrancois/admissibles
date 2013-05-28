@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -18,12 +19,7 @@
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Memcached.php 24593 2012-01-05 20:35:02Z matthew $
- */
-
-/**
  * @todo test
- * @author francois.espinet
- *
  */
 class Cache_Memcached extends Cache_Backend implements Cache_Interface
 {
@@ -96,7 +92,6 @@ class Cache_Memcached extends Cache_Backend implements Cache_Interface
      *
      * @param array $options associative array of options
      * @throws Zend_Cache_Exception
-     * @return void
      */
     public function __construct(array $options = array())
     {
@@ -105,7 +100,7 @@ class Cache_Memcached extends Cache_Backend implements Cache_Interface
         }
 
         if (isset($this->_options['servers'])) {
-            $value= $this->_options['servers'];
+            $value = $this->_options['servers'];
             if (isset($value['host'])) {
                 // in this case, $value seems to be a simple associative array (one server only)
                 $value = array(0 => $value); // let's transform it into a classical array of associative arrays

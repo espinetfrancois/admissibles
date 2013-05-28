@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Exceptions du routeur de l'application
+ * Exceptions du routeur de l'application.
+ *
  * @author francois.espinet
  *
  */
