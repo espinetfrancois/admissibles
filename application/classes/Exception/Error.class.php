@@ -1,9 +1,13 @@
 <?php
 
 /**
- * Décrit une erreur de php transformée en exception
- * Wrapper pour les erreurs php
+ * Décrit une erreur de php transformée en exception.
+ * Wrapper pour les erreurs php.
+ *
  * @author francois.espinet
+ * @version 1.1
+ * @deprecated
+ * @package Exception
  *
  */
 class Exception_Error extends Exception_Projet
@@ -19,7 +23,8 @@ class Exception_Error extends Exception_Projet
     protected $_errno = null;
     protected $_additionalMessage = null;
 
-    public function __construct($errno, $errstr, $errfile, $errline, $additionalMessage = null) {
+    public function __construct($errno, $errstr, $errfile, $errline, $additionalMessage = null)
+    {
         $this->file = $errfile;
         $this->message = $errstr;
         $this->line = $errline;
@@ -28,12 +33,10 @@ class Exception_Error extends Exception_Projet
         $this->_additionalMessage = $additionalMessage;
     }
 
-    public function __toString() {
-        return "Une erreur de type : ".$this->_errno." a été détectée dans le fichier : ".
-         $this->file." ligne : " .
-         $this->line.'<br/>'."\n" .
-         $this->message .
-         ($this->_additionalMessage !== null ? '' : "\n".'<br/>Information Additionnelle : "'.$this->_additionalMessage.'"');
+    public function __toString()
+    {
+        return "Une erreur de type : " . $this->_errno . " a été détectée dans le fichier : " . $this->file . " ligne : " . $this->line . '<br/>' . "\n" . $this->message
+                . ($this->_additionalMessage !== null ? '' : "\n" . '<br/>Information Additionnelle : "' . $this->_additionalMessage . '"');
     }
 
     public function get_errno()

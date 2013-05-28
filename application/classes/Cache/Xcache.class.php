@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -19,7 +20,6 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Xcache.php 24593 2012-01-05 20:35:02Z matthew $
  */
-
 class Cache_Xcache extends Cache_Backend implements Cache_Interface
 {
 
@@ -41,7 +41,6 @@ class Cache_Xcache extends Cache_Backend implements Cache_Interface
 	 *
 	 * @param  array $options associative array of options
 	 * @throws Zend_Cache_Exception
-	 * @return void
 	 */
 	public function __construct(array $options = array())
 	{

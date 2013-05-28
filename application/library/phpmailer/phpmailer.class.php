@@ -48,7 +48,7 @@ class PHPMailer
 
     /**
      * Email priority (1 = High, 3 = Normal, 5 = low).
-     * @var int
+     * @var integer
      */
     public $Priority                    = 3;
 
@@ -142,7 +142,7 @@ class PHPMailer
     /**
      * Sets word wrapping on the body of the message to a given number of
      * characters.
-     * @var int
+     * @var integer
      */
     public $WordWrap                    = 0;
 
@@ -202,7 +202,7 @@ class PHPMailer
 
     /**
      * Sets the default SMTP server port.
-     * @var int
+     * @var integer
      */
     public $Port                    = 25;
 
@@ -240,7 +240,7 @@ class PHPMailer
     /**
      * Sets the SMTP server timeout in seconds.
      * This function will not work with the win32 version.
-     * @var int
+     * @var integer
      */
     public $Timeout             = 10;
 
@@ -1099,9 +1099,9 @@ class PHPMailer
                             $len = $space_left;
                             if ($is_utf8) {
                                 $len = $this->UTF8CharBoundary($word, $len);
-                            } elseif (substr($word, $len - 1, 1) == "=") {
+                            } else if (substr($word, $len - 1, 1) == "=") {
                                 $len--;
-                            } elseif (substr($word, $len - 2, 1) == "=") {
+                            } else if (substr($word, $len - 2, 1) == "=") {
                                 $len -= 2;
                             }
                             $part = substr($word, 0, $len);
@@ -1117,9 +1117,9 @@ class PHPMailer
                         $len = $length;
                         if ($is_utf8) {
                             $len = $this->UTF8CharBoundary($word, $len);
-                        } elseif (substr($word, $len - 1, 1) == "=") {
+                        } else if (substr($word, $len - 1, 1) == "=") {
                             $len--;
-                        } elseif (substr($word, $len - 2, 1) == "=") {
+                        } else if (substr($word, $len - 2, 1) == "=") {
                             $len -= 2;
                         }
                         $part = substr($word, 0, $len);
@@ -1174,11 +1174,11 @@ class PHPMailer
                     $maxLength = ($encodedCharPos == 0) ? $maxLength :
                     $maxLength - ($lookBack - $encodedCharPos);
                     $foundSplitPos = true;
-                } elseif ($dec >= 192) { // First byte of a multi byte character
+                } else if ($dec >= 192) { // First byte of a multi byte character
                     // Reduce maxLength to split at start of character
                     $maxLength = $maxLength - ($lookBack - $encodedCharPos);
                     $foundSplitPos = true;
-                } elseif ($dec < 192) { // Middle byte of a multi byte character, look further back
+                } else if ($dec < 192) { // Middle byte of a multi byte character, look further back
                     $lookBack += 3;
                 }
             } else {
@@ -1247,7 +1247,7 @@ class PHPMailer
             } else {
                 if(count($this->to) > 0) {
                     $result .= $this->AddrAppend('To', $this->to);
-                } elseif (count($this->cc) == 0) {
+                } else if (count($this->cc) == 0) {
                     $result .= $this->HeaderLine('To', 'undisclosed-recipients:;');
                 }
             }
@@ -1462,7 +1462,7 @@ class PHPMailer
 
         if ($this->IsError()) {
             $body = '';
-        } elseif ($this->sign_key_file) {
+        } else if ($this->sign_key_file) {
             try {
                 $file = tempnam('', 'mail');
                 file_put_contents($file, $body); //TODO check this worked
@@ -1923,7 +1923,7 @@ class PHPMailer
                     } else if ( $space_conv ) {
                         $c = '=20';
                     }
-                } elseif ( ($dec == 61) || ($dec < 32 ) || ($dec > 126) ) { // always encode "\t", which is *not* required
+                } else if ( ($dec == 61) || ($dec < 32 ) || ($dec > 126) ) { // always encode "\t", which is *not* required
                     $h2 = floor($dec/16);
                     $h1 = floor($dec%16);
                     $c = $escape.$hex[$h2].$hex[$h1];
@@ -2265,7 +2265,7 @@ class PHPMailer
     {
         if (!empty($this->Hostname)) {
             $result = $this->Hostname;
-        } elseif (isset($_SERVER['SERVER_NAME'])) {
+        } else if (isset($_SERVER['SERVER_NAME'])) {
             $result = $_SERVER['SERVER_NAME'];
         } else {
             $result = 'localhost.localdomain';
@@ -2634,7 +2634,7 @@ class PHPMailer
         foreach($headers as $header) {
             if (strpos($header, 'From:') === 0) {
                 $from_header = $header;
-            } elseif (strpos($header, 'To:') === 0) {
+            } else if (strpos($header, 'To:') === 0) {
                 $to_header = $header;
             }
         }

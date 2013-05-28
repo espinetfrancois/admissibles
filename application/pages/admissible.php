@@ -26,7 +26,7 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
     if (!in_array($demande->serie(), $dispos)) {
         echo '<p>Désolé, l\'élève que vous avez choisi vient d\'être sollicité. Merci de reitérer votre recherche.</p>';
         Logs::logger(2, 'Demandes d\'admissibles simultannees sur l\'eleve '.$_POST['user']);
-    } elseif (!$demandeManager->autorisation($demande)) {
+    } else if (!$demandeManager->autorisation($demande)) {
         echo '<p>Désolé, vous avez déjà effectué une demande d\'hébergement. Merci d\'attendre la réponse de l\'élève ou d\'annuler votre demande.</p>';
         Logs::logger(2, 'Tentative de sur-demande de l\'admissible '.$demande->id());
     } else {
@@ -77,7 +77,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         try {
             $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
         } catch (Exception_Bdd $e) {
-            Registry::get('layout')->addMessage("Impossible de vérifier votre admissibilité dans la base de données.", MSG_LEVEL_ERROR);
+            Registry::get('layout')->addMessage('Impossible de vérifier votre admissibilité dans la base de données.', MSG_LEVEL_ERROR);
         }
         if ($id == -1) {
             $erreurD[] = Model_Demande::Non_Admissible;
@@ -98,7 +98,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         try {
             $eleves = $eleveManager->getFavorite($demande, 2);
         } catch (Exception_Bdd $e) {
-            throw new Exception_Page("Erreur lors de la requête en base pour trouver les élèves.", "Impossible de trouver des élèves dans la base de données.", null, $e);
+            throw new Exception_Page('Erreur lors de la requête en base pour trouver les élèves.', 'Impossible de trouver des élèves dans la base de données.', null, $e);
         }
         if (empty($eleves)) {
             echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités).<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
@@ -165,8 +165,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
     </p>
     <p id="champ-sexe" class="champ radio">
         <label for="sexe">Sexe: </label>
-        <label> Masculin <input type="radio" name="sexe" value="M"<?php if (!isset($demande) || $demande->sexe() == "M") { echo "checked='checked'"; } ?>/></label>
-        <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == "F") { echo "checked='checked'"; } ?>/></label>
+        <label> Masculin <input type="radio" name="sexe" value="M"<?php if (!isset($demande) || $demande->sexe() == 'M') { echo 'checked="checked"'; } ?>/></label>
+        <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == 'F') { echo 'checked="checked"'; } ?>/></label>
     <?php if (isset($erreurD) && in_array(Model_Demande::Sexe_Invalide, $erreurD)) echo $champInvalide; ?></p>
     <p class="champ">
         <label for="prepa">Etablissement d'origine : </label>

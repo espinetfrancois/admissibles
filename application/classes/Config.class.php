@@ -1,39 +1,45 @@
 <?php
+
 /**
- * Classe de configuration du projet
+ * Classe de configuration du projet.
  * Définit les constantes de l'application ainsi que les paramètres dans les différents fichiers ini.
  * Elle est appelée à chaque requète (dans le fichier index.php) et est necessaire au bon fonctionnement de l'application.
- * Cette classe à tout à fait sa place dans le registre
+ * Cette classe à tout à fait sa place dans le registre.
+ *
  * @author francois.espinet
  * @version 1.0
  * @todo : caching
  */
 
-class Config {
+class Config
+{
 
     /**
-     * Tableau de configuration de la base de donnée
+     * Tableau de configuration de la base de donnée.
+     *
      * @var array
      */
     protected $_dbconf = null;
 
     /**
-     * Autres paramètres
-     * @var string
+     * Autres paramètres.
+     *
+     * @var array
      * @access protected
      */
     protected $_otherparam = array();
 
     /**
-     * Paramètres de connexion à frankiz
+     * Paramètres de connexion à frankiz.
+     *
      * @var array
      */
     protected $_frankiz = array();
 
     /**
-     * Constructeur de la classe
+     * Constructeur de la classe.
+     *
      * @access public
-     * @return void
      */
     public function __construct()
     {
@@ -43,10 +49,10 @@ class Config {
         $this->loadConfig();
     }
 
-
     /**
      * Définition des constantes de l'application.
-     * La visibilité évite les doubles définitions
+     * La visibilité évite les doubles définitions.
+     *
      * @access protected
      * @return void
      */
@@ -54,24 +60,24 @@ class Config {
     {
         define('CONSTS', true);
         //define('ROOT_PATH', realpath(dirname(__FILE__) . '/../'));
-        define('CONFIG_PATH', APPLICATION_PATH.'/configs');
-        define('PUBLIC_PATH', ROOT_PATH.'/htdocs');
-        define('PAGES_PATH', APPLICATION_PATH.'/pages');
-        define('CLASS_PATH', APPLICATION_PATH.'/classes');
+        define('CONFIG_PATH', APPLICATION_PATH . '/configs');
+        define('PUBLIC_PATH', ROOT_PATH . '/htdocs');
+        define('PAGES_PATH', APPLICATION_PATH . '/pages');
+        define('CLASS_PATH', APPLICATION_PATH . '/classes');
 
         //définition des template
-        define('TEMPLATE_PATH', APPLICATION_PATH.'/template');
-        define('MENUS_PATH', TEMPLATE_PATH.'/menus');
+        define('TEMPLATE_PATH', APPLICATION_PATH . '/template');
+        define('MENUS_PATH', TEMPLATE_PATH . '/menus');
 
         //définition des logs pour les données
-        define('DATA_PATH', ROOT_PATH.'/data');
-        define('LOGS_PATH', DATA_PATH.'/logs');
+        define('DATA_PATH', ROOT_PATH . '/data');
+        define('LOGS_PATH', DATA_PATH . '/logs');
 
         define('HTTP_PUBLIC_PATH', '');
-        define('HTTP_CSS_PATH', HTTP_PUBLIC_PATH.'/css');
-        define('HTTP_JS_PATH', HTTP_PUBLIC_PATH.'/js');
-        define('HTTP_LIBRARY_PATH', HTTP_PUBLIC_PATH.'/library');
-        define('HTTP_IMAGES_PATH', HTTP_PUBLIC_PATH.'/images');
+        define('HTTP_CSS_PATH', HTTP_PUBLIC_PATH . '/css');
+        define('HTTP_JS_PATH', HTTP_PUBLIC_PATH . '/js');
+        define('HTTP_LIBRARY_PATH', HTTP_PUBLIC_PATH . '/library');
+        define('HTTP_IMAGES_PATH', HTTP_PUBLIC_PATH . '/images');
 
         //constantes d'environement
         define('APP_ENV', (getenv('APP_ENV') ? getenv('APP_ENV') : 'production'));
@@ -82,42 +88,43 @@ class Config {
         define('MSG_LEVEL_WARNING', 'warning');
     }
 
-
     /**
-     * Fonction statique pour pouvoir charger les constantes à l'extérieur de la classe
-     * S'assure que les constantes n'ont pas été chargées avant
+     * Fonction statique pour pouvoir charger les constantes à l'extérieur de la classe.
+     * S'assure que les constantes n'ont pas été chargées avant.
+     *
      * @author francois.espinet
      */
-    public static function constantes() {
+    public static function constantes()
+    {
         defined('CONSTS') || self::defineConstantes();
     }
 
-
     /**
-     * Include des libraries tierces
+     * Include des libraries tierces.
+     *
      * @access public
      * @return void
      */
-    static function addLibraries()
+    public static function addLibraries()
     {
-        require_once(LIBRARY_PATH.'/phpmailer/phpmailer.class.php');
+        require_once(LIBRARY_PATH . '/phpmailer/phpmailer.class.php');
     }
 
-
     /**
-     * Chargement du fichier de configuration (.ini)
+     * Chargement du fichier de configuration (.ini).
+     *
      * @access protected
      * @return void
      */
     protected function loadConfig()
     {
-        if (APP_ENV != 'production') {
-            $file = CONFIG_PATH.'/dev.ini';
+        if (APP_ENV !== 'production') {
+            $file = CONFIG_PATH . '/dev.ini';
         } else {
-            $file = CONFIG_PATH.'/prod.ini';
+            $file = CONFIG_PATH . '/prod.ini';
         }
         $config = parse_ini_file($file, true);
-        foreach ($config as $item=>$configitem) {
+        foreach ($config as $item => $configitem) {
             switch ($item) {
                 case 'bdd':
                     $this->initBdd($configitem);
@@ -132,16 +139,18 @@ class Config {
                     $this->initApp($configitem);
                     break;
                 default:
-                    array_merge($this->_otherparam,$configitem);
+                    array_merge($this->_otherparam, $configitem);
                     break;
             }
         }
     }
 
-
     /**
-     * Ajout et vérification de la configuration de la base de données
+     * Ajout et vérification de la configuration de la base de données.
+     *
+     * @param array $aConfig  le tableau de configuration de la bdd
      * @access protected
+     * @throws Exception
      * @return void
      */
     protected function initBdd($aConfig)
@@ -152,58 +161,64 @@ class Config {
         }
     }
 
-
     /**
-     * Initialisation de Frankiz
+     * Initialisation de Frankiz.
+     *
      * @author francois.espinet
-     * @param unknown $aConfig
+     * @param array $aConfig tableau de configuration de Frankiz
+     * @throws Exception
      */
-    protected function initFrankiz($aConfig) {
+    protected function initFrankiz($aConfig)
+    {
         $this->_frankiz = $aConfig;
         if (count($aConfig) < 3) {
-        	throw new Exception('Le fichier de configuration de Frankiz est erroné.');
+            throw new Exception('Le fichier de configuration de Frankiz est erroné.');
         }
     }
 
-
     /**
-     * Configuration de php
+     * Configuration de php.
+     *
      * @author francois.espinet
-     * @param array $aConfig
+     * @param array $aConfig le tableau de configuration de php
+     * @throws Exception
      */
-    protected function initPhp($aConfig) {
+    protected function initPhp($aConfig)
+    {
         foreach ($aConfig as $item => $value) {
             ini_set($item, $value);
         }
     }
 
     /**
-     * Configuration des constantes de l'application
+     * Configuration des constantes de l'application.
+     *
      * @author francois.espinet
-     * @param unknown $aConfig
+     * @param array $aConfig le tableau de configuration de l'application
      */
-    protected function initApp($aConfig) {
+    protected function initApp($aConfig)
+    {
         foreach ($aConfig as $item => $value) {
             define(strtoupper($item), $value);
         }
-        defined('APP_MAIL') || define('APP_MAIL', false);
-        defined('APP_CACHE') || define('APP_CACHE', false);
+        defined('APP_MAIL') === true || define('APP_MAIL', false);
+        defined('APP_CACHE') === true || define('APP_CACHE', false);
     }
 
-
     /**
-     * Lecture de paramètres facultatifs
+     * Lecture de paramètres facultatifs.
+     *
      * @access public
      * @return void
      */
-    public function get_otherparam()
+    public function getOtherParam()
     {
         return $this->_otherparam;
     }
 
-
     /**
-     * Renvoie le tableau de configuration de frankiz
+     * Renvoie le tableau de configuration de frankiz.
+     *
      * @author francois.espinet
      * @return array
      */
@@ -212,9 +227,9 @@ class Config {
         return $this->_frankiz;
     }
 
-
     /**
-     * Remplit la configuration de Frankiz
+     * Remplit la configuration de Frankiz.
+     *
      * @author francois.espinet
      * @param array $_frankiz
      */
@@ -223,47 +238,47 @@ class Config {
         $this->_frankiz = $_frankiz;
     }
 
-
     /**
-     * Renvoie l'host de la base de données
+     * Renvoie l'host de la base de données.
+     *
      * @access public
      * @return string
      */
     public function getDbhost()
     {
-    	return $this->_dbconf['host'];
+        return $this->_dbconf['host'];
     }
 
-
     /**
-     * Renvoie le login de la base de données
+     * Renvoie le login de la base de données.
+     *
      * @access public
      * @return string
      */
     public function getDblogin()
     {
-    	return $this->_dbconf['login'];
+        return $this->_dbconf['login'];
     }
 
-
     /**
-     * Renvoie la base de donnée de la base de donnée
+     * Renvoie la base de donnée de la base de donnée.
+     *
      * @access public
      * @return string
      */
     public function getDbbase()
     {
-    	return $this->_dbconf['base'];
+        return $this->_dbconf['base'];
     }
 
-
     /**
-     * Renvoie le mot de passe de la base de donnée
+     * Renvoie le mot de passe de la base de donnée.
+     *
      * @access public
      * @return string
      */
     public function getDbpass()
     {
-    	return $this->_dbconf['password'];
+        return $this->_dbconf['password'];
     }
 }

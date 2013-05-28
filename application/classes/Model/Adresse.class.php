@@ -1,74 +1,86 @@
 <?php
+
 /**
- * Classe représentant un logement recommandé pour les oraux
+ * Classe représentant un logement recommandé pour les oraux.
+ *
  * @author Nicolas GROROD <nicolas.grorod@polytechnique.edu>
  * @version 1.0
- *
+ * @package Model
  */
-class Model_Adresse extends Model {
+class Model_Adresse extends Model
+{
 
     /**
-     * Identifiant unique
-     * @var int
+     * Identifiant unique.
+     *
+     * @var integer
      * @access protected
      */
-    protected  $id;
+    protected $id;
 
     /**
+     * Le nom.
      *
      * @var string
      * @access protected
      */
-    protected  $nom;
+    protected $nom;
 
     /**
+     * L'adresse.
      *
      * @var string
      * @access protected
      */
-    protected  $adresse;
+    protected $adresse;
 
     /**
+     * Le téléphone.
      *
      * @var string
      * @access protected
      */
-    protected  $tel;
+    protected $tel;
 
     /**
+     * L'email.
      *
      * @var string
      * @access protected
      */
-    protected  $email;
+    protected $email;
 
     /**
+     * La description.
      *
      * @var string
      * @access protected
      */
-    protected  $description;
+    protected $description;
 
     /**
      * Catégorie de l'hébergement : résidence universiataire, hôtel...
+     *
      * @var string
      * @access protected
      */
-    protected  $categorie;
+    protected $categorie;
 
     /**
-     * Validation de l'hébergement par l'administrateur
-     * @var int
+     * Validation de l'hébergement par l'administrateur.
+     *
+     * @var integer
      * @access protected
      */
-    protected  $valide;
+    protected $valide;
 
     /**
-     * Erreurs de remplissage des attributs
+     * Erreurs de remplissage des attributs.
+     *
      * @var array
      * @access protected
      */
-    protected  $erreurs;
+    protected $erreurs;
 
     /**
      * Constantes relatives aux erreurs possibles rencontrées lors de l'exécution de la méthode
@@ -83,48 +95,49 @@ class Model_Adresse extends Model {
     const Valide_Invalide = 8;
 
     /**
-     * Méthode permettant de savoir si l'adresse est nouvelle
+     * Méthode permettant de savoir si l'adresse est nouvelle.
+     *
      * @access public
      * @return bool
      */
-    public  function isNew()
+    public function isNew()
     {
         return empty($this->id);
     }
 
-
     /**
-     * Méthode permettant de savoir si les attributs sont valides
+     * Méthode permettant de savoir si les attributs sont valides.
+     *
      * @access public
      * @return bool
      */
-    public final  function isValid()
+    public final function isValid()
     {
         return !(empty($this->nom) || empty($this->adresse) || empty($this->description) || empty($this->categorie));
     }
 
-
     /**
-     * Setter id
+     * Setter id.
+     *
      * @access public
      * @param string $id
      * @return void
      */
-    public  function setId($id)
+    public function setId($id)
     {
         $this->id = (int) $id;
     }
 
-
     /**
-     * Setter nom
+     * Setter nom.
+     *
      * @access public
      * @param string $nom
      * @return void
      */
-    public  function setNom($nom)
+    public function setNom($nom)
     {
-        if (empty($nom) || strlen($nom) >= 200) {
+        if (empty($nom) === true || strlen($nom) >= 200) {
             $this->erreurs[] = self::Nom_Invalide;
         } else {
             $this->nom = $nom;
@@ -132,48 +145,48 @@ class Model_Adresse extends Model {
 
     }
 
-
     /**
-     * Setter adresse
+     * Setter adresse.
+     *
      * @access public
      * @param string $adresse
      * @return void
      */
-    public  function setAdresse($adresse)
+    public function setAdresse($adresse)
     {
-        if (empty($adresse) || strlen($adresse) >= 250) {
+        if (empty($adresse) === true || strlen($adresse) >= 250) {
             $this->erreurs[] = self::Adresse_Invalide;
         } else {
             $this->adresse = $adresse;
         }
     }
 
-
     /**
-     * Setter tel
+     * Setter tel.
+     *
      * @access public
      * @param string $tel
      * @return void
      */
-    public  function setTel($tel)
+    public function setTel($tel)
     {
-        if (!preg_match('#^0[1-8]([-. ]?[0-9]{2}){4}$#',$tel) && !empty($tel)) { // n° de téléphone avec ou sans séparateur si non vide
+        if (!preg_match('#^0[1-8]([-. ]?[0-9]{2}){4}$#', $tel) && !empty($tel)) { // n° de téléphone avec ou sans séparateur si non vide
             $this->erreurs[] = self::Tel_Invalide;
         } else {
             $this->tel = $tel;
         }
     }
 
-
     /**
-     * Setter email
+     * Setter email.
+     *
      * @access public
      * @param string $email
      * @return void
      */
-    public  function setEmail($email)
+    public function setEmail($email)
     {
-        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#',$email) && !empty($email)) { // adresse email si non vide
+        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email) && empty($email) !== true) { // adresse email si non vide
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;
@@ -181,16 +194,16 @@ class Model_Adresse extends Model {
 
     }
 
-
     /**
-     * Setter description
+     * Setter description.
+     *
      * @access public
      * @param string $description
      * @return void
      */
-    public  function setDescription($description)
+    public function setDescription($description)
     {
-        if (empty($description) || strlen($description) >= 250) {
+        if (empty($description) === true || strlen($description) >= 250) {
             $this->erreurs[] = self::Description_Invalide;
         } else {
             $this->description = $description;
@@ -198,14 +211,14 @@ class Model_Adresse extends Model {
 
     }
 
-
     /**
-     * Setter categorie
+     * Setter categorie.
+     *
      * @access public
      * @param string $categorie
      * @return void
      */
-    public  function setCategorie($categorie)
+    public function setCategorie($categorie)
     {
         if (!is_numeric($categorie)) { // id numérique
             $this->erreurs[] = self::Categorie_Invalide;
@@ -214,14 +227,14 @@ class Model_Adresse extends Model {
         }
     }
 
-
     /**
-     * Setter valide
+     * Setter valide.
+     *
      * @access public
-     * @param int $valide
+     * @param integer $valide
      * @return void
      */
-    public  function setValide($valide)
+    public function setValide($valide)
     {
         if ($valide != 0 && $valide != 1) { // O ou 1
             $this->erreurs[] = self::Valide_Invalide;
@@ -230,111 +243,112 @@ class Model_Adresse extends Model {
         }
     }
 
-
     /**
-     * Setter erreurs null
+     * Setter erreurs null.
+     *
      * @access public
      * @return void
      */
-    public  function setErreurs()
+    public function setErreurs()
     {
         $this->erreurs = array();
     }
 
     /**
-     * Getter id
+     * Getter id.
+     *
      * @access public
      * @return int
      */
-    public  function id()
+    public function id()
     {
         return $this->id;
     }
 
-
     /**
-     * Getter nom
+     * Getter nom.
+     *
      * @access public
      * @return string
      */
-    public  function nom()
+    public function nom()
     {
         return $this->nom;
     }
 
-
     /**
-     * Getter adresse
+     * Getter adresse.
+     *
      * @access public
      * @return string
      */
-    public  function adresse()
+    public function adresse()
     {
         return $this->adresse;
     }
 
-
     /**
-     * Getter tel
+     * Getter tel.
+     *
      * @access public
      * @return string
      */
-    public  function tel()
+    public function tel()
     {
         return $this->tel;
     }
 
-
     /**
-     * Getter email
+     * Getter email.
+     *
      * @access public
      * @return string
      */
-    public  function email()
+    public function email()
     {
         return $this->email;
     }
 
-
     /**
-     * Getter description
+     * Getter description.
+     *
      * @access public
      * @return string
      */
-    public  function description()
+    public function description()
     {
         return $this->description;
     }
 
-
     /**
-     * Getter valide
+     * Getter valide.
+     *
      * @access public
      * @return int
      */
-    public  function valide()
+    public function valide()
     {
         return $this->valide;
     }
 
-
     /**
-     * Getter categorie
+     * Getter categorie.
+     *
      * @access public
      * @return string
      */
-    public  function categorie()
+    public function categorie()
     {
         return $this->categorie;
     }
 
-
     /**
-     * Getter erreurs
+     * Getter erreurs.
+     *
      * @access public
      * @return array
      */
-    public  function erreurs()
+    public function erreurs()
     {
         return $this->erreurs;
     }

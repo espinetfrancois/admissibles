@@ -1,10 +1,12 @@
 <?php
+
 /**
- * Class pour l'envoi de mail administrateur fonctionnelle
- * Elle sert à prévenir les administrateurs d'un problème de fonctionnement métier de l'application
+ * Classe pour l'envoi de mail administrateur fonctionnelle.
+ * Elle sert à prévenir les administrateurs d'un problème de fonctionnement métier de l'application.
+ *
  * @author francois.espinet
  * @version 1.0
- *
+ * @package Mail
  */
 class Mail_AdminFonc extends Mail {
 
@@ -12,18 +14,21 @@ class Mail_AdminFonc extends Mail {
     const X_Action_NvDemande = 'nvdemande';
 
     /**
-     * Nom
+     * Nom.
+     *
      * @var string
      */
     public $nom;
 
     /**
-     * Prenom
+     * Prenom.
+     *
      * @var string
      */
     public $prenom;
 
-    protected function psend() {
+    protected function psend()
+    {
     	try {
     		parent::psend();
     	} catch (Exception_Mail $e) {

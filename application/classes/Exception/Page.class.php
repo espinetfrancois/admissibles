@@ -1,15 +1,18 @@
 <?php
 
 /**
- * Exception lancé dans les pages
- * @author francois.espinet
+ * Exception lancé dans les pages.
  *
+ * @author francois.espinet
+ * @version 1.1
+ * @package Exception
  */
 class Exception_Page extends Exception_Projet
 {
+
     const FATAL_ERROR = 1;
-    const ERROR       = 2;
-    const WARNING     = 4;
+    const ERROR = 2;
+    const WARNING = 4;
 
     /**
      * Le message user friendly
@@ -25,23 +28,24 @@ class Exception_Page extends Exception_Projet
      * @param long $code
      * @param Exception $previous
      */
-    public function __construct($message, $userMessage, $code = null, $previous = null) {
+    public function __construct($message, $userMessage, $code = null, $previous = null)
+    {
         parent::__construct($message, $code, $previous);
         $this->userMessage = $userMessage;
     }
 
-
     /**
-     * Retourne une message lisible et compréhensible par l'utilisateur
+     * Retourne une message lisible et compréhensible par l'utilisateur.
+     *
      * @author francois.espinet
      * @return string
      */
-    public function getUserMessage() {
+    public function getUserMessage()
+    {
         if ($this->userMessage === null)
             return $this->getMessage();
 
         return $this->userMessage;
     }
-
 
 }

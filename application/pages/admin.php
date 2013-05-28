@@ -11,8 +11,8 @@ $parametres = Registry::get('parametres');
 $db = Registry::get('db');
 
 // Identification
-if (!isset($_SESSION['eleve']) && $_SESSION["administrateur"] !== true) {
-    frankiz_do_auth("/administration/gestion");
+if (!isset($_SESSION['eleve']) && $_SESSION['administrateur'] !== true) {
+    frankiz_do_auth('/administration/gestion');
     return;
 }
 //identification ok, affichage de l'interface
@@ -27,20 +27,21 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
             echo '<h3>Etablissements de provenance des élèves</h3>';
             echo '<p>Les élèves gardent la possibilité d\'entrer une autre valeur que celles proposées ci-dessous.</p>';
             $form = '<input type="text" name="ville" value="VILLE" size="10" maxlength="50"/> - <input type="text" name="nom" value="Nom de l\'établissement" size="30" maxlength="50"/>';
-            break;
+        break;
 
         case Parametres::Filiere:
             echo '<span id="page_id">44</span>';
             echo '<h3>Filières d\'entrée des élèves</h3>';
             $form = '<input type="text" name="nom" maxlength="50"/>';
-            break;
+        break;
 
         default:
             echo '<span id="page_id">4</span>';
             echo '<h3>Erreur de paramétrage...</h3>';
             //             Logs::logger(2, 'Corruption des parametres admin.php::GET type');
             throw new Exception_Page('Corruption des parametres admin.php::GET type', "L'url demandée n'est pas valide.", Exception_Page::WARNING);
-            break;
+        break;
+
     }
 
     // Suppression d'un élément de liste
@@ -57,7 +58,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
                 Registry::get('layout')->addMessage('Élément supprimé avec succés.', MSG_LEVEL_OK);
                 Logs::logger(1, 'Administrateur : Suppression d\'un element de liste');
             } catch (Exception_Bdd $e) {
-                Registry::get("layout")->addMessage('Impossible de supprimer cet élément.', MSG_LEVEL_ERROR);
+                Registry::get('layout')->addMessage('Impossible de supprimer cet élément.', MSG_LEVEL_ERROR);
             }
         } else {
             Registry::get('layout')->addMessage('Vous ne pouvez supprimer cet élément tant qu\'il est utilisé dans le profil d\'un élève ou d\'un admissible', MSG_LEVEL_WARNING);
@@ -72,7 +73,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
             try {
                 $parametres->addToList($_GET['type'], array('nom' => $_POST['nom'], 'commune' => $_POST['ville']));
                 Logs::logger(1, 'Administrateur : Ajout d\'un element a une liste');
-                Registry::get('layout')->addMessage("Lycée ajouté avec succés", MSG_LEVEL_OK);
+                Registry::get('layout')->addMessage('Lycée ajouté avec succés', MSG_LEVEL_OK);
             } catch (Exception_Bdd $e) {
                 Registry::get('layout')->addMessage("Impossible d'ajouter ce lycée dans la base de donnée", MSG_LEVEL_ERROR);
             }
@@ -80,7 +81,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
             Registry::get('layout')->addMessage('Erreur lors de l\'ajout d\'un nouvel élément : l\'élément est invalide', MSG_LEVEL_WARNING);
             Logs::logger(2, 'Administrateur : Erreur dans le remplissage du formulaire d\'ajout d\'un element a une liste');
         }
-    } elseif (isset($_POST['nom'])) { // Ajout d'un élément de liste (autre)
+    } else if (isset($_POST['nom'])) { // Ajout d'un élément de liste (autre)
         //vérification du post
         if (!empty($_POST['nom']) && strlen($_POST['nom']) <= 50) {
             try {
@@ -109,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'param' && isset($_GET['type'])
     echo '<tbody>';
     foreach ($liste as $res) {
         if ($_GET['type'] == Parametres::Etablissement) {
-            $res['nom'] = $res['ville']." - ".$res['nom'];
+            $res['nom'] = $res['ville'].' - '.$res['nom'];
         }
         echo '<tr>';
             echo '<td>'.$res['nom'].'</td><td><a class="action" href="/administration/gestion?action=param&type='.$_GET['type'].'&suppr='.$res['id'].'">Supprimer</a></td>';
@@ -138,7 +139,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'series') {
             try {
                 $parametres->deleteFromList(Parametres::Serie, $_GET['suppr']);
                 Logs::logger(1, 'Administrateur : Suppression d\'une serie');
-                Registry::get('layout')->addMessage("Liste des admissibles supprimée avec succés.", MSG_LEVEL_OK);
+                Registry::get('layout')->addMessage('Liste des admissibles supprimée avec succés.', MSG_LEVEL_OK);
             } catch (Exception_Bdd $e) {
                 Registry::get('layout')->addMessage("Erreur lors de la suppression de la liste d'admissibilité sélectionnée.", MSG_LEVEL_ERROR);
             }
@@ -520,7 +521,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
             echo '<option value="'.$value['id'].'" '.$selected.'>'.$value['nom'].'</option>';
         }
 
-        if (isset($adresse) && $adresse->valide() == "1") {
+        if (isset($adresse) && $adresse->valide() == '1') {
             $checked = 'checked';
         } else {
             $checked = '';

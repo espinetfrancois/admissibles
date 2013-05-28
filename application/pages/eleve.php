@@ -15,7 +15,7 @@ $parametres = Registry::get('parametres');
 
 // Identification
 if (!isset($_SESSION['eleve'])) {
-    frankiz_do_auth("/x/donnees-personnelles");
+    frankiz_do_auth('/x/donnees-personnelles');
     return;
 }
 
@@ -39,9 +39,9 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['sexeAdm'
                 $eleveManager->update($_SESSION['eleve']);
             }
             Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
-            Registry::get('layout')->addMessage("Vous vous êtes enregistrés avec succés.", MSG_LEVEL_OK);
+            Registry::get('layout')->addMessage('Vous vous êtes enregistrés avec succés.', MSG_LEVEL_OK);
         } catch (Exception_Bdd $e) {
-        	Registry::get('layout')->addMessage("Impossible de vous ajouter dans la base de données.", MSG_LEVEL_ERROR);
+        	Registry::get('layout')->addMessage('Impossible de vous ajouter dans la base de données.', MSG_LEVEL_ERROR);
         }
     } else {
         $erreurs = $_SESSION['eleve']->erreurs();
@@ -50,7 +50,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['sexeAdm'
 }
 
 // Modification des disponibilités d'acceuil
-if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1") {
+if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == '1') {
     $series = $parametres->getList(Parametres::Serie);
     $dispo = array();
     try {
@@ -63,9 +63,9 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
                 }
             }
         }
-        Registry::get('layout')->addMessage("Vos disponibilités ont été mises à jour avec succés.", MSG_LEVEL_OK);
+        Registry::get('layout')->addMessage('Vos disponibilités ont été mises à jour avec succés.', MSG_LEVEL_OK);
     } catch (Exception_Bdd $e) {
-    	Registry::get('layout')->addMessage("Impossible de mettre à jour vos disponibilités.", MSG_LEVEL_ERROR);
+    	Registry::get('layout')->addMessage('Impossible de mettre à jour vos disponibilités.', MSG_LEVEL_ERROR);
     }
     Logs::logger(1, 'Modification des disponibilites eleve (user : '.$_SESSION['eleve']->user().')');
 }
@@ -74,7 +74,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == "1
 if (isset($_POST['accept']) && !empty($_POST['accept'])) {
     try {
         $demande = $demandeManager->getUnique($_POST['accept']);
-        $demande->setCode($demandeManager->updateStatus($_POST['accept'], "2"));
+        $demande->setCode($demandeManager->updateStatus($_POST['accept'], '2'));
         Registry::get('layout')->addMessage('Votre acceptation à bien été confirmée', MSG_LEVEL_OK);
         try {
         	// envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
@@ -82,7 +82,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
         	$elevem = new Manager_Eleve(Registry::get('db'));
         	$eleve = $elevem->getUnique($demande->userEleve());
         	$mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
-        	$mail->demandeConfirmee($eleve->email(), "/admissible/annulation-demande?code=".$demande->code(), $demande->userEleve());
+        	$mail->demandeConfirmee($eleve->email(), '/admissible/annulation-demande?code='.$demande->code(), $demande->userEleve());
 
         	Logs::logger(1, 'Acceptation d\'une demande de logement (user : '.$_SESSION['eleve']->user().')');
         	Registry::get('layout')->addMessage('Un mail à été envoyé à l\'admissible, son adresse figure dans votre espace personnel.', MSG_LEVEL_OK);
@@ -90,7 +90,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
         	Registry::get('layout')->addMessage("Envoi du mail à l'admissible impossible. Contactez manuellement : ".$demande->email(), MSG_LEVEL_ERROR);
         }
     } catch (Exception_Bdd $e) {
-        Registry::get('layout')->addMessage("Impossible de mettre à jour le statut de la demande", MSG_LEVEL_ERROR);
+        Registry::get('layout')->addMessage('Impossible de mettre à jour le statut de la demande', MSG_LEVEL_ERROR);
     }
 }
 
@@ -102,7 +102,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
                                  'email' => $_POST['adr_email'],
                                  'description' => $_POST['adr_description'],
                                  'categorie' => $_POST['adr_categorie'],
-                                 'valide' => "0"));
+                                 'valide' => '0'));
     if ($adresse->isValid()) {
         try {
             $adresseManager->save($adresse);
@@ -110,7 +110,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['adr_nom'])) {
             Registry::get('layout')->addMessage('Votre adresse a été ajoutée à la base de donnée. Elle sera affichée après validation par les administrateurs.',MSG_LEVEL_OK);
             Logs::logger(1, 'Proposition d\'une adresse (user : '.$_SESSION['eleve']->user().')');
         } catch (Exception_Bdd $e) {
-            Registry::get('layout')->addMessage("Impossible de sauvegarder votre adresse en base de donnée", MSG_LEVEL_ERROR);
+            Registry::get('layout')->addMessage('Impossible de sauvegarder votre adresse en base de donnée', MSG_LEVEL_ERROR);
         }
     } else {
         $erreurAjoutAdresse = $adresse->erreurs();
@@ -142,17 +142,17 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
         <label for="sexe">Sexe: </label>
         <label> Masculin <input type="radio" name="sexe" value="M"
         <?php
-        if ($_SESSION['eleve']->sexe() == "M" || $_SESSION['eleve']->sexe() == "")
+        if ($_SESSION['eleve']->sexe() == 'M' || $_SESSION['eleve']->sexe() == '')
             echo 'checked="checked"';
-        echo "/>";
+        echo '/>';
         ?>
         </label> <label>Féminin<input type="radio" name="sexe" value="F"
         <?php
-        if ($_SESSION['eleve']->sexe() == "F")
+        if ($_SESSION['eleve']->sexe() == 'F')
             echo 'checked="checked"';
         echo '/>';
         if (isset($erreurs) && in_array(Model_Eleve::Sexe_Invalide, $erreurs))
-            echo '<span style="color:red;">Merci de renseigner ce champ</span>';
+            echo $champInvalide;
     ?>
         </label>
     </p>
@@ -160,11 +160,11 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
         <label for="sexeAdm">J'accepte de loger un admissible du sexe opposé s'il me demande: </label>
 		<select name="sexeAdm">
 			<option value="1"<?php
-        		if ($_SESSION['eleve']->sexeAdm() == "1" || $_SESSION['eleve']->sexeAdm() == "")
+        		if ($_SESSION['eleve']->sexeAdm() == '1' || $_SESSION['eleve']->sexeAdm() == '')
 					echo 'selected';
        		?>>Oui</option>
 			<option value="0"<?php
-        		if ($_SESSION['eleve']->sexeAdm() == "0")
+        		if ($_SESSION['eleve']->sexeAdm() == '0')
 					echo 'selected';
        		?>>Non</option>
 		</select>
@@ -220,7 +220,7 @@ try {
     $series = $parametres->getList(Parametres::Serie);
     $dispos = $eleveManager->getDispo($_SESSION['eleve']->user());
 } catch (Exception_Bdd $e) {
-    Registry::get('layout')->addMessage("Impossible de récupérer vos disponibilités ou la liste des séries.", MSG_LEVEL_ERROR);
+    Registry::get('layout')->addMessage('Impossible de récupérer vos disponibilités ou la liste des séries.', MSG_LEVEL_ERROR);
     $series = array();
     $dispos = array();
 }
@@ -298,25 +298,30 @@ if (empty($demandes)) {
           </tr></thead><tbody>';
     foreach ($demandes as $demande) {
         switch ($demande->status()) {
-        case 0:
-            $status_libele = 'En cours de validation par l\'admissible';
-            $action = 'Merci d\'attendre que l\'admissible ait vérifié son adresse email. Vous ne recevrez pas d\'autre demande que celle-ci pour cette série.';
+            case 0:
+                $status_libele = 'En cours de validation par l\'admissible';
+                $action = 'Merci d\'attendre que l\'admissible ait vérifié son adresse email. Vous ne recevrez pas d\'autre demande que celle-ci pour cette série.';
             break;
-        case 1:
-            $status_libele = 'En attente d\'acceptation';
-            $action = '<form class="inline" action="/x/espace-personnel" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
+
+            case 1:
+                $status_libele = 'En attente d\'acceptation';
+                $action = '<form class="inline" action="/x/espace-personnel" method="post"><input type="hidden" name="accept" value="'.$demande->code().'"><input type="submit" value="Accepter la demande"/></form>';
             break;
-        case 2:
-            $status_libele = 'Validée';
-            $action = 'Prendre contact avec l\'admissible pour définir les modalités de son arrivée : '.$demande->email();
+
+            case 2:
+                $status_libele = 'Validée';
+                $action = 'Prendre contact avec l\'admissible pour définir les modalités de son arrivée : '.$demande->email();
             break;
-        case 3:
-            $status_libele = 'Annulée';
-            $action = 'Vous pouvez recevoir une autre demande pour cette série';
+
+            case 3:
+                $status_libele = 'Annulée';
+                $action = 'Vous pouvez recevoir une autre demande pour cette série';
             break;
-        default:
-            throw new Exception_Page('Corruption des parametres. eleve.php::statut', 'Le statut demandé est inconnu');
+
+            default:
+                throw new Exception_Page('Corruption des parametres. eleve.php::statut', 'Le statut demandé est inconnu');
             break;
+
         }
 
         echo '<tr>

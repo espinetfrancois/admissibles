@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Class d'apatation du registre à un cache
- * Dans le cas ou aucun cache n'est disponible sur le serveur, on utilise le registre comme classe
+ * Classe d'apatation du registre à un cache.
+ * Dans le cas ou aucun cache n'est disponible sur le serveur, on utilise le registre comme classe.
+ *
  * @author francois.espinet
  *
  */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -19,7 +20,6 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id: Apc.php 24593 2012-01-05 20:35:02Z matthew $
  */
-
 class Cache_Apc extends Cache_Backend implements Cache_Interface
 {
 
@@ -28,7 +28,6 @@ class Cache_Apc extends Cache_Backend implements Cache_Interface
      *
      * @param  array $options associative array of options
      * @throws Zend_Cache_Exception
-     * @return void
      */
     public function __construct(array $options = array())
     {
@@ -132,8 +131,8 @@ class Cache_Apc extends Cache_Backend implements Cache_Interface
     public function getFillingPercentage()
     {
         $mem = apc_sma_info(true);
-        $memSize    = $mem['num_seg'] * $mem['seg_size'];
-        $memAvailable= $mem['avail_mem'];
+        $memSize = $mem['num_seg'] * $mem['seg_size'];
+        $memAvailable = $mem['avail_mem'];
         $memUsed = $memSize - $memAvailable;
         if ($memSize == 0) {
             Zend_Cache::throwException('can\'t get apc memory size');
