@@ -139,7 +139,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
     <p>Merci de renseigner les informations qui permettront aux admissibles de vous identifier :</p>
     <form action="/x/espace-personnel" method="post">
     <p id="champ-sexe" class="champ radio">
-        <label for="sexe">Sexe: </label>
+        <label for="sexe">Genre: </label>
         <label> Masculin <input type="radio" name="sexe" value="M"
         <?php
         if ($_SESSION['eleve']->sexe() == 'M' || $_SESSION['eleve']->sexe() == '')
@@ -289,7 +289,7 @@ if (empty($demandes)) {
     echo '<thead><tr>
               <th>Nom</th>
               <th>Prérom</th>
-              <th>Sexe</th>
+              <th>Genre</th>
               <th>Etablissement</th>
               <th>Filière</th>
               <th>Série</th>
