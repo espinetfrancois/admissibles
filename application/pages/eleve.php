@@ -208,8 +208,10 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
             </select>
         <?php if (isset($erreurs) && in_array(Model_Eleve::Filiere_Invalide, $erreurs)) echo $champInvalide; ?>
     </p>
+    <p class="mentions-legales champ"><a href="/mentions-legales" target="_blank">Consultez les mentions légales</a></p>
     <br/>
     <input type="submit" value="Modifier mes informations personnelles"/>
+
     </form>
     <?php
     return;

@@ -122,3 +122,16 @@ form .error {
 	color 		: red !important;
 	border		: 1.3px solid red !important;
 }
+
+/* Mentions légales */
+
+form .mentions-legales {
+	text-align : center;
+	width : 100%;
+	border : 1px solid red;
+}
+
+form .mentions-legales a {
+	width : 100%;
+	display : block;
+}

@@ -226,6 +226,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         </select>
         <?php if (isset($erreurD) && in_array(Model_Demande::Sport_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
+    <p class="mentions-legales champ"><a href="/mentions-legales" target="_blank">Consultez les mentions légales</a></p>
     <br/>
     <input type="submit" value="Rechercher un logement"/>
 
