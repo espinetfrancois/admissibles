@@ -108,7 +108,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         //on affiche les élève disponible
         echo '<p>Voici les élèves qui te correspondent le mieux pour t\'héberger :</p>';
         echo '<table border=1 cellspacing=0>';
-        echo '<thead><tr><th>Nom d\'utilisateur</th><th>Sexe</th>
+        echo '<thead><tr><th>Nom d\'utilisateur</th><th>Genre</th>
                          <th>Etablissement d\'origine</th>
                          <th>Filière</th><th>Section sportive</th>
                          <th>Contact</th></tr></thead>';
@@ -164,7 +164,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         ?>
     </p>
     <p id="champ-sexe" class="champ radio">
-        <label for="sexe">Sexe: </label>
+        <label for="sexe">Genre: </label>
         <label> Masculin <input type="radio" name="sexe" value="M"<?php if (!isset($demande) || $demande->sexe() == 'M') { echo 'checked="checked"'; } ?>/></label>
         <label>Féminin<input type="radio" name="sexe" value="F"<?php if (isset($demande) && $demande->sexe() == 'F') { echo 'checked="checked"'; } ?>/></label>
     <?php if (isset($erreurD) && in_array(Model_Demande::Sexe_Invalide, $erreurD)) echo $champInvalide; ?></p>
@@ -226,6 +226,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         </select>
         <?php if (isset($erreurD) && in_array(Model_Demande::Sport_Invalide, $erreurD)) echo $champInvalide; ?>
     </p>
+    <p class="mentions-legales champ"><a href="/mentions-legales" target="_blank">Consultez les mentions légales</a></p>
     <br/>
     <input type="submit" value="Rechercher un logement"/>
 

@@ -86,6 +86,7 @@ class Config
         define('MSG_LEVEL_ERROR', 'error');
         define('MSG_LEVEL_OK', 'ok');
         define('MSG_LEVEL_WARNING', 'warning');
+
     }
 
     /**

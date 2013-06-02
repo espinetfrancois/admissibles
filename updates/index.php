@@ -21,6 +21,7 @@ try {
 if (isset($_POST['pull']) && $_POST['pull'] == 1) {
     //on essaye de puller
     try {
+        echo '<p><pre>'.$repo->git('fetch').'</pre></p>';
         echo '<p><pre>'.$repo->git('pull --rebase origin production').'</pre></p>';
     } catch (GitRuntimeException $e) {
         echo "<br/><p>Erreur lors du pull ".$e->getMessage().'</p><br/><pre>'.$e->getTraceAsString().'</pre>';
