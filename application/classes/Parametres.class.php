@@ -145,19 +145,19 @@ class Parametres extends Manager
             case self::Etablissement:
                 $valeurs = 'NOM = :nom, COMMUNE = :commune';
                 $table = 'ref_etablissements';
-                $array = array('nom' => $this->_escape($donnees['nom']), 'commune' => $this->_escape($donnees['commune']));
+                $array = array('nom' => $this->escape($donnees['nom']), 'commune' => $this->escape($donnees['commune']));
                 break;
 
             case self::Filiere:
                 $valeurs = 'NOM = :nom';
                 $table = 'ref_filieres';
-                $array = array('nom' => $this->_escape($donnees['nom']));
+                $array = array('nom' => $this->escape($donnees['nom']));
                 break;
 
             case self::Serie:
                 $valeurs = 'INTITULE = :intitule, DATE_DEBUT = :date_debut, DATE_FIN = :date_fin, OUVERTURE = :ouverture, FERMETURE = :fermeture';
                 $table = 'series';
-                $array = array('intitule' => $this->_escape($donnees['intitule']), 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'],
+                $array = array('intitule' => $this->escape($donnees['intitule']), 'date_debut' => $donnees['date_debut'], 'date_fin' => $donnees['date_fin'], 'ouverture' => $donnees['ouverture'],
                         'fermeture' => $donnees['fermeture']
                 );
                 break;
