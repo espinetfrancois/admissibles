@@ -126,3 +126,8 @@ a.action, a.action:visited {
 	padding-left	: 1em;
 	margin-left		: 1em;
 }
+
+p.important {
+	border : 1px solid #DC0034;
+	padding : 3px;
+}

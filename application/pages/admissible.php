@@ -240,9 +240,14 @@ if (isset($success) && $success == 1) {
 }
 //page par défaut
 ?>
-
 <h3>Détail du fonctionnement</h3>
-
+<p class="emph">Ce service d'hébergement permet seulement de vous mettre en
+    relation avec un élève pouvant vous accueillir. En aucun cas l'École Polytechnique
+    ne pourrait être tenue responsable si la qualité de l'accueil, du logement ou du sommeil
+    vous dérangeait pendant vos oraux. Bien que l'élève s'engage à vous accueillir lors de son
+    inscription sur le site, l'École ne garantit pas qu'il le fera effectivement. Enfin, l'hébergement
+    est fourni à titre gracieux par les élèves de l'École, aucune rétribution financière ne pourra vous
+    être demandée pour le logement.</p>
 <p>Vous pouvez vous inscrire dès la sortie des listes
     d'admissibilités pour votre série et jusqu'à la veille du début des
     épreuves orales minuit.</p>
@@ -254,7 +259,7 @@ if (isset($success) && $success == 1) {
     convient le plus. Ensuite :</p>
 <ul>
     <li>Vous recevrez ensuite un email de confirmation. Et votre
-        demande sera transmise à l'élève que vous aurez choisit.</li>
+        demande sera transmise à l'élève que vous aurez choisi.</li>
     <li>Vous recevrez ensuite un email lorsque l'élève polytechnicien
         aura accepté votre demande, et vous pourrez alors contacter la
         personne correspondante pour arranger les modalités de votre séjour.</li>
@@ -265,5 +270,7 @@ if (isset($success) && $success == 1) {
     votre première demande et remplissez-en une autre...</p>
 <p>Pour commencer le processus, cliquez
 <a href='/admissible/inscription?action=demande'>ici</a>.</p>
+
+<p>Remarque : un sport préféré vous sera demandé, il s'agit juste de vous proposer des élèves avec qui vous pourriez avoir plus d'affinités.</p>
 <!-- <span id="page_id">11</span> -->
 <!-- <span id="page_id">12</span> -->

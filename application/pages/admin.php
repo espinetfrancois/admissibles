@@ -596,6 +596,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
         // Gestion des adresses à valider
         echo '<h4>Adresses non affichées (proposées par les élèves)</h4>';
         echo '<p>Pour valider une annonce, cliquez sur Modifier et cocher la case correspondannte</p>';
+        echo '<p>Avant de valider une annonce, merci de vérifier le caractère non-commercial de cette dernière.</p>';
         try {
             $adressesValides = $adresseManager->getListAffiche(0);
         } catch (Exception_Bdd $e) {

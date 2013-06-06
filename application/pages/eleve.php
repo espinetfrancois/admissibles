@@ -38,14 +38,14 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['sexeAdm'
             } else {
                 $eleveManager->update($_SESSION['eleve']);
             }
-            Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
-            Registry::get('layout')->addMessage('Vous vous êtes enregistrés avec succés.', MSG_LEVEL_OK);
+            Logs::logger(1, 'Modification des informations personnelles élève (user : '.$_SESSION['eleve']->user().')');
+            Registry::get('layout')->addMessage('Vous vous êtes enregistré avec succés.', MSG_LEVEL_OK);
         } catch (Exception_Bdd $e) {
         	Registry::get('layout')->addMessage('Impossible de vous ajouter dans la base de données.', MSG_LEVEL_ERROR);
         }
     } else {
         $erreurs = $_SESSION['eleve']->erreurs();
-        Logs::logger(2, 'Erreur de remplissage du formulaire informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
+        Logs::logger(2, 'Erreur de remplissage du formulaire informations personnelles élève (user : '.$_SESSION['eleve']->user().')');
     }
 }
 
@@ -67,7 +67,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == '1
     } catch (Exception_Bdd $e) {
     	Registry::get('layout')->addMessage('Impossible de mettre à jour vos disponibilités.', MSG_LEVEL_ERROR);
     }
-    Logs::logger(1, 'Modification des disponibilites eleve (user : '.$_SESSION['eleve']->user().')');
+    Logs::logger(1, 'Modification des disponibilites élève (user : '.$_SESSION['eleve']->user().')');
 }
 
 // Acceptation d'une demande de logement
@@ -75,7 +75,7 @@ if (isset($_POST['accept']) && !empty($_POST['accept'])) {
     try {
         $demande = $demandeManager->getUnique($_POST['accept']);
         $demande->setCode($demandeManager->updateStatus($_POST['accept'], '2'));
-        Registry::get('layout')->addMessage('Votre acceptation à bien été confirmée', MSG_LEVEL_OK);
+        Registry::get('layout')->addMessage('L\'acceptation de la demande à bien été enregistrée', MSG_LEVEL_OK);
         try {
         	// envoi d'un mail de confirmation à l'admissible contenant un dernier lien d'annulation
         	//préparation de l'envoi du mail : récupération des informations de l'X
@@ -131,7 +131,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
     } catch (Exception_Bdd $e) {
         $prepas  = array();
         $filieres = array();
-        Registry::get('layout')->addMessage('Impossible de récupérer la liste des établissement ou des filières.', MSG_LEVEL_ERROR);
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des établissements ou des filières.', MSG_LEVEL_ERROR);
     }
     $champInvalide = '<span class="error">Merci de renseigner ce champ</span>'
     ?>
@@ -157,7 +157,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
         </label>
     </p>
 	<p id="champ-sexeAdm" class="champ radio">
-        <label for="sexeAdm">J'accepte de loger un admissible du sexe opposé s'il me demande: </label>
+        <label for="sexeAdm">J'accepte de loger un admissible du sexe opposé s'il me demande : </label>
 		<select name="sexeAdm">
 			<option value="1"<?php
         		if ($_SESSION['eleve']->sexeAdm() == '1' || $_SESSION['eleve']->sexeAdm() == '')
@@ -237,7 +237,10 @@ if (!empty($series)) {
     <h3>Gestion de vos disponibilités</h3>
     <p>Cochez ci-dessous les semaines pour lesquelles vous êtes disposés à accueillir un admissible.</p>
     <p>Vous pourrez modifier vos choix jusqu'à la publication des listes d'admissibilité de chaque série.</p>
-    <p>Dès lors, vous serez tenus d'héberger tout admissible vous contactant via cette interface : la validation de ce formulaire tient lieu d'engagement vis à vis de l'admissible qui fera sa demande.</p>
+    <p>Dès lors, vous serez tenus d'héberger tout admissible vous contactant via cette interface :
+        la validation de ce formulaire tient lieu d'engagement vis à vis de l'admissible qui fera sa demande.</p>
+    <p>La date indiquée est celle du premier jour des oraux. Selon les cas, vous devrez surement accueillir l'admissible la veille au soir.</p>
+    <p class="emph">Remarque : vous partagez votre logement à titre gratuit.</p>
     <p><span class="emph-emph">Pensez donc à venir vous désinscrire dans les temps si vous n'êtes plus disponible !</span></p>
 
     <form action="/x/espace-personnel" method="post">
@@ -266,7 +269,7 @@ if (!empty($series)) {
     </form>
     <?php
 } else {
-    echo '<p>Il n\'est pas encore possible de mettre à jour vos disponibilitées d\'hébergement. Merci de repasser plus tard...</p>';
+    echo '<p>Il n\'est pas encore possible de mettre à jour vos disponibilités d\'hébergement. Merci de repasser plus tard...</p>';
 }
 ?>
 <hr/>
@@ -344,6 +347,7 @@ if (empty($demandes)) {
 <h3>Proposer un hébergement :</h3>
 <p>Vous avez dormi à proximité de l'école durant vos oraux de concours ?<br/>
 N'hésitez pas à partager avec les futurs admissibles les adresses qui vous ont aidées !</p>
+<p class="emph">Veillez à ne pas inclure de publicité dans vos annonces</p>
 <?php
 //interface d'ajout d'une adresse
 try {

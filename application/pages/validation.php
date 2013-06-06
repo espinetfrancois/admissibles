@@ -32,7 +32,7 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
             //envoi du mail d'avertissement à l'X
             $mail->nouvelleDemande();
         } catch (Exception_Mail $e) {
-            Registry::get('layout')->addMessage("Impossible d'envoyer le mail d'annulation à l'élève", MSG_LEVEL_ERROR);
+            Registry::get('layout')->addMessage("Impossible d'envoyer le mail de validation à l'élève", MSG_LEVEL_ERROR);
         } catch (Exception_Bdd $e) {
             Registry::get('layout')->addMessage("Impossible de retrouver l'élève dans la base de données.", MSG_LEVEL_ERROR);
         }

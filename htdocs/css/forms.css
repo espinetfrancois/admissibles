@@ -36,6 +36,7 @@
 .contenu form p.champ input, p.champ textarea, p.champ select {
 	float : right;
 	clear : right;
+	padding : 1px;
 }
 
 /* Placement des labels */
@@ -46,6 +47,13 @@
 .contenu form p.champ.radio label:not(:first-child) {
 	float : right;
 	margin : 0 5px;
+	padding : 1px;
+}
+
+/* fix for webkit */
+.contenu form .champ label input[type=radio] {
+	float : none;
+	width : 13px;
 }
 
 /* Décoration des inputs */
