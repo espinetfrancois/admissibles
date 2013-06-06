@@ -34,9 +34,9 @@ if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
                 // Envoi d'un mail à l'X lui indiquant l'annulation de la demande
                 $mail->demandeAnnulee();
             } catch (Exception_Mail $e) {
-                Registry::get('layout')->addMessage('Impossible d'envoyer le mail à l'élève correspondant.', MSG_LEVEL_ERROR);
+                Registry::get('layout')->addMessage('Impossible d\'envoyer le mail à l\'élève correspondant.', MSG_LEVEL_ERROR);
             } catch (Exception_Bdd $e) {
-                Registry::get('layout')->addMessage("Impossible de récupérer les information de l'élève dans la base de donées", MSG_LEVEL_ERROR);
+                Registry::get('layout')->addMessage("Impossible de récupérer les informations de l'élève dans la base de donées", MSG_LEVEL_ERROR);
             }
         }
         echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>
