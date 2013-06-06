@@ -131,7 +131,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
     } catch (Exception_Bdd $e) {
         $prepas  = array();
         $filieres = array();
-        Registry::get('layout')->addMessage('Impossible de récupérer la liste des établissement ou des filières.', MSG_LEVEL_ERROR);
+        Registry::get('layout')->addMessage('Impossible de récupérer la liste des établissements ou des filières.', MSG_LEVEL_ERROR);
     }
     $champInvalide = '<span class="error">Merci de renseigner ce champ</span>'
     ?>
@@ -157,7 +157,7 @@ if ((isset($_GET['action']) && $_GET['action'] == 'modify') || ! $_SESSION['elev
         </label>
     </p>
 	<p id="champ-sexeAdm" class="champ radio">
-        <label for="sexeAdm">J'accepte de loger un admissible du sexe opposé s'il me demande: </label>
+        <label for="sexeAdm">J'accepte de loger un admissible du sexe opposé s'il me demande : </label>
 		<select name="sexeAdm">
 			<option value="1"<?php
         		if ($_SESSION['eleve']->sexeAdm() == '1' || $_SESSION['eleve']->sexeAdm() == '')

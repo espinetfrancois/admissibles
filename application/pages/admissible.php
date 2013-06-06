@@ -259,7 +259,7 @@ if (isset($success) && $success == 1) {
     convient le plus. Ensuite :</p>
 <ul>
     <li>Vous recevrez ensuite un email de confirmation. Et votre
-        demande sera transmise à l'élève que vous aurez choisit.</li>
+        demande sera transmise à l'élève que vous aurez choisi.</li>
     <li>Vous recevrez ensuite un email lorsque l'élève polytechnicien
         aura accepté votre demande, et vous pourrez alors contacter la
         personne correspondante pour arranger les modalités de votre séjour.</li>
