@@ -164,7 +164,7 @@ class Model_Demande extends Model {
      */
     public function setNom($nom)
     {
-        if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $nom) === false) { // lettres seulement
+        if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $nom) != 1 ) { // lettres seulement
             $this->erreurs[] = self::Nom_Invalide;
         } else {
             $this->nom = $nom;
@@ -180,7 +180,7 @@ class Model_Demande extends Model {
      */
     public function setPrenom($prenom)
     {
-        if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $prenom) === false) { // lettres seulement
+        if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $prenom) != 1 ) { // lettres seulement
             $this->erreurs[] = self::Prenom_Invalide;
         } else {
             $this->prenom = $prenom;
@@ -196,7 +196,7 @@ class Model_Demande extends Model {
      */
     public function setEmail($email)
     {
-        if (preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email) === false) { // adresse email
+        if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}(\.[a-z]{2,4})+$/iu', $email) != 1) { // adresse email
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;
@@ -288,7 +288,7 @@ class Model_Demande extends Model {
      */
     public function setUserEleve($user)
     {
-        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) === false) { // de la forme prenom.nom
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1) { // de la forme prenom.nom
             $this->erreurs[] = self::User_Invalide;
         } else {
             $this->userEleve = $user;

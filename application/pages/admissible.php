@@ -34,8 +34,12 @@ if (isset($_SESSION['demande']) && isset($_POST['user'])) {
         $demande->setStatus('0');
         $demande->setCode(md5(sha1(time().$demande->email())));
 
-        $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
-        $mail->demandeEnvoyee($demande->userEleve(), '/admissible/annulation-demande?code='.$demande->code(), '/admissible/validation-demande?code='.$demande->code());
+        try {
+            $mail = new Mail_Admissible($demande->nom(), $demande->prenom(), $demande->email());
+            $mail->demandeEnvoyee($demande->userEleve(), '/admissible/annulation-demande?code='.$demande->code(), '/admissible/validation-demande?code='.$demande->code());
+        } catch (Exception_Mail $e) {
+            Registry::get('layout')->addMessage("Impossible d'envoyer un mail à votre adresse.", MSG_LEVEL_ERROR);
+        }
         try {
             $demandeManager->add($demande);
             $eleveManager->deleteDispo($_POST['user'], $demande->serie());

@@ -97,7 +97,7 @@ class Manager_Eleve extends Manager
      */
     public function addDispo($user, $serie)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) || !is_numeric($serie)) {
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1|| !is_numeric($serie)) {
             throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::addDispo', Exception_Bdd_Query::Currupt_Params);
         }
         try {
@@ -125,7 +125,7 @@ class Manager_Eleve extends Manager
      */
     public function deleteDispo($user, $serie)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) || !is_numeric($serie)) {
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1 || !is_numeric($serie)) {
             throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::deleteDispo', Exception_Bdd_Query::Currupt_Params);
         }
         try {
@@ -152,7 +152,7 @@ class Manager_Eleve extends Manager
      */
     public function getUnique($user)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1) { // de la forme prenom.nom(.2011)
             throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::getUnique', Exception_Bdd_Query::Currupt_Params);
         }
         try {
@@ -193,7 +193,7 @@ class Manager_Eleve extends Manager
      */
     public function getDispo($user)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1) { // de la forme prenom.nom(.2011)
             throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::getDispo', Exception_Bdd_Query::Currupt_Params);
         }
         try {

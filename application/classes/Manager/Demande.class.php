@@ -149,7 +149,7 @@ class Manager_Demande extends Manager
      */
     public function updateStatus($code, $status)
     {
-        if (!is_numeric($status) || !preg_match('#^[a-f0-9]{32}$#', $code)) {
+        if (!is_numeric($status) || !preg_match('#^[a-f0-9]{32}$#', $code) != 1) {
             throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::updateStatus', Exception_Bdd_Query::Currupt_Params);
         }
         try {
@@ -175,7 +175,7 @@ class Manager_Demande extends Manager
      */
     public function getUnique($code)
     {
-        if (!preg_match('#^[0-9a-f]{32}$#', $code)) {
+        if (!preg_match('#^[0-9a-f]{32}$#', $code) != 1) {
             throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::getUnique', Exception_Bdd_Query::Currupt_Params);
         }
         try {
@@ -271,7 +271,7 @@ class Manager_Demande extends Manager
      */
     public function getDemandes($user)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom(.2011)
+        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1) { // de la forme prenom.nom(.2011)
             throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::getDemandes', Exception_Bdd_Query::Currupt_Params);
         }
         try {
