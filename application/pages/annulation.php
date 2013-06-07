@@ -9,7 +9,7 @@
 $demandeManager = new Manager_Demande(Registry::get('db'));
 $eleveManager = new Manager_Eleve(Registry::get('db'));
 
-if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
+if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code']) == 1) {
     try {
         $demande = $demandeManager->getUnique($_GET['code']);
         if ($demande->status() != 3) {

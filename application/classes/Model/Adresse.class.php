@@ -170,7 +170,7 @@ class Model_Adresse extends Model
      */
     public function setTel($tel)
     {
-        if (!preg_match('#^0[1-8]([-. ]?[0-9]{2}){4}$#', $tel) && !empty($tel)) { // n° de téléphone avec ou sans séparateur si non vide
+        if (preg_match('#^0[1-8]([-. ]?[0-9]{2}){4}$#', $tel) != 1 && !empty($tel)) { // n° de téléphone avec ou sans séparateur si non vide
             $this->erreurs[] = self::Tel_Invalide;
         } else {
             $this->tel = $tel;
@@ -186,7 +186,7 @@ class Model_Adresse extends Model
      */
     public function setEmail($email)
     {
-        if (!preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email) && empty($email) !== true) { // adresse email si non vide
+        if (preg_match('#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#', $email) != 1 && empty($email) !== true) { // adresse email si non vide
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;

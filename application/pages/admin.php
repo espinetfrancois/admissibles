@@ -152,8 +152,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'series') {
     if (isset($_POST['intitule']) && isset($_POST['date_debut']) && isset($_POST['date_fin'])) {
         //vérification du post
         if (!empty($_POST['intitule']) && strlen($_POST['intitule']) <= 50
-                && preg_match('#^[0-9]{2}/[0-9]{2}/[0-9]{4}$#', $_POST['date_debut'])
-                && preg_match('#^[0-9]{2}/[0-9]{2}/[0-9]{4}$#', $_POST['date_fin'])) {
+                && preg_match('#^[0-9]{2}/[0-9]{2}/[0-9]{4}$#', $_POST['date_debut']) == 1
+                && preg_match('#^[0-9]{2}/[0-9]{2}/[0-9]{4}$#', $_POST['date_fin']) == 1) {
 
             $expDateD = explode('/', $_POST['date_debut']);
             $expDateF = explode('/', $_POST['date_fin']);
@@ -215,7 +215,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'admissibles') {
     // Traitement de la liste ajoutée
     if (isset($_POST['serie']) && isset($_POST['filiere']) && isset($_POST['liste'])) {
         if (is_numeric($_POST['serie']) && is_numeric($_POST['filiere'])
-                && preg_match("#^(.+\s\(.+\)(\r)?(\n)?)+$#", $_POST['liste'])) {
+                && preg_match("#^(.+\s\(.+\)(\r)?(\n)?)+$#", $_POST['liste']) == 1) {
             $parametres->parseADM($_POST['serie'], $_POST['filiere'], $_POST['liste']);
             Registry::get('layout')->addMessage('Ajout des admissibles réussi !', MSG_LEVEL_OK);
             Logs::logger(1, 'Administrateur : Ajout d\'une liste d\'admissibilite');

@@ -125,7 +125,7 @@ class Model_Eleve extends Model
      */
     public function setUser($user)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user)) { // de la forme prenom.nom
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1) { // de la forme prenom.nom
             $this->erreurs[] = self::User_Invalide;
         } else {
             $this->user = $user;
@@ -173,7 +173,7 @@ class Model_Eleve extends Model
      */
     public function setEmail($email)
     {
-        if (!preg_match('#^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\.[a-z]{2,4}$#', $email)) { // adresse email
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $email) != 1) { // adresse email
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;

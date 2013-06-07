@@ -8,7 +8,7 @@
 
 $demandeManager = new Manager_Demande(Registry::get('db'));
 
-if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code'])) {
+if (isset($_GET['code']) && preg_match('#^[0-9a-f]{32}$#i', $_GET['code']) == 1) {
     echo '<h2>Demande d\'hébergement chez un élève pendant la période des oraux</h2>';
     try {
         $demande = $demandeManager->getUnique($_GET['code']);
