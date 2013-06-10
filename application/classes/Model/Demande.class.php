@@ -167,7 +167,7 @@ class Model_Demande extends Model {
         if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $nom) != 1 ) { // lettres seulement
             $this->erreurs[] = self::Nom_Invalide;
         } else {
-            $this->nom = $nom;
+            $this->nom = Manager::escape($nom);
         }
     }
 
@@ -183,7 +183,7 @@ class Model_Demande extends Model {
         if (preg_match('#[a-zA-Zéèàêâùïüë_-]+#', $prenom) != 1 ) { // lettres seulement
             $this->erreurs[] = self::Prenom_Invalide;
         } else {
-            $this->prenom = $prenom;
+            $this->prenom = Manager::escape($prenom);
         }
     }
 
