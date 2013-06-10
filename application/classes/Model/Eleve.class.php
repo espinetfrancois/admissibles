@@ -173,7 +173,7 @@ class Model_Eleve extends Model
      */
     public function setEmail($email)
     {
-        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $email) != 1) { // adresse email
+        if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}(\.[a-z]{2,4})+$/iu', $email) != 1) { // adresse email
             $this->erreurs[] = self::Email_Invalide;
         } else {
             $this->email = $email;
