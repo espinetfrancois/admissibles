@@ -38,13 +38,12 @@ class Manager_Demande extends Manager
                 $requete->bindValue(':filiere', $demande->filiere());
                 $requete->bindValue(':prepa', $demande->prepa());
                 $requete->execute();
-                $requete = $this->_db
-                        ->prepare(
+                $requete = $this->_db->prepare(
                                 'INSERT INTO demandes
-                                               SET ID_ADMISSIBLE = :id,
-                                                   USER_X = :user,
-                                                   LIEN = :code,
-                                                   ID_STATUS = :status');
+                                   SET ID_ADMISSIBLE = :id,
+                                       USER_X = :user,
+                                       LIEN = :code,
+                                       ID_STATUS = :status');
                 $requete->bindValue(':id', $demande->id());
                 $requete->bindValue(':user', $demande->userEleve());
                 $requete->bindValue(':code', $demande->code());
@@ -149,7 +148,7 @@ class Manager_Demande extends Manager
      */
     public function updateStatus($code, $status)
     {
-        if (!is_numeric($status) || !preg_match('#^[a-f0-9]{32}$#', $code) != 1) {
+        if (!is_numeric($status) || preg_match('#^[a-f0-9]{32}$#', $code) != 1) {
             throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::updateStatus', Exception_Bdd_Query::Currupt_Params);
         }
         try {
@@ -175,7 +174,7 @@ class Manager_Demande extends Manager
      */
     public function getUnique($code)
     {
-        if (!preg_match('#^[0-9a-f]{32}$#', $code) != 1) {
+        if (preg_match('#^[0-9a-f]{32}$#', $code) != 1) {
             throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::getUnique', Exception_Bdd_Query::Currupt_Params);
         }
         try {
@@ -204,7 +203,7 @@ class Manager_Demande extends Manager
         if ($requete->rowCount() != 1) {
             throw new Exception_Bdd_Integrity('Corruption de la table "demandes". Non unicite de "LIEN" ou lien');
         } else if ($requete->rowCount() == 0) {
-            throw new Exception_Bdd_Query('Corruption des paramètres : Manager_Demande::getUnique : la recherche n\'a renvoyé aucun résultats', Exception_Bdd_Query::Currupt_Params);
+            throw new Exception_Bdd_Query('Corruption des paramètres : Manager_Demande::getUnique : la recherche n\'a renvoyé aucun résultat', Exception_Bdd_Query::Currupt_Params);
         }
 
         $requete->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Model_Demande');
@@ -271,7 +270,7 @@ class Manager_Demande extends Manager
      */
     public function getDemandes($user)
     {
-        if (!preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1) { // de la forme prenom.nom(.2011)
+        if (preg_match('#^[a-z0-9_-]+\.[a-z0-9_-]+(\.?[0-9]{4})?$#', $user) != 1) { // de la forme prenom.nom(.2011)
             throw new Exception_Bdd_Query('Corruption des parametres. Manager_Demande::getDemandes', Exception_Bdd_Query::Currupt_Params);
         }
         try {
