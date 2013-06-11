@@ -13,7 +13,7 @@ if (file_exists(APPLICATION_PATH.'/inc/autoload.php')) {
     die();
 }
 
-if ($_SESSION['administrateur'] !== true) {
+if (! (isset($_SESSION['administrateur']) &&  $_SESSION['administrateur'] === true)) {
     if (file_exists(APPLICATION_PATH.'/inc/fkz_auth.php')) {
     	include_once(APPLICATION_PATH.'/inc/fkz_auth.php');
     	frankiz_do_auth("/updates");
