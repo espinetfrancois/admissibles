@@ -120,8 +120,9 @@ class Mail_Admissible extends Mail
      * Ce mail lui permet de prendre contact avec l'élève.
      *
      * @access public
-     * @param string $sEleveX   l'élève à qui la demande à été envoyée
      * @param string $sXmail    l'email de l'élève pour que l'admissible puisse prendre contact avec lui
+     * @param string $sLinkCancel le lien pour annuler la demande
+     * @param string $sEleveX   l'élève à qui la demande à été envoyée
      * @throws Exception_Mail
      * @return void
      */
@@ -129,16 +130,13 @@ class Mail_Admissible extends Mail
     {
         $sEleveX = $this->getNameFromUid($sEleveX);
         try {
-            $this->AltBody = $this
-                    ->_substitute(self::Action_Accepted, self::CONTENT_TYPE_TXT,
-                            array('ELEVE_X' => $sEleveX, 'X_MAIL' => $sXmail, 'LINK_CANCEL' => $sLinkCance));
+            $this->AltBody = $this->_substitute(self::Action_Accepted, self::CONTENT_TYPE_TXT,
+                            array('ELEVE_X' => $sEleveX, 'X_MAIL' => $sXmail, 'LINK_CANCEL' => $this->appRootUrl . $sLinkCancel));
 
-            $this->Body = $this
-                    ->_substitute(self::Action_Accepted, self::CONTENT_TYPE_HTML,
-                            array('X_MAIL' => $sXmail, 'ELEVE_X' => $sEleveX, 'LINK_CANCEL' => $sLinkCancel));
+            $this->Body = $this->_substitute(self::Action_Accepted, self::CONTENT_TYPE_HTML,
+                            array('X_MAIL' => $sXmail, 'ELEVE_X' => $sEleveX, 'LINK_CANCEL' => $this->appRootUrl . $sLinkCancel));
 
-            $this->Subject = $this
-                    ->_substitute(self::Action_Accepted, self::CONTENT_TYPE_OBJET, array('NOM' => $this->nom, 'PRENOM' => $this->prenom));
+            $this->Subject = $this->_substitute(self::Action_Accepted, self::CONTENT_TYPE_OBJET, array('NOM' => $this->nom, 'PRENOM' => $this->prenom));
             $this->psend();
         } catch (Exception_Mail $e) {
             throw new Exception_Mail("Impossible d'envoyer le mail de notification de confirmation de demande", Exception_Mail::Send_Echec_Admissible_DemandeConfirmee, $e);
