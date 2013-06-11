@@ -11,7 +11,7 @@ $parametres = Registry::get('parametres');
 $db = Registry::get('db');
 
 // Identification
-if (!isset($_SESSION['eleve']) && $_SESSION['administrateur'] !== true) {
+if (! (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true)) {
     frankiz_do_auth('/administration/gestion');
     return;
 }
