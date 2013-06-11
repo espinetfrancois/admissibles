@@ -38,14 +38,14 @@ if (isset($_SESSION['eleve']) && isset($_POST['sexe']) && isset($_POST['sexeAdm'
             } else {
                 $eleveManager->update($_SESSION['eleve']);
             }
-            Logs::logger(1, 'Modification des informations personnelles élève (user : '.$_SESSION['eleve']->user().')');
+            Logs::logger(1, 'Modification des informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
             Registry::get('layout')->addMessage('Vous vous êtes enregistré avec succés.', MSG_LEVEL_OK);
         } catch (Exception_Bdd $e) {
         	Registry::get('layout')->addMessage('Impossible de vous ajouter dans la base de données.', MSG_LEVEL_ERROR);
         }
     } else {
         $erreurs = $_SESSION['eleve']->erreurs();
-        Logs::logger(2, 'Erreur de remplissage du formulaire informations personnelles élève (user : '.$_SESSION['eleve']->user().')');
+        Logs::logger(2, 'Erreur de remplissage du formulaire informations personnelles eleve (user : '.$_SESSION['eleve']->user().')');
     }
 }
 
@@ -67,7 +67,7 @@ if (isset($_SESSION['eleve']) && isset($_POST['serie']) && $_POST['serie'] == '1
     } catch (Exception_Bdd $e) {
     	Registry::get('layout')->addMessage('Impossible de mettre à jour vos disponibilités.', MSG_LEVEL_ERROR);
     }
-    Logs::logger(1, 'Modification des disponibilites élève (user : '.$_SESSION['eleve']->user().')');
+    Logs::logger(1, 'Modification des disponibilites eleve (user : '.$_SESSION['eleve']->user().')');
 }
 
 // Acceptation d'une demande de logement
