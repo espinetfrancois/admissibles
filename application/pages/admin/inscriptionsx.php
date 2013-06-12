@@ -19,13 +19,16 @@ $series = $parametres->getXInSeries();
 
 foreach ($series as $serie => $aX) {
     $sTable = '<table class="dispo-series"><thead><tr><th>'.$serie.'</th></tr></thead><tbody>';
-    if (count($aX) == 0) {
+    $nEleves = count($aX);
+    if ($nEleves == 1 && $aX[0] === NULL) {
         $sTable .= '<tr><td>Aucun élève disponible</td></tr>';
-    }
-    foreach ($aX as $x) {
-        $sTable .= '<tr><td>'.$x.'</td></tr>';
+        $nEleves = 0;
+    } else {
+        foreach ($aX as $x) {
+            $sTable .= '<tr><td>'.$x.'</td></tr>';
+        }
     }
     $sTable .= '</tbody>';
-    $sTable .= '</tfoot><tr><th>Nombre d\'élèves diponibles : '.count($aX).'</tr></th></tfoot></table>';
+    $sTable .= '<tfoot><tr><th>Nombre d\'élèves diponibles : '.$nEleves.'</th></tr></tfoot></table>';
     echo $sTable;
 }
