@@ -10,7 +10,7 @@
                 href="/administration/gestion?action=param&type=<?php echo Parametres::Filiere; ?>">Filières d'entrée des élèves</a>
             </li>
             <li id="46"><a href="/administration/gestion?action=admissibles">Listes d'admissibilité</a>
-            <li><a href='/administration/inscriptionsx'>Disponibilités des élèves</a></li>
+            <li id="491"><a href='/administration/inscriptionsx'>Disponibilités des élèves</a></li>
             </li>
             <li id="42"><a href="/administration/gestion?action=demandes">Demandes en cours</a>
             </li>
