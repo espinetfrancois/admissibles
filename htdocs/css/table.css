@@ -37,5 +37,11 @@ table th {
 
 .contenu .dispo-series {
 	display : inline-block;
+	float : left;
 	margin : 1em;
+}
+
+.contenu table tfoot {
+	border-top : 1px solid black;
+	padding : 1px;
 }
