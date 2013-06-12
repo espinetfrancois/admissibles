@@ -12,7 +12,7 @@ if (! (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === tru
 //identification ok, affichage de l'interface
 echo '<h2>Interface d\'administration</h2>';
 echo '<h3>Disponibilités des X</h3>';
-echo '<span id="page_id">48</span>';
+echo '<span id="page_id">491</span>';
 
 $series = $parametres->getXInSeries();
 
