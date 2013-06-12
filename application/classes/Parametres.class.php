@@ -461,4 +461,24 @@ class Parametres extends Manager
             throw new Exception_Bdd_Query('Impossible de supprimer un admissible', Exception_Bdd_Query::Level_Minor, $e);
         }
     }
+
+    public function getXInSeries() {
+        try {
+            $requete = $this->_db->prepare(
+                                    'SELECT INTITULE, ID_X FROM `disponibilites`
+                                    RIGHT JOIN `series` ON `disponibilites`.`ID_SERIE` = `series`.`ID`'
+                                     );
+
+            $requete->execute();
+            $result = $requete->fetchAll(PDO::FETCH_GROUP|PDO::FETCH_ASSOC);
+            foreach ($result as $serie => $x) {
+                foreach ($x as $anX)
+                $ret[$serie][] = $anX['ID_X'];
+            }
+
+            return $ret;
+        } catch (PDOException $e) {
+            throw new Exception_Bdd_Query("Impossible de récupérer la liste des inscrits.", Exception_Bdd_Query::Level_Minor, $e);
+        }
+    }
 }

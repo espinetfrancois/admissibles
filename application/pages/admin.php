@@ -632,6 +632,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'hotel') {
     <li><a href="/administration/gestion?action=series">Modifier les séries d'admissibilités (dates d'ouverture du site)</a></li>
     <li><a href="/administration/gestion?action=param&type=<?php echo Parametres::Etablissement; ?>">Modifier les établissements de provenance des élèves</a></li>
 <li><a href="/administration/gestion?action=param&type=<?php echo Parametres::Filiere; ?>">Modifier les filières d'entrée des élèves</a></li>
+    <li><a href='/administration/inscriptionsx'>Voir les disponibilités des élèves par série</a></li>
     <li><a href="/administration/gestion?action=admissibles">Entrer la liste des admissibles pour la prochaine série</a></li>
     <li><a href="/administration/gestion?action=demandes">Voir les demandes en cours</a></li>
     <li><a href="/administration/gestion?action=hotel">Modifier la liste des hébergements à proximitè de l'école</a></li>

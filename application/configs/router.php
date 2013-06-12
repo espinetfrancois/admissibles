@@ -25,5 +25,6 @@ return array(
        'administration'   => array(
                                    'root'                   => 'admin.php',
                                    'gestion'                => 'admin.php',
+                                   'inscriptionsx'           => 'admin/inscriptionsx.php'
                                   )
 );
