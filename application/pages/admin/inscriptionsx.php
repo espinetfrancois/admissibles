@@ -10,7 +10,7 @@ $db = Registry::get('db');
 
 // Identification
 if (! (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true)) {
-	frankiz_do_auth('/administration/gestion');
+	frankiz_do_auth('/administration/inscriptionsx');
 	return;
 }
 
