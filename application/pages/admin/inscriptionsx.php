@@ -1,3 +1,8 @@
+<style>
+.contenu {
+    max-width : 100% !important;
+}
+</style>
 <?php
 require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 $parametres = Registry::get('parametres');
