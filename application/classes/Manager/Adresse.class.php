@@ -92,7 +92,7 @@ class Manager_Adresse extends Manager
     public final function save(Model_Adresse $adresse)
     {
         if ($adresse->isValid() === true) {
-            $adresse->isNew() === true ? $this->_add($adresse) : $this->_update($adresse);
+            $adresse->isNew() === true ? $this->add($adresse) : $this->update($adresse);
         } else {
             throw new Exception_Bdd_Query("Une adresse invalide à été présenté pour l'enregistrement", Exception_Bdd_Query::Currupt_Params);
         }

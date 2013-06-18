@@ -25,6 +25,13 @@ return array(
        'administration'   => array(
                                    'root'                   => 'admin.php',
                                    'gestion'                => 'admin.php',
-                                   'inscriptionsx'           => 'admin/inscriptionsx.php'
+                                   'listes-admissibles'     => 'admin/insertion_admissibles.php',
+                                   'series-admissibilites'  => 'admin/series.php',
+                                   'etablissements'         => 'admin/etablissements.php',
+                                   'filieres'               => 'admin/filieres.php',
+                                   'inscriptionsx'          => 'admin/inscriptionsx.php',
+                                   'demandes'               => 'admin/demandes.php',
+                                   'hebergements'           => 'admin/hebergements.php',
+                                   'remise-a-zero'          => 'admin/raz.php'
                                   )
 );

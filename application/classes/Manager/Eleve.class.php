@@ -101,14 +101,24 @@ class Manager_Eleve extends Manager
             throw new Exception_Bdd_Query('Corruption des parametres : Manager_Eleve::addDispo', Exception_Bdd_Query::Currupt_Params);
         }
         try {
-            $requete = $this->_db->prepare(
-                                           'INSERT INTO disponibilites
-                                           SET ID_X = :user,
-                                           ID_SERIE = :serie'
+			$requete1 = $this->_db->prepare(
+                                          'SELECT * FROM disponibilites
+                                           WHERE ID_X = :user
+                                           AND ID_SERIE = :serie'
                                             );
-            $requete->bindValue(':user', $user);
-            $requete->bindValue(':serie', $serie);
-            $requete->execute();
+            $requete1->bindValue(':user', $user);
+            $requete1->bindValue(':serie', $serie);
+            $requete1->execute();
+			if($requete1->rowCount() == 0) {
+				$requete2 = $this->_db->prepare(
+											   'INSERT INTO disponibilites
+											   SET ID_X = :user,
+											   ID_SERIE = :serie'
+												);
+				$requete2->bindValue(':user', $user);
+				$requete2->bindValue(':serie', $serie);
+				$requete2->execute();
+			}
         } catch (Exception $e) {
             throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Eleve::addDispo', Exception_Bdd_Query::Level_Major, $e);
         }
