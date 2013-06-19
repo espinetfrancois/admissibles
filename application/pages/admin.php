@@ -6,6 +6,7 @@
  *
  */
 
+require_once(APPLICATION_PATH.'/inc/fkz_auth.php');
 // Identification
 if (! (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === true)) {
     frankiz_do_auth('/administration/gestion');
