@@ -20,7 +20,7 @@ class Exception_Bdd_Integrity extends Exception_Bdd
             $mail = new Mail_AdminTech();
             $mail->warning("La base de donnée doit être réparée : " . $this->getMessage());
         } catch (Exception_Mail $e) {
-
+            $e->log();
         }
         parent::__destruct();
     }

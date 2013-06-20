@@ -94,7 +94,6 @@ class Manager_Demande extends Manager
             try {
                 throw new Exception_Bdd_Integrity('Corruption de la table "admissibles". Non unicite des champs');
             } catch (Exception $e) {
-
             }
             Logs::logger(2, 'Corruption de la table "admissibles". Non unicite des champs');
             $result = $requete->fetch(PDO::FETCH_ASSOC);
@@ -131,11 +130,11 @@ class Manager_Demande extends Manager
             $requete->bindValue(':serie', $demande->serie());
             $requete->bindValue(':filiere', $demande->filiere());
             $requete->execute();
+            return ($requete->rowCount() == 0);
         } catch (Exception $e) {
             throw new Exception_Bdd_Query('Erreur lors de la requête : Manager_Demande::autorisation', Exception_Bdd_Query::Level_Major, $e);
+            return false;
         }
-
-        return ($requete->rowCount() == 0);
     }
 
     /**
