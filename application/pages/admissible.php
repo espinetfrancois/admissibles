@@ -80,14 +80,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         $erreurD = $demande->erreurs();
         try {
             $id = $demandeManager->isAdmissible($_POST['nom'], $_POST['prenom'], $_POST['serie']);
+            if ($id == -1) {
+            	$erreurD[] = Model_Demande::Non_Admissible;
+            	Logs::logger(2, 'Formulaire de demande rempli par un non-admissible');
+            } else {
+            	$demande->setId($id);
+            }
         } catch (Exception_Bdd $e) {
+            $demande->setId(-1);
             Registry::get('layout')->addMessage('Impossible de vérifier votre admissibilité dans la base de données.', MSG_LEVEL_ERROR);
-        }
-        if ($id == -1) {
-            $erreurD[] = Model_Demande::Non_Admissible;
-            Logs::logger(2, 'Formulaire de demande rempli par un non-admissible');
-        } else {
-            $demande->setId($id);
         }
     }
 
