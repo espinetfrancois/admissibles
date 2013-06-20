@@ -106,6 +106,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'demande') {
         }
         if (empty($eleves)) {
             echo '<p>Désolé, aucune correspondance n\'a été trouvée (tous les élèves ont déjà été sollicités).<br/>Rendez-vous sur la page <a href=\'\'>Bonnes adresses</a> pour trouver un hébergement à proximité de l\'école...</p>';
+            try {
+                $mailFonc = new Mail_AdminFonc();
+                $mailFonc->aucunX($demande->email());
+            } catch (Exception_Mail $e) {
+                Logs::logger(2, "Impossible de prévenir les administrateurs d'un manque de disponibilité des X");
+            }
             throw new Exception_Page('Plus aucun eleve disponible.', 'Aucun élève n\'a été trouvé.', Exception_Page::WARNING);
             return;
         }

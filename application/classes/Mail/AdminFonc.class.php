@@ -10,8 +10,7 @@
  */
 class Mail_AdminFonc extends Mail {
 
-    const X_Action_Canceled = 'anndemande';
-    const X_Action_NvDemande = 'nvdemande';
+    const Aucun_X = 'nox';
 
     /**
      * Nom.
@@ -30,9 +29,25 @@ class Mail_AdminFonc extends Mail {
     protected function psend()
     {
     	try {
+    	    $this->AddAddress($this->adminFoncMail);
     		parent::psend();
     	} catch (Exception_Mail $e) {
     		throw new Exception_Mail("Impossible d'envoyer un mail à l'administateur fonctionnel.", Exception_Mail::Send_Echec_Admin, $e);
     	}
+    }
+
+    public function aucunX($admEmail = '') {
+        $this->AltBody = $this->_substitute(self::Aucun_X, self::CONTENT_TYPE_TXT,array('EMAIL' => $admEmail));
+
+        $this->Body = $this->_substitute(self::Aucun_X, self::CONTENT_TYPE_HTML,array('EMAIL' => $admEmail));
+
+        $this->Subject = $this->_substitute(self::Aucun_X, self::CONTENT_TYPE_OBJET);
+
+        $this->psend();
+    }
+
+    protected function _substitute($sAction = '', $sType, $aRemplacement = array())
+    {
+    	return parent::substitute(self::Pers_Admin_Fonc, $sAction, $sType, $aRemplacement);
     }
 }

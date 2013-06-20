@@ -37,11 +37,12 @@ abstract class Mail extends PHPMailer
     private $mails = null;
 
     /**
-     * Mail de l'administrateur de la plateforme.
+     * Mail des administrateurs de la plateforme.
      *
      * @var string
      */
-    protected $adminMail = "admissibles@binets.polytechnique.fr";
+    protected $adminTechMail = "admissibles@binets.polytechnique.fr";
+    protected $adminFoncMail = "admissibles@binets.polytechnique.fr";
 
     /**
      * Constructeur
@@ -87,7 +88,8 @@ abstract class Mail extends PHPMailer
         $this->mails = parse_ini_file(CONFIG_PATH . '/' . self::Ini_File, true);
         $this->SetFrom($this->mails['application']['app_email'], $this->mails['application']['app_name']);
         unset($this->mails['application']);
-        $this->adminMail = $this->mails['admin']['email'];
+        $this->adminFoncMail = $this->mails['admin']['email_fonc'];
+        $this->adminTechMail = $this->mails['admin']['email_tech'];
         unset($this->mails['admin']);
 
     }
