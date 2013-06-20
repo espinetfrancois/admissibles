@@ -83,7 +83,7 @@ class Mail_AdminTech extends Mail
     protected function psend()
     {
         try {
-            $this->AddAddress($this->adminMail);
+            $this->AddAddress($this->adminTechMail);
             parent::psend();
         } catch (Exception_Mail $e) {
             throw new Exception_Mail("Impossible d'envoyer un mail à l'administateur technique.", Exception_Mail::Send_Echec_Admin, $e);
