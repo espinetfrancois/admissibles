@@ -244,6 +244,7 @@ class Manager_Demande extends Manager
                            INNER JOIN ref_statuts
                            ON demandes.ID_STATUS = ref_statuts.ID
                            ORDER BY series.DATE_DEBUT,
+                                    status,
                                     ref_filieres.NOM,
                                     admissibles.NOM,
                                     admissibles.PRENOM'
