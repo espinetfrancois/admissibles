@@ -50,11 +50,11 @@ foreach ($resume as $serie=>$statseries) {
     $rowspan = 'rowspan='.count($statseries);
     foreach($statseries as $status=>$num) {
     	echo '<tr>';
-    	echo '<td '.$rowspan.' >'.$serie.'</td>';
+    	echo ($rowspan === null ? '' : '<td '.$rowspan.' >'.$serie.'</td>');
     	echo '<td>'.$status.'</td>';
     	echo '<td>'.$num.'</td>';
     	echo '</tr>';
-    	$rowspan = '';
+    	$rowspan = null;
     }
 }
 
