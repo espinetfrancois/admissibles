@@ -47,12 +47,14 @@ echo '<table border=1 cellspacing=0>';
 echo '<thead><tr><th>Série</th><th>État</th><th>Nombre</th></thead>';
 echo '<tbody>';
 foreach ($resume as $serie=>$statseries) {
+    $rowspan = 'rowspan='.count($statseries);
     foreach($statseries as $status=>$num) {
     	echo '<tr>';
-    	echo '<td>'.$serie.'</td>';
+    	echo '<td '.$rowspan.' >'.$serie.'</td>';
     	echo '<td>'.$status.'</td>';
     	echo '<td>'.$num.'</td>';
     	echo '</tr>';
+    	$rowspan = '';
     }
 }
 
