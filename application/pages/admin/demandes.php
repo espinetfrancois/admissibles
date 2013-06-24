@@ -26,9 +26,11 @@ try {
 echo '<table border=1 cellspacing=0>';
 echo '<thead><tr><th>Série</th><th>Filière</th><th>Admissible</th><th>Elève X</th><th>Statut</th></tr></thead>';
 echo '<tbody>';
+$resume = array();
 if (count($demandes) < 1)
 	echo '<tr><td colspan="5">Pas de demandes en cours</td></tr>';
 foreach ($demandes as $demande) {
+    (isset($resume[$demande->serie()][$demande->status()]) ? $resume[$demande->serie()][$demande->status()]+=1 : $resume[$demande->serie()][$demande->status()]=1);
 	echo '<tr>';
 	echo '<td>'.$demande->serie().'</td>';
 	echo '<td>'.$demande->filiere().'</td>';
@@ -36,6 +38,22 @@ foreach ($demandes as $demande) {
 	echo '<td>'.$demande->userEleve().'</td>';
 	echo '<td>'.$demande->status().'</td>';
 	echo '</tr>';
+}
+
+echo '</tbody></table>';
+
+echo '<h3>Résumé des demandes</h3>';
+echo '<table border=1 cellspacing=0>';
+echo '<thead><tr><th>Série</th><th>État</th><th>Nombre</th></thead>';
+echo '<tbody>';
+foreach ($resume as $serie=>$statseries) {
+    foreach($statseries as $status=>$num) {
+    	echo '<tr>';
+    	echo '<td>'.$serie.'</td>';
+    	echo '<td>'.$status.'</td>';
+    	echo '<td>'.$num.'</td>';
+    	echo '</tr>';
+    }
 }
 
 echo '</tbody></table>';
