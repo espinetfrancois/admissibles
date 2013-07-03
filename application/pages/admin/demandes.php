@@ -13,7 +13,7 @@ if (! (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === tru
 echo '<h2>Interface d\'administration</h2>';
 
 // Administration des demandes en cours
-echo '<span id="page_id">42</span>';
+echo '<span id="page_id">422</span>';
 echo '<h3>Demandes en cours</h3>';
 $demandeManager = new Manager_Demande(Registry::get('db'));
 try {

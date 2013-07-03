@@ -233,6 +233,6 @@ if (isset($_GET['ajout']) || isset($_GET['modif']) || isset($erreurModif)) {
     }
     echo '</tbody></table>';
 
-    echo '<span id="page_id">47</span>';
+    echo '<span id="page_id">441</span>';
 }
 return;

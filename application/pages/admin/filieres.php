@@ -13,7 +13,7 @@ if (! (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === tru
 echo '<h2>Interface d\'administration</h2>';
 
 // Gestion des listes de paramètres = lycées de provenance et filières d'entrée
-echo '<span id="page_id">44</span>';
+echo '<span id="page_id">402</span>';
 echo '<h3>Filières d\'entrée des élèves</h3>';
 $form = '<input type="text" name="nom" maxlength="50"/>';
 
