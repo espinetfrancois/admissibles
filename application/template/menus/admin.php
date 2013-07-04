@@ -9,7 +9,6 @@
             </li>
             <li id="412"><a href="/administration/listes-admissibles">Listes d'admissibilité</a>
             <li id="421"><a href='/administration/inscriptionsx'>Disponibilités des élèves</a></li>
-            </li>
             <li id="422"><a href="/administration/demandes">Demandes en cours</a>
             </li>
             <li id="441"><a href="/administration/hebergements">Hébergements à proximité de l'école</a>
