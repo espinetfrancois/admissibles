@@ -107,6 +107,14 @@ class Layout
     protected $_templates = array('jquery/jquery-ui-1.10.1.custom.css');
 
     /**
+     * Le layout est-il activé?
+     *
+     * @var boolean
+     * @access protected
+     */
+    protected $_disabled = false;
+
+    /**
      * Constructeur.
      *
      * @access public
@@ -385,6 +393,10 @@ class Layout
 
     }
 
+    public function disableLayout() {
+        $this->_disabled = true;
+    }
+
     /* ********************************************************************************************************************* *
 
                                 Méthodes de rendu (affichage) des contenus
@@ -577,9 +589,20 @@ class Layout
         if ($this->page404 === true) {
             $this->prependMessage('La page que vous avez demandé n\'a pas été trouvée. <a href="/">Retourner à l\'accueil</a>', MSG_LEVEL_ERROR);
         }
-        return self::DOCTYPE . "\n" . '<html>' . "\n" . $this->renderHead() . "\n" . '<body>' . $this->renderBandeau() . "\n"
-        // 		             . $this->renderMessages() . "\n"
- . $this->renderMenu() . "\n" . $this->renderContent() . "\n" . $this->renderFooter() . "\n" . '</body>' . "\n" . '</html>' . "\n";
+        if ($this->_disabled === false) {
+            return self::DOCTYPE . "\n" . '<html>' . "\n" . $this->renderHead() . "\n" . '<body>' . $this->renderBandeau() . "\n"
+            // 		             . $this->renderMessages() . "\n"
+                                 . $this->renderMenu() . "\n"
+                                 . $this->renderContent() . "\n"
+                                 . $this->renderFooter() . "\n"
+                                 . '</body>' . "\n" . '</html>' . "\n";
+        } else {
+            $sContents = '';
+            foreach ($this->_content as $sContent) {
+                $sContents .= $sContent . "\n";
+            }
+            return $sContents;
+        }
     }
 
     /**

@@ -73,15 +73,17 @@ class Statistiques extends Manager
 
     function getMailsX() {
         try {
-        	$requete = $this->_db->query(  'SELECT `USER`,
-                                               `ADRESSE_MAIL` AS MAIL,
-                                               `PROMOTION`
-                                        FROM `x` as x
-                                        WHERE 1'
+        	$requete = $this->_db->query(  'SELECT  SUBSTRING_INDEX(`USER`, ".", 1) AS PRENOM,
+                                                    SUBSTRING_INDEX(`USER`, ".", -1) AS NOM,
+                                                    `ADRESSE_MAIL` AS MAIL,
+                                                    `PROMOTION`
+                                            FROM `x` as x
+                                            WHERE 1'
         	);
         	$requete->execute();
         	return $requete->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_NAMED);
         } catch (PDOException $e) {
+            echo $e;
         	throw new Exception_Bdd('Erreur lors de la récupération des adresses email des X.');
         }
     }
