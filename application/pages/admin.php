@@ -25,5 +25,6 @@ if (! (isset($_SESSION['administrateur']) && $_SESSION['administrateur'] === tru
     <li><a href="/administration/listes-admissibles">Entrer la liste des admissibles pour la prochaine série</a></li>
     <li><a href="/administration/demandes">Voir les demandes en cours</a></li>
     <li><a href="/administration/hebergements">Modifier la liste des hébergements à proximitè de l'école</a></li>
+    <li><a href="/administration/statistiques">Voir les statistiques d'utilisation du site</a>
 </ul>
 <span id="page_id">4</span>

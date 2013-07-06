@@ -32,6 +32,8 @@ return array(
                                    'inscriptionsx'          => 'admin/inscriptionsx.php',
                                    'demandes'               => 'admin/demandes.php',
                                    'hebergements'           => 'admin/hebergements.php',
-                                   'remise-a-zero'          => 'admin/raz.php'
+                                   'remise-a-zero'          => 'admin/raz.php',
+                                   'statistiques'           => 'admin/statistiques.php',
+                                   'envoyer-retex'          => 'admin/envoi_retex.php'
                                   )
 );

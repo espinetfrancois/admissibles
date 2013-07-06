@@ -18,7 +18,7 @@ echo '<h2>Interface d\'administration</h2>';
 echo '<h3>Remize à zéro</h3>';
 
 // Interface de remise à zéro de la plate-forme
-echo '<span id="page_id">48</span>';
+echo '<span id="page_id">451</span>';
 if (isset($_POST['raz']) && $_POST['raz']) {
     try {
         $parametres->remiseAZero();

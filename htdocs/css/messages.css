@@ -36,3 +36,8 @@
 	color : rgba(140, 46, 11, 1);
 	border-color : rgba(237, 84, 29, 1);
 }
+
+/** message dans les dialogues jquery **/
+.ok.ui-dialog-content, .error.ui-dialog-content, .warning.ui-dialog-content {
+	font-size : 1.5em;
+}

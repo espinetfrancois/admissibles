@@ -43,7 +43,7 @@ if (isset($_GET['suppr'])) {
 
 //interface de gestion
 echo '<h3>Insérer une liste d\'admissibilité</h3>';
-echo '<span id="page_id">46</span>';
+echo '<span id="page_id">412</span>';
 try {
 	$filieres = $parametres->getList(Parametres::Filiere);
 	$series = $parametres->getList(Parametres::Serie);

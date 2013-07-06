@@ -63,7 +63,7 @@ if (isset($_POST['intitule']) && isset($_POST['date_debut']) && isset($_POST['da
 
 //interface pour l'ajout
 echo '<h3>Séries d\'admissibilité</h3>';
-echo '<span id="page_id">41</span>';
+echo '<span id="page_id">411</span>';
 try {
 	$series = $parametres->getList(Parametres::Serie);
 } catch (Exception_Bdd $e) {
