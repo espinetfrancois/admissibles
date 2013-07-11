@@ -43,7 +43,15 @@ class Mail_Sondage extends Mail
     protected function psend()
     {
         try {
-            parent::psend();
+            if (APP_MAIL) {
+                try {
+                    parent::Send();
+                } catch (Exception $e) {
+                    throw new Exception_Mail("Un problème est survenu lors de l'envoi du mail", null, $e);
+                }
+            } else {
+                $this->PreSend();
+            }
         } catch (Exception_Mail $e) {
             throw new Exception_Mail("Le mail n'a pas pu être envoyé", $e);
             //TODO : set message ici?
