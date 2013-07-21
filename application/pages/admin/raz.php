@@ -31,7 +31,7 @@ if (isset($_POST['raz']) && $_POST['raz']) {
 ?>
 <p style="color:red;">Attention : la remise à zéro de l'interface est irréversible.</p>
 <p>Cette action efface toutes les informations relatives aux séries, aux admissibles, aux élèves, et aux demandes d'hébergement.</p>
-<form action="/administration/gestion?action=RAZ" method="post">
+<form action="/administration/remise-a-zero" method="post">
 <p class="champ" id="champ-raz"><label for="raz">Cocher cette case si vous êtes certain de vouloir effectuer une remise à zéro de l'interface :</label><input type="checkbox" name="raz"/></p>
 <input type="submit" value="Effectuer la remise à zéro"/>
 </form>
